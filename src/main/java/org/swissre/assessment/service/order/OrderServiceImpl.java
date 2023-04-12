@@ -2,8 +2,10 @@ package org.swissre.assessment.service.order;
 
 import static java.util.stream.Collectors.toList;
 
+import java.math.BigDecimal;
 import java.util.AbstractMap.SimpleImmutableEntry;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -52,20 +54,16 @@ public class OrderServiceImpl implements OrderService {
         .map(OrderItem::getQuantity).reduce(0, Integer::sum);
   }
 
-  @Override
-  public List<OrderItem> getDiscountsBeverage1Snack1(List<OrderItem> order) {
+  public List<OrderItem> getDiscountsBeverage1Snack1(Integer orderId,
+      Map<Integer, List<OrderItem>> allOrders) {
+    List<OrderItem> order = allOrders.getOrDefault(orderId, new ArrayList<>());
     int maxGiftCount = maxGiftCount(order);
 
-    List<MenuItem> flattedOrderList = new ArrayList<>();
-    for (OrderItem orderItem : order) {
-      for (int k = orderItem.getQuantity(); k > 0; k--) {
-        flattedOrderList.add(orderItem.getMenuItem());
-      }
-    }
+    List<MenuItem> flattedOrderList = flattenOrder(order);
 
     List<MenuItem> extras = flattedOrderList.stream()
         .filter(menuItem -> menuItem.getType() == Type.EXTRA)
-        .sorted((m1, m2) -> Float.compare(m1.getPrice(), m2.getPrice()))
+        .sorted(Comparator.comparing(MenuItem::getPrice))
         .collect(toList());
 
     Iterator<MenuItem> iterator = extras.iterator();
@@ -77,6 +75,16 @@ public class OrderServiceImpl implements OrderService {
     }
 
     return convertMenuItemsToOrderItems(discountedExtraMenuItems);
+  }
+
+  private static List<MenuItem> flattenOrder(List<OrderItem> order) {
+    List<MenuItem> flattedOrderList = new ArrayList<>();
+    for (OrderItem orderItem : order) {
+      for (int k = orderItem.getQuantity(); k > 0; k--) {
+        flattedOrderList.add(orderItem.getMenuItem());
+      }
+    }
+    return flattedOrderList;
   }
 
   @Override
@@ -105,43 +113,41 @@ public class OrderServiceImpl implements OrderService {
     prettyPrintOrder(order);
     System.out.println("-------------------------------------------");
 
-    float billForOrder = billingService.calculateSum(order);
+    BigDecimal billForOrder = billingService.calcSum(order);
     int baseShift = 32 + maxQuantityAndSumPriceStrLength(order);
     int shift = baseShift - String.format("%.02f", billForOrder).length();
 
     System.out.printf("%-" + shift + "s %.02f %s %n", "Total:", billForOrder, "CHF");
 
-    List<OrderItem> discountedOrderItems5thBeverage = getDiscountedOrders5thBeverage(allOrders)
-        .getOrDefault(orderId, new ArrayList<>());
+    List<OrderItem> disOrderItems5thBeverage = getDisOrdItems5thBev(orderId, allOrders);
+    List<OrderItem> disOrderItemsBev1Snack1 = getDiscountsBeverage1Snack1(orderId, allOrders);
 
-    List<OrderItem> discountedOrderItemsBeverage1Snack1 = getDiscountsBeverage1Snack1(order);
+    List<OrderItem> disOrderItems = Stream.concat(disOrderItems5thBeverage.stream(),
+            disOrderItemsBev1Snack1.stream()).collect(toList());
 
-    List<OrderItem> discountedOrderItems = Stream.concat(discountedOrderItems5thBeverage.stream(),
-            discountedOrderItemsBeverage1Snack1.stream())
-        .collect(toList());
+    List<MenuItem> menuItems = flattenOrder(disOrderItems);
+    int j = flattenOrder(disOrderItems5thBeverage).size();
 
-    for (int i = 0; i < discountedOrderItems.size(); i++) {
-
-      OrderItem discountedOrderItem = discountedOrderItems.get(i);
-      float discount = discountedOrderItem.getMenuItem().getPrice();
+    for (int i = 0; i < menuItems.size(); i++) {
+      MenuItem discountedMenuItem = menuItems.get(i);
+      BigDecimal discount = discountedMenuItem.getPrice();
       int discountShift = baseShift - String.format("%.02f", discount).length();
 
-      String discountType =
-          i < discountedOrderItems5thBeverage.size() ? "beverage5th" : "beverage1snack1";
+      String discountType = i < j ? "beverage5th" : "beverage1snack1";
 
       System.out.printf("%-" + discountShift + "s%s%.02f %s", discountType, "-", discount, "CHF");
 
-      if (i < discountedOrderItems.size() - 1) {
+      if (i < menuItems.size() - 1) {
         System.out.println();
       }
     }
 
-    if (!discountedOrderItems.isEmpty()) {
+    if (!menuItems.isEmpty()) {
       System.out.println();
     }
     System.out.println("-------------------------------------------");
 
-    float billForOrderDisc = billingService.calculateSumWithDiscounts(order, discountedOrderItems);
+    BigDecimal billForOrderDisc = billingService.calcSumWithDisc(order, disOrderItems);
 
     int discountSumShift = baseShift - String.format("%.02f", billForOrderDisc).length();
 
@@ -149,28 +155,27 @@ public class OrderServiceImpl implements OrderService {
         billForOrderDisc, "CHF");
   }
 
-  @Override
-  public Map<Integer, List<OrderItem>> getDiscountedOrders5thBeverage(
+  public List<OrderItem> getDisOrdItems5thBev(Integer orderId,
       Map<Integer, List<OrderItem>> allOrders) {
-    List<SimpleImmutableEntry<Integer, OrderItem>> extractedOrders = extractOrders(allOrders);
 
-    List<SimpleImmutableEntry<Integer, MenuItem>> extractedOrdersWithDuplicates = splitOrders(
-        extractedOrders);
-
+    List<SimpleImmutableEntry<Integer, OrderItem>> extOrds = extractOrders(allOrders);
+    List<SimpleImmutableEntry<Integer, MenuItem>> extOrdsWithDuplicates = splitOrders(extOrds);
     List<SimpleImmutableEntry<Integer, MenuItem>> extractedOrdersDiscounted = new ArrayList<>();
 
-    filterDiscounts(extractedOrdersWithDuplicates, extractedOrdersDiscounted);
+    filterDiscounts(extOrdsWithDuplicates, extractedOrdersDiscounted);
 
-    return convertBack(extractedOrdersDiscounted);
+    Map<Integer, List<OrderItem>> discountedOrdersMap = convertBack(extractedOrdersDiscounted);
+
+    return discountedOrdersMap.getOrDefault(orderId, new ArrayList<>());
   }
 
   private Map<Integer, List<OrderItem>> convertBack(
-      List<SimpleImmutableEntry<Integer, MenuItem>> extractedOrdersDiscounted) {
-    return extractedOrdersDiscounted.stream().collect(
-            Collectors.groupingBy(Entry::getKey, Collectors.mapping(Entry::getValue, toList())))
-        .entrySet().stream().collect(Collectors.toMap(Entry::getKey, menuItemEntry -> {
-          List<MenuItem> menuItems = menuItemEntry.getValue();
+      List<SimpleImmutableEntry<Integer, MenuItem>> extOrdsDisc) {
+    return extOrdsDisc.stream().collect(Collectors.groupingBy(Entry::getKey,
+                Collectors.mapping(Entry::getValue, toList()))).entrySet().stream()
+        .collect(Collectors.toMap(Entry::getKey, menuItemEntry -> {
 
+          List<MenuItem> menuItems = menuItemEntry.getValue();
           return convertMenuItemsToOrderItems(menuItems);
         }));
   }
@@ -232,7 +237,7 @@ public class OrderServiceImpl implements OrderService {
 
   private String printOrder(OrderItem orderItem, int maxQuantityLength, int maxSumPriceStrLength) {
     MenuItem menuItem = orderItem.getMenuItem();
-    float sumPrice = orderItem.getQuantity() * menuItem.getPrice();
+    BigDecimal sumPrice = menuItem.getPrice().multiply(new BigDecimal(String.valueOf(orderItem.getQuantity())));
 
     int shiftQuantity = maxQuantityLength - String.valueOf(orderItem.getQuantity()).length();
     int shiftSumPrice = maxSumPriceStrLength - String.format("%.02f", sumPrice).length();
@@ -251,15 +256,16 @@ public class OrderServiceImpl implements OrderService {
   }
 
   private int maxSumPriceStrLength(List<OrderItem> orders) {
+
     return orders.stream()
-        .map(orderItem -> orderItem.getQuantity() * orderItem.getMenuItem().getPrice())
+        .map(orderItem -> orderItem.getMenuItem().getPrice().multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
         .map(sumPrice -> String.format("%.02f", sumPrice)).map(String::length)
         .max(Integer::compareTo).orElse(0);
   }
 
   private int maxQuantityAndSumPriceStrLength(List<OrderItem> orders) {
     return orders.stream().map(orderItem -> {
-          float sumPrice = orderItem.getQuantity() * orderItem.getMenuItem().getPrice();
+          BigDecimal sumPrice = orderItem.getMenuItem().getPrice().multiply(new BigDecimal(String.valueOf(orderItem.getQuantity())));
           return String.format("%.02f", sumPrice).length() + String.valueOf(orderItem.getQuantity())
               .length();
         })

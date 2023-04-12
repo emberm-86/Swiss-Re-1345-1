@@ -4,6 +4,7 @@ import static org.swissre.assessment.domain.Type.BEVERAGE;
 import static org.swissre.assessment.domain.Type.EXTRA;
 import static org.swissre.assessment.domain.Type.SNACK;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,20 +18,20 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(makeFinal = true)
 public enum MenuItem {
 
-  SMALL_COFFEE("sc", "Small coffee", BEVERAGE, 2.5f),
-  MEDIUM_COFFEE("mc", "Medium coffee", BEVERAGE, 3.0f),
-  LARGE_COFFEE("lc", "Large coffee", BEVERAGE, 3.5f),
-  BACON_ROLL("br", "Bacon roll", SNACK, 4.5f),
-  ORANGE_JUICE("oj", "Orange Juice", BEVERAGE, 3.95f),
+  SMALL_COFFEE("sc", "Small coffee", BEVERAGE, new BigDecimal("2.50")),
+  MEDIUM_COFFEE("mc", "Medium coffee", BEVERAGE, new BigDecimal("3.00")),
+  LARGE_COFFEE("lc", "Large coffee", BEVERAGE, new BigDecimal("3.50")),
+  BACON_ROLL("br", "Bacon roll", SNACK, new BigDecimal("4.50")),
+  ORANGE_JUICE("oj", "Orange Juice", BEVERAGE, new BigDecimal("3.95")),
 
-  EXTRA_MILK("xem", "Extra Milk", EXTRA, 0.3f),
-  FOAMED_MILK("xfm", "Foamed Milk", EXTRA, 0.5f),
-  ROASTED_COFFEE("rcf", "Roasted Coffee", EXTRA, 0.9f);
+  EXTRA_MILK("xem", "Extra Milk", EXTRA, new BigDecimal("0.3")),
+  FOAMED_MILK("xfm", "Foamed Milk", EXTRA, new BigDecimal("0.5")),
+  ROASTED_COFFEE("rcf", "Roasted Coffee", EXTRA, new BigDecimal("0.5"));
 
   String code;
   String name;
   Type type;
-  float price;
+  BigDecimal price;
 
   @Override
   public String toString() {
