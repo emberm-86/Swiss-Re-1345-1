@@ -15,6 +15,8 @@ b, from Intellij right click on Application class, Run java -jar target/SwissRe-
 2. List previous orders
 3. Quit (Q)
 
+You create orders with the first option and can track your orders and 5th beverage discounts with the second option fom the main menu
+
 ## II. Create Order
 Small coffee    (sc)    2,50  CHF
 
@@ -69,7 +71,7 @@ Please type the quantity:
 
 You can continue or submit or cancel your order here.
 
-## III. You can track your orders and 5th beverage discounts with the second option fom the main menu.
+## III. List orders.
 
 1. Create new order
 2. List previous orders
