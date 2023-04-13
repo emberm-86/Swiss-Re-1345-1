@@ -36,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
       return;
     }
 
-    orderStorageProvider.addNewOrder(orderSelectionCurrent);
+    orderStorageProvider.addNewOrder(new ArrayList<>(orderSelectionCurrent));
 
     System.out.println("You can check your bill here.");
     printSingleOrder(orderStorageProvider.getLastOrderIndex(), orderSelectionCurrent,
