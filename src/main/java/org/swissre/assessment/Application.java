@@ -1,7 +1,7 @@
 package org.swissre.assessment;
 
 import static org.swissre.assessment.domain.MenuItem.checkIfExtraByCode;
-import static org.swissre.assessment.service.Util.isNumeric;
+import static org.swissre.assessment.service.Util.isValidNum;
 import static org.swissre.assessment.service.Util.printCreateOrderMenu;
 import static org.swissre.assessment.service.Util.printMainMenu;
 
@@ -167,8 +167,8 @@ public class Application {
                 "Please choose a coffee with valid extra code: " + checkSelectableExtras()
                     + " or say no(n)!");
           } else {
-            if (!isNumeric(menuCode)) {
-              System.out.println("Please give a number as an input!");
+            if (!isValidNum(menuCode)) {
+              System.out.println("Please give a valid number: > 0 as an input!");
             } else {
               orderService.addNewOrder(menuItemSelected, menuCode);
 

@@ -34,15 +34,14 @@ public class Util {
         "Please choose an other product with the code(second column) or submit your order(x), cancel(c): ");
   }
 
-  public static boolean isNumeric(String strNum) {
+  public static boolean isValidNum(String strNum) {
     if (strNum == null) {
       return false;
     }
     try {
-      Integer.parseInt(strNum);
+      return Integer.parseInt(strNum) > 0;
     } catch (NumberFormatException nfe) {
       return false;
     }
-    return true;
   }
 }
