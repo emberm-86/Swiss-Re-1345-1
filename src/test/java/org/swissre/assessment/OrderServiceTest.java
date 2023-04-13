@@ -51,18 +51,18 @@ public class OrderServiceTest {
   @ParameterizedTest
   @MethodSource("createMultipleOrders")
   public void test5thBeverageInSameOrderMultipleOrders(Map<Integer, List<OrderItem>> orders) {
-    List<OrderItem> order1 = orderService.getDisOrdItems5thBev(0, orders);
-    List<OrderItem> order2 = orderService.getDisOrdItems5thBev(1, orders);
-    List<OrderItem> order3 = orderService.getDisOrdItems5thBev(2, orders);
+    List<OrderItem> discOrders1 = orderService.getDisOrdItems5thBev(0, orders);
+    List<OrderItem> discOrders2 = orderService.getDisOrdItems5thBev(1, orders);
+    List<OrderItem> discOrders3 = orderService.getDisOrdItems5thBev(2, orders);
 
-    assertEquals(1, order1.size());
-    assertEquals(1, order2.size());
-    assertEquals(2, order3.size());
+    assertEquals(1, discOrders1.size());
+    assertEquals(1, discOrders2.size());
+    assertEquals(2, discOrders3.size());
 
-    assertEquals(order1.get(0), new OrderItem(MenuItem.MEDIUM_COFFEE, 1));
-    assertEquals(order2.get(0), new OrderItem(MenuItem.ORANGE_JUICE, 1));
-    assertEquals(order3.get(0), new OrderItem(MenuItem.LARGE_COFFEE, 1));
-    assertEquals(order3.get(1), new OrderItem(MenuItem.MEDIUM_COFFEE, 1));
+    assertEquals(discOrders1.get(0), new OrderItem(MenuItem.MEDIUM_COFFEE, 1));
+    assertEquals(discOrders2.get(0), new OrderItem(MenuItem.ORANGE_JUICE, 1));
+    assertEquals(discOrders3.get(0), new OrderItem(MenuItem.LARGE_COFFEE, 1));
+    assertEquals(discOrders3.get(1), new OrderItem(MenuItem.MEDIUM_COFFEE, 1));
 
     for (int i = 0; i < orders.size(); i++) {
       List<OrderItem> disOrdItems5thBev = orderService.getDisOrdItems5thBev(i, orders);
@@ -85,14 +85,32 @@ public class OrderServiceTest {
 
     assertEquals(1, discountedBeverage1Snack1.size());
     assertEquals(discountedBeverage1Snack1.get(0), new OrderItem(MenuItem.EXTRA_MILK, 2));
+
+    List<OrderItem> order1 = orders.get(0);
+    BigDecimal origSumPrice = billingService.calcSum(order1);
+    BigDecimal discSumPrice = billingService.calcSumWithDisc(order1,
+        discountedBeverage1Snack1);
+
+    BigDecimal expectedDiff = discountedBeverage1Snack1.stream()
+        .map(orderItem -> orderItem.getMenuItem().getPrice()
+            .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
+        .reduce(new BigDecimal("0.00"), BigDecimal::add);
+
+    assertEquals(expectedDiff, origSumPrice.subtract(discSumPrice));
   }
 
   @ParameterizedTest
   @MethodSource("createOrdersNoDiscount")
   public void test5thBeverageInSameOrderNoDiscount(Map<Integer, List<OrderItem>> orders) {
-    List<OrderItem> discountedOrders5thBeverage = orderService.getDisOrdItems5thBev(0, orders);
+    List<OrderItem> discOrders5thBeverage = orderService.getDisOrdItems5thBev(0, orders);
 
-    assertTrue(discountedOrders5thBeverage.isEmpty());
+    assertTrue(discOrders5thBeverage.isEmpty());
+
+    List<OrderItem> order1 = orders.get(0);
+    BigDecimal origSumPrice = billingService.calcSum(order1);
+    BigDecimal discSumPrice = billingService.calcSumWithDisc(order1, discOrders5thBeverage);
+
+    assertEquals(origSumPrice, discSumPrice);
   }
 
   @ParameterizedTest
@@ -101,6 +119,12 @@ public class OrderServiceTest {
     List<OrderItem> discountedBeverage1Snack1 = orderService.getDiscountsBeverage1Snack1(0, orders);
 
     assertTrue(discountedBeverage1Snack1.isEmpty());
+
+    List<OrderItem> order1 = orders.get(0);
+    BigDecimal origSumPrice = billingService.calcSum(order1);
+    BigDecimal discSumPrice = billingService.calcSumWithDisc(order1, discountedBeverage1Snack1);
+
+    assertEquals(origSumPrice, discSumPrice);
   }
 
   private static Stream<Arguments> createOneComplexOrder() {
