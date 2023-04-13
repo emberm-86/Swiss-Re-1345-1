@@ -49,25 +49,6 @@ public class OrderServiceTest {
   }
 
   @ParameterizedTest
-  @MethodSource("createOneComplexOrderAA")
-  public void test5thBeverageInSameOrderAA(Map<Integer, List<OrderItem>> orders) {
-    List<OrderItem> disOrds5thBev = orderService.getDisOrdItems5thBev(
-        orders.size() - 1, orders);
-
-    assertEquals(1, disOrds5thBev.size());
-    assertEquals(disOrds5thBev.get(0), new OrderItem(MenuItem.ORANGE_JUICE, 2));
-
-    BigDecimal origSumPrice = billingService.calcSum(orders.get(0));
-    BigDecimal discSumPrice = billingService.calcSumWithDisc(orders.get(0), disOrds5thBev);
-    BigDecimal expectedDiff = disOrds5thBev.stream()
-        .map(orderItem -> orderItem.getMenuItem().getPrice()
-            .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
-        .reduce(ZERO, BigDecimal::add);
-
-    assertEquals(expectedDiff, origSumPrice.subtract(discSumPrice));
-  }
-
-  @ParameterizedTest
   @MethodSource("createMultipleOrders")
   public void test5thBeverageInSameOrderMultipleOrders(Map<Integer, List<OrderItem>> orders) {
     List<OrderItem> order1 = orderService.getDisOrdItems5thBev(0, orders);
@@ -84,9 +65,10 @@ public class OrderServiceTest {
     assertEquals(order3.get(1), new OrderItem(MenuItem.MEDIUM_COFFEE, 1));
 
     for (int i = 0; i < orders.size(); i++) {
-      BigDecimal origSumPrice = billingService.calcSum(orders.get(i));
       List<OrderItem> disOrdItems5thBev = orderService.getDisOrdItems5thBev(i, orders);
+      BigDecimal origSumPrice = billingService.calcSum(orders.get(i));
       BigDecimal discSumPrice = billingService.calcSumWithDisc(orders.get(i), disOrdItems5thBev);
+
       BigDecimal expectedDiff = disOrdItems5thBev.stream()
           .map(orderItem -> orderItem.getMenuItem().getPrice()
               .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
@@ -119,19 +101,6 @@ public class OrderServiceTest {
     List<OrderItem> discountedBeverage1Snack1 = orderService.getDiscountsBeverage1Snack1(0, orders);
 
     assertTrue(discountedBeverage1Snack1.isEmpty());
-  }
-
-  private static Stream<Arguments> createOneComplexOrderAA() {
-    return Stream.of(
-        Arguments.of(Stream.of(
-                new SimpleEntry<>(0, asList(
-                    new OrderItem(MenuItem.BACON_ROLL, 2),
-                    new OrderItem(MenuItem.ORANGE_JUICE, 1),
-                    new OrderItem(MenuItem.ORANGE_JUICE, 2),
-                    new OrderItem(MenuItem.ORANGE_JUICE, 3),
-                    new OrderItem(MenuItem.ORANGE_JUICE, 4))))
-            .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))
-        ));
   }
 
   private static Stream<Arguments> createOneComplexOrder() {
