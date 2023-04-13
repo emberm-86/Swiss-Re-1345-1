@@ -4,9 +4,9 @@ Coffee Corner shop
 ## Prerequisites:
 Java 8 or upper, Maven, IntelliJ or other ide
 
-2. Run the application
-a, mvn clean install and run from project dir
-b, from Intellij right click on Application class, Run java -jar target/SwissRe-1354-1.jar from project dir
+Run the application
+a, mvn clean install and run java -jar target/SwissRe-1354-1.jar from project dir
+b, from Intellij right click on Application class and click on Run
 
 3. Maunal: it is a console application with menu navigation
 
