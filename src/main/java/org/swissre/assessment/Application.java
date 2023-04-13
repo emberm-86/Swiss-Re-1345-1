@@ -53,9 +53,15 @@ public class Application {
             break;
 
           case CREATE_ORDER:
-            orderService.closeOrder();
-            MENU_SELECTED = MenuState.MAIN_MENU;
-            printMainMenu();
+            if (menuItemSelected != null && menuItemSelected.isCoffee() && !extraAlreadyChosen) {
+              System.out.println(
+                  "You can choose an extra with codes to your coffee product: " + checkSelectableExtras()
+                      + " or say no(n)!");
+            } else {
+              orderService.closeOrder();
+              MENU_SELECTED = MenuState.MAIN_MENU;
+              printMainMenu();
+            }
             break;
         }
         continue;
@@ -112,7 +118,7 @@ public class Application {
 
       if (checkIfExtraByCode(menuCode)) {
         throw new IllegalArgumentException(
-            "Please choose a coffee product before selecting extra: sc,mc,lc!");
+            "Please choose a coffee product before selecting extra: sc, mc, lc!");
       }
 
       menuItemSelected = MenuItem.getMenuItemByCode(menuCode);
@@ -134,9 +140,15 @@ public class Application {
             if (extraAlreadyChosen) {
               System.out.println("Please type the quantity: ");
             } else {
-              System.out.println(
-                  "You can choose an other coffee extra with valid code: " + checkSelectableExtras()
-                      + " or say no(n)!");
+              String selectableExtras = checkSelectableExtras();
+              if (!selectableExtras.isEmpty()) {
+                System.out.println(
+                    "You can choose an other coffee extra with valid code: " + selectableExtras
+                        + " or say no(n)!");
+              } else {
+                System.out.println(
+                    "No selectable extras left, please press no(n)");
+              }
             }
           } else {
             String selectableExtras = checkSelectableExtras();
@@ -145,7 +157,7 @@ public class Application {
                   "This has already been chosen: " + extra.getCode() + ". Choose an other one " +
                       selectableExtras + " or say no(n)!");
             } else {
-              System.out.println("You have selected all the extras for this menuitem");
+              System.out.println("No selectable extras left, please press no(n)");
             }
           }
         } else {
