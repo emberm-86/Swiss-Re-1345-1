@@ -1,7 +1,7 @@
 # Swiss-Re-1345-1
 Coffee Corner shop
 
-1. Prerequisites:
+## Prerequisites:
 Java 8 or upper, Maven, IntelliJ or other ide
 
 2. Run the application
@@ -10,14 +10,12 @@ b, from Intellij right click on Application class, Run java -jar target/SwissRe-
 
 3. Maunal: it is a console application with menu navigation
 
-I. Main Menu:
-
+## I. Main Menu:
 1. Create new order
 2. List previous orders
 3. Quit (Q)
 
-II. Create Order
-
+## II. Create Order
 Small coffee    (sc)    2,50  CHF
 Medium coffee   (mc)    3,00  CHF
 Large coffee    (lc)    3,50  CHF
@@ -29,13 +27,13 @@ Roasted Coffee  (rcf)   0,50  CHF
 
 Please choose an other product with the code(second column) or submit your order(x), cancel(c): 
 
-II/a non-coffee product: type the code and the quantity
+## II/a non-coffee product: type the code and the quantity
 Please choose another product with the code(second column) or submit your order(x), cancel(c): 
 br
 Please type the quantity: 
 2
 
-II/b coffee product: type the code the type of extra and the quantity
+## II/b coffee product: type the code the type of extra and the quantity
 You can ignore the further extra selection with 'n' 
 
 Please choose another product with the code(second column) or submit your order(x), cancel(c): 
@@ -47,11 +45,10 @@ n
 Please type the quantity: 
 3
 
-II/c Please choose another product with the code(second column) or submit your order(x), cancel(c): 
+## II/c Please choose another product with the code(second column) or submit your order(x), cancel(c): 
 You can continue or submit or cancel your order here.
 
-III. You can track your orders and 5th beverage discounts with the second option fom the main menu.
-
+## III. You can track your orders and 5th beverage discounts with the second option fom the main menu.
 1. Create new order
 2. List previous orders
 3. Quit (Q)
