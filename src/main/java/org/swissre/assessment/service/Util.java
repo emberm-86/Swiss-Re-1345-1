@@ -17,6 +17,8 @@ public class Util {
 
   public static void printMainMenu() {
     System.out.println("========================");
+    System.out.println("Coffee Corner");
+    System.out.println("========================");
     System.out.println("1. Create new order");
     System.out.println("2. List previous orders");
     System.out.println("3. Quit (Q)");
