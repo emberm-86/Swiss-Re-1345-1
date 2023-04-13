@@ -36,27 +36,39 @@ Roasted Coffee  (rcf)   0,50  CHF
 Please choose an other product with the code(second column) or submit your order(x), cancel(c): 
 
 ## II/a non-coffee product: type the code and the quantity
-Please choose another product with the code(second column) or submit your order(x), cancel(c): 
+Please choose another product with the code(second column) or submit your order(x), cancel(c):
+
 br
-Please type the quantity: 
+
+Please type the quantity:
+
 2
 
 ## II/b coffee product: type the code the type of extra and the quantity
 You can ignore the further extra selection with 'n' 
 
-Please choose another product with the code(second column) or submit your order(x), cancel(c): 
+Please choose another product with the code(second column) or submit your order(x), cancel(c):
+
 sc
+
 You can choose an extra with codes to your coffee product: xem, xfm, rcf or say no(n)
+
 xem
+
 You can choose another coffee extra with valid code: xfm, rcf or say no(n)!
+
 n
+
 Please type the quantity: 
+
 3
 
 ## II/c Please choose another product with the code(second column) or submit your order(x), cancel(c): 
+
 You can continue or submit or cancel your order here.
 
 ## III. You can track your orders and 5th beverage discounts with the second option fom the main menu.
+
 1. Create new order
 2. List previous orders
 3. Quit (Q)
