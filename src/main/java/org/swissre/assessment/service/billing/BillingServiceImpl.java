@@ -1,12 +1,18 @@
 package org.swissre.assessment.service.billing;
 
+import static java.util.stream.Collectors.summarizingInt;
+import static java.util.stream.Collectors.summingInt;
+import static java.util.stream.Collectors.toList;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.OrderItem;
 
 public class BillingServiceImpl implements BillingService {
@@ -41,12 +47,13 @@ public class BillingServiceImpl implements BillingService {
   }
 
   private List<OrderItem> normalizedOrder(List<OrderItem> orders) {
-    return new ArrayList<>(
-        orders.stream().collect(Collectors.toMap(OrderItem::getMenuItem, Function.identity(),
-                (o1, o2) -> {
-                  o1.setQuantity(o1.getQuantity() + o2.getQuantity());
-                  return o1;
-                }, LinkedHashMap::new))
-            .values());
+    Map<String, Integer> menuItems = orders.stream()
+        .collect(Collectors.groupingBy(orderItem -> orderItem.getMenuItem().getCode(),
+            LinkedHashMap::new, summingInt(OrderItem::getQuantity)));
+
+    return menuItems.entrySet().stream()
+        .map(menuItemOcc -> new OrderItem(MenuItem.getMenuItemByCode(menuItemOcc.getKey()),
+            menuItemOcc.getValue()))
+        .collect(toList());
   }
 }
