@@ -17,13 +17,21 @@ b, from Intellij right click on Application class, Run java -jar target/SwissRe-
 
 ## II. Create Order
 Small coffee    (sc)    2,50  CHF
+
 Medium coffee   (mc)    3,00  CHF
+
 Large coffee    (lc)    3,50  CHF
+
 Bacon roll      (br)    4,50  CHF
+
 Orange Juice    (oj)    3,95  CHF
+
 Extra Milk      (xem)   0,30  CHF
+
 Foamed Milk     (xfm)   0,50  CHF
+
 Roasted Coffee  (rcf)   0,50  CHF
+
 
 Please choose an other product with the code(second column) or submit your order(x), cancel(c): 
 
