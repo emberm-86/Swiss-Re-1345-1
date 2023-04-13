@@ -44,8 +44,7 @@ Please type the quantity:
 
 2
 
-## II/b coffee product: type the code the type of extra and the quantity
-You can ignore the further extra selection with 'n' 
+## II/b coffee product: type the code the type of extra and the quantity, you can ignore the further extra selection with 'n' 
 
 Please choose another product with the code(second column) or submit your order(x), cancel(c):
 
@@ -79,11 +78,16 @@ Please choose with a number:
 Order: 0
 
 Bacon roll      (br)    4,50 X 2  9,00 CHF
+
 Small coffee    (sc)    2,50 X 3  7,50 CHF
+
 Extra Milk      (xem)   0,30 X 3  0,90 CHF
 
+
 Total:                           17,40 CHF 
+
 beverage1snack1                  -0,30 CHF
+
 beverage1snack1                  -0,30 CHF
 
 Total with discount:             16,80 CHF 
@@ -93,6 +97,7 @@ Order: 1
 Orange Juice    (oj)    3,95 X 3  11,85 CHF
 
 Total:                            11,85 CHF 
+
 beverage5th                       -3,95 CHF
 
 Total with discount:               7,90 CHF 
