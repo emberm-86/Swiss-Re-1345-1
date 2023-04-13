@@ -35,7 +35,7 @@ Roasted Coffee  (rcf)   0,50  CHF
 
 Please choose an other product with the code(second column) or submit your order(x), cancel(c): 
 
-## II/a non-coffee product: type the code and the quantity
+### II/a non-coffee product: type the code and the quantity
 Please choose another product with the code(second column) or submit your order(x), cancel(c):
 
 br
@@ -44,7 +44,7 @@ Please type the quantity:
 
 2
 
-## II/b coffee product: type the code the type of extra and the quantity, you can ignore the further extra selection with 'n' 
+### II/b coffee product: type the code the type of extra and the quantity, you can ignore the further extra selection with 'n' 
 
 Please choose another product with the code(second column) or submit your order(x), cancel(c):
 
@@ -62,7 +62,7 @@ Please type the quantity:
 
 3
 
-## II/c Please choose another product with the code(second column) or submit your order(x), cancel(c): 
+### II/c Please choose another product with the code(second column) or submit your order(x), cancel(c): 
 
 You can continue or submit or cancel your order here.
 
