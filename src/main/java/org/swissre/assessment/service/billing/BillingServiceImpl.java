@@ -16,7 +16,7 @@ public class BillingServiceImpl implements BillingService {
     return order.stream().map(orderItem ->
       orderItem.getMenuItem().getPrice().multiply(
         new BigDecimal(String.valueOf(orderItem.getQuantity()))))
-        .reduce(BigDecimal.ZERO, BigDecimal::add);
+        .reduce(new BigDecimal("0.00"), BigDecimal::add);
   }
   @Override
   public BigDecimal calcSumWithDisc(List<OrderItem> order,
@@ -30,7 +30,7 @@ public class BillingServiceImpl implements BillingService {
               item -> basePrice.subtract(item.getMenuItem().getPrice().multiply(
                   new BigDecimal(String.valueOf(item.getQuantity())))))
           .orElse(basePrice);
-    }).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }).reduce(new BigDecimal("0.00"), BigDecimal::add);
   }
 
   private Optional<OrderItem> findInDiscountedList(List<OrderItem> discountedOrderItems,

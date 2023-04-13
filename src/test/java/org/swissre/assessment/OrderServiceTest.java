@@ -83,27 +83,17 @@ public class OrderServiceTest {
     assertEquals(order3.get(0), new OrderItem(MenuItem.LARGE_COFFEE, 1));
     assertEquals(order3.get(1), new OrderItem(MenuItem.MEDIUM_COFFEE, 1));
 
-    BigDecimal origSumPrice = billingService.calcSum(orders.get(0));
-    BigDecimal discSumPrice = billingService.calcSumWithDisc(orders.get(0), order1);
-    BigDecimal expectedDiff = order1.stream().map(orderItem -> orderItem.getMenuItem().getPrice()
-            .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
-        .reduce(ZERO, BigDecimal::add);
+    for (int i = 0; i < orders.size(); i++) {
+      BigDecimal origSumPrice = billingService.calcSum(orders.get(i));
+      List<OrderItem> disOrdItems5thBev = orderService.getDisOrdItems5thBev(i, orders);
+      BigDecimal discSumPrice = billingService.calcSumWithDisc(orders.get(i), disOrdItems5thBev);
+      BigDecimal expectedDiff = disOrdItems5thBev.stream()
+          .map(orderItem -> orderItem.getMenuItem().getPrice()
+              .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
+          .reduce(new BigDecimal("0.00"), BigDecimal::add);
 
-    assertEquals(expectedDiff, origSumPrice.subtract(discSumPrice));
-
-    origSumPrice = billingService.calcSum(orders.get(1));
-    discSumPrice = billingService.calcSumWithDisc(orders.get(1), order2);
-    expectedDiff = order2.stream().map(orderItem -> orderItem.getMenuItem().getPrice()
-            .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
-        .reduce(ZERO, BigDecimal::add);
-    assertEquals(expectedDiff, origSumPrice.subtract(discSumPrice));
-
-    origSumPrice = billingService.calcSum(orders.get(2));
-    discSumPrice = billingService.calcSumWithDisc(orders.get(2), order3);
-    expectedDiff = order3.stream().map(orderItem -> orderItem.getMenuItem().getPrice()
-            .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
-        .reduce(ZERO, BigDecimal::add);
-    assertEquals(expectedDiff, origSumPrice.subtract(discSumPrice));
+      assertEquals(expectedDiff, origSumPrice.subtract(discSumPrice));
+    }
   }
 
   @ParameterizedTest
