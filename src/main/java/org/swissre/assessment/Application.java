@@ -113,7 +113,7 @@ public class Application {
 
       if (Arrays.stream(MenuItem.codes())
           .noneMatch(menuItemCode -> menuItemCode.equals(menuCode))) {
-        throw new IllegalArgumentException("You choose invalid product code, please retry it.");
+        throw new IllegalArgumentException("You chose an invalid product code, please retry it!");
       }
 
       if (checkIfExtraByCode(menuCode)) {
