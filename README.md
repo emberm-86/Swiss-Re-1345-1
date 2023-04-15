@@ -5,8 +5,8 @@ Coffee Corner shop
 Java 8 or upper, Maven, IntelliJ or other ide
 
 Run the application
-a, cd PROJECT_DIR, mvn clean install and run java -jar target/SwissRe-1354-1.jar
-b, from Intellij right click on Application class and click on Run
+a. cd PROJECT_DIR, mvn clean install and run java -jar target/SwissRe-1354-1.jar
+b. from Intellij right click on Application class and click on Run
 
 ## Maunal: it is a console application with menu navigation
 
@@ -45,7 +45,7 @@ Please type the quantity:
 2
 ```
 
-#### II/b coffee product: type the code the type of extra and the quantity, you can ignore the further extra selection with 'n' 
+#### II/b coffee product: type the code, then the type of extra and the quantity, you can ignore the further extra selection with 'n' 
 ``` bash
 Please choose another product with the code(second column) or submit your order(x), cancel(c):
 sc
@@ -58,9 +58,7 @@ Please type the quantity:
 ```
 
 #### II/c Please choose another product with the code(second column) or submit your order(x), cancel(c): 
-``` bash
 You can continue or submit or cancel your order here.
-```
 
 ### III. List orders.
 ``` bash
