@@ -20,7 +20,7 @@ Coffee Corner
 3. Quit (Q)
 ========================
 ```
-You create orders with the first option and can track your orders and 5th beverage discounts with the second option fom the main menu
+You can create orders with the first option and track them and 5th beverage discounts with the second option from the main menu
 
 ### II. Create Order
 ``` bash
