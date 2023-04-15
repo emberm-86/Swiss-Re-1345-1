@@ -33,6 +33,7 @@ public class OrderServiceImpl implements OrderService {
   @Override
   public void closeOrder() {
     if (orderSelectionCurrent.isEmpty()) {
+      System.out.println("You have ordered nothing.");
       return;
     }
 
@@ -256,7 +257,6 @@ public class OrderServiceImpl implements OrderService {
   }
 
   private int maxSumPriceStrLength(List<OrderItem> orders) {
-
     return orders.stream()
         .map(orderItem -> orderItem.getMenuItem().getPrice().multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
         .map(sumPrice -> String.format("%.02f", sumPrice)).map(String::length)
