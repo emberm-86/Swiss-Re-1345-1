@@ -34,7 +34,7 @@ Extra Milk      (xem)   0,30  CHF
 Foamed Milk     (xfm)   0,50  CHF
 Roasted Coffee  (rcf)   0,50  CHF
 ========================
-Please choose an other product with the code(second column) or submit your order(x), cancel(c): 
+Please choose another product with the code(second column) or submit your order(x), cancel(c): 
 ```
 
 #### II/a non-coffee product: type the code and the quantity
@@ -94,6 +94,6 @@ beverage5th                       -3,95 CHF
 Total with discount:               7,90 CHF 
 ========================
 
-Press X to return to the Main Menu
+Press X to return to the Main Menu!
 ```
 That's it :)
