@@ -72,7 +72,7 @@ public class OrderServiceTest {
       BigDecimal expectedDiff = disOrdItems5thBev.stream()
           .map(orderItem -> orderItem.getMenuItem().getPrice()
               .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
-          .reduce(new BigDecimal("0.00"), BigDecimal::add);
+          .reduce(ZERO, BigDecimal::add);
 
       assertEquals(expectedDiff, origSumPrice.subtract(discSumPrice));
     }
@@ -94,7 +94,7 @@ public class OrderServiceTest {
     BigDecimal expectedDiff = discountedBeverage1Snack1.stream()
         .map(orderItem -> orderItem.getMenuItem().getPrice()
             .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
-        .reduce(new BigDecimal("0.00"), BigDecimal::add);
+        .reduce(ZERO, BigDecimal::add);
 
     assertEquals(expectedDiff, origSumPrice.subtract(discSumPrice));
   }

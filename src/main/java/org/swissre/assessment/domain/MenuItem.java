@@ -24,9 +24,9 @@ public enum MenuItem {
   BACON_ROLL("br", "Bacon roll", SNACK, new BigDecimal("4.50")),
   ORANGE_JUICE("oj", "Orange Juice", BEVERAGE, new BigDecimal("3.95")),
 
-  EXTRA_MILK("xem", "Extra Milk", EXTRA, new BigDecimal("0.3")),
-  FOAMED_MILK("xfm", "Foamed Milk", EXTRA, new BigDecimal("0.5")),
-  ROASTED_COFFEE("rcf", "Roasted Coffee", EXTRA, new BigDecimal("0.5"));
+  EXTRA_MILK("xem", "Extra Milk", EXTRA, new BigDecimal("0.30")),
+  FOAMED_MILK("xfm", "Foamed Milk", EXTRA, new BigDecimal("0.50")),
+  ROASTED_COFFEE("rcf", "Roasted Coffee", EXTRA, new BigDecimal("0.90"));
 
   String code;
   String name;
