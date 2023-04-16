@@ -147,7 +147,8 @@ public class Application {
                         + " or say no(n)!");
               } else {
                 System.out.println(
-                    "No selectable extras left, please press no(n)!");
+                    "No selectable extras left, please type the quantity:");
+                extraAlreadyChosen = true;
               }
             }
           } else {
@@ -157,7 +158,8 @@ public class Application {
                   "This has already been chosen: " + extra.getCode() + ". Choose an other one " +
                       selectableExtras + " or say no(n)!");
             } else {
-              System.out.println("No selectable extras left, please press no(n)!");
+              System.out.println("No selectable extras left, please type the quantity:");
+              extraAlreadyChosen = true;
             }
           }
         } else {
