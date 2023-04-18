@@ -17,19 +17,22 @@ public class BillingServiceImpl implements BillingService {
 
   @Override
   public BigDecimal calcSum(List<OrderItem> order) {
-    return order.stream().map(orderItem ->
-      orderItem.getMenuItem().getPrice().multiply(
-        new BigDecimal(String.valueOf(orderItem.getQuantity()))))
-        .reduce(ZERO, BigDecimal::add);
+
+    return order.stream().map(orderItem -> orderItem.getMenuItem().getPrice().multiply(
+        new BigDecimal(String.valueOf(orderItem.getQuantity())))).reduce(ZERO, BigDecimal::add);
   }
+
   @Override
   public BigDecimal calcSumWithDisc(List<OrderItem> order,
       List<OrderItem> discountedOrderItems) {
+
     return normalizedOrder(order).stream().map(orderItem -> {
+
       BigDecimal basePrice = orderItem.getMenuItem().getPrice().multiply(
           new BigDecimal(String.valueOf(orderItem.getQuantity())));
 
       Optional<OrderItem> discounted = findInDiscountedList(discountedOrderItems, orderItem);
+
       return discounted.map(
               item -> basePrice.subtract(item.getMenuItem().getPrice().multiply(
                   new BigDecimal(String.valueOf(item.getQuantity())))))
@@ -39,6 +42,7 @@ public class BillingServiceImpl implements BillingService {
 
   private Optional<OrderItem> findInDiscountedList(List<OrderItem> discountedOrderItems,
       OrderItem orderItem) {
+
     return discountedOrderItems.stream().
         filter(discountedOrderItem -> discountedOrderItem.getMenuItem().getCode()
             .equals(orderItem.getMenuItem().getCode())).findFirst();
