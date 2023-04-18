@@ -1,13 +1,13 @@
-package org.swissre.assessment.service;
+package org.swissre.assessment.service.menu;
 
 import java.util.Arrays;
 import java.util.List;
 import org.swissre.assessment.domain.MenuItem;
 
-public class Util {
+public class MenuUtil {
 
   public static void prettyPrintMenu(List<MenuItem> menuItems) {
-    menuItems.stream().map(Util::printMenu).forEach(System.out::println);
+    menuItems.stream().map(MenuUtil::printMenu).forEach(System.out::println);
   }
 
   public static String printMenu(MenuItem menuItem) {

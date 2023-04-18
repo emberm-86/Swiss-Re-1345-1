@@ -1,9 +1,9 @@
 package org.swissre.assessment;
 
 import static org.swissre.assessment.domain.MenuItem.checkIfExtraByCode;
-import static org.swissre.assessment.service.Util.isValidNum;
-import static org.swissre.assessment.service.Util.printCreateOrderMenu;
-import static org.swissre.assessment.service.Util.printMainMenu;
+import static org.swissre.assessment.service.menu.MenuUtil.isValidNum;
+import static org.swissre.assessment.service.menu.MenuUtil.printCreateOrderMenu;
+import static org.swissre.assessment.service.menu.MenuUtil.printMainMenu;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,7 +20,6 @@ public class Application {
   private static MenuState MENU_SELECTED = MenuState.MAIN_MENU;
   private static MenuItem menuItemSelected;
   private static final List<MenuItem> selectedExtras = new ArrayList<>();
-
   private static boolean extraAlreadyChosen;
 
   private static OrderService orderService;
