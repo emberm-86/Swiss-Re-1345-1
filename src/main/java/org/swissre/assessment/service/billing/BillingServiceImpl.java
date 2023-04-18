@@ -1,16 +1,14 @@
 package org.swissre.assessment.service.billing;
 
-import static java.util.stream.Collectors.summarizingInt;
+import static java.math.BigDecimal.ZERO;
 import static java.util.stream.Collectors.summingInt;
 import static java.util.stream.Collectors.toList;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.OrderItem;
@@ -22,7 +20,7 @@ public class BillingServiceImpl implements BillingService {
     return order.stream().map(orderItem ->
       orderItem.getMenuItem().getPrice().multiply(
         new BigDecimal(String.valueOf(orderItem.getQuantity()))))
-        .reduce(new BigDecimal("0.00"), BigDecimal::add);
+        .reduce(ZERO, BigDecimal::add);
   }
   @Override
   public BigDecimal calcSumWithDisc(List<OrderItem> order,
@@ -36,7 +34,7 @@ public class BillingServiceImpl implements BillingService {
               item -> basePrice.subtract(item.getMenuItem().getPrice().multiply(
                   new BigDecimal(String.valueOf(item.getQuantity())))))
           .orElse(basePrice);
-    }).reduce(new BigDecimal("0.00"), BigDecimal::add);
+    }).reduce(ZERO, BigDecimal::add);
   }
 
   private Optional<OrderItem> findInDiscountedList(List<OrderItem> discountedOrderItems,

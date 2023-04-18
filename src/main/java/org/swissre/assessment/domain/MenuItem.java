@@ -33,11 +33,6 @@ public enum MenuItem {
   Type type;
   BigDecimal price;
 
-  @Override
-  public String toString() {
-    return name + "(" + code + ")" + String.format("%.02f", price);
-  }
-
   public static String[] codes() {
     return Arrays.stream(values()).map(MenuItem::getCode).toArray(String[]::new);
   }
@@ -47,17 +42,17 @@ public enum MenuItem {
         .findFirst().orElse(null);
   }
 
-  public static Boolean checkIfExtraByCode(String code) {
+  public static boolean checkIfExtraByCode(String code) {
     return Arrays.stream(values()).anyMatch(menuItem -> menuItem.getCode().equalsIgnoreCase(code)
         && menuItem.getType() == EXTRA);
   }
 
-  public static Boolean isCoffee(String menuCode) {
+  public static boolean isCoffee(String menuCode) {
     return Stream.of(SMALL_COFFEE, MEDIUM_COFFEE, LARGE_COFFEE).collect(Collectors.toSet())
         .contains(getMenuItemByCode(menuCode));
   }
 
-  public Boolean isCoffee() {
+  public boolean isCoffee() {
     return Stream.of(SMALL_COFFEE, MEDIUM_COFFEE, LARGE_COFFEE).collect(Collectors.toSet())
         .contains(this);
   }
