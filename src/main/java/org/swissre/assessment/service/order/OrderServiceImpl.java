@@ -64,7 +64,7 @@ public class OrderServiceImpl implements OrderService {
 
     List<MenuItem> extras = flattedOrderList.stream()
         .filter(menuItem -> menuItem.getType() == Type.EXTRA)
-        .sorted(Comparator.comparing(MenuItem::getPrice))
+        .sorted(Comparator.comparing(MenuItem::getPrice).reversed())
         .collect(toList());
 
     Iterator<MenuItem> iterator = extras.iterator();

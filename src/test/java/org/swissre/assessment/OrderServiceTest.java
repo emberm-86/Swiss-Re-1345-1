@@ -84,7 +84,7 @@ public class OrderServiceTest {
     List<OrderItem> discountedBeverage1Snack1 = orderService.getDiscountsBeverage1Snack1(0, orders);
 
     assertEquals(1, discountedBeverage1Snack1.size());
-    assertEquals(discountedBeverage1Snack1.get(0), new OrderItem(MenuItem.EXTRA_MILK, 2));
+    assertEquals(discountedBeverage1Snack1.get(0), new OrderItem(MenuItem.ROASTED_COFFEE, 2));
 
     List<OrderItem> order1 = orders.get(0);
     BigDecimal origSumPrice = billingService.calcSum(order1);
@@ -136,10 +136,10 @@ public class OrderServiceTest {
                     new OrderItem(MenuItem.ORANGE_JUICE, 2),
                     new OrderItem(MenuItem.MEDIUM_COFFEE, 3),
                     new OrderItem(MenuItem.ORANGE_JUICE, 4),
-                    new OrderItem(MenuItem.EXTRA_MILK, 1),
-                    new OrderItem(MenuItem.FOAMED_MILK, 1),
                     new OrderItem(MenuItem.ROASTED_COFFEE, 1),
-                    new OrderItem(MenuItem.EXTRA_MILK, 1))))
+                    new OrderItem(MenuItem.FOAMED_MILK, 1),
+                    new OrderItem(MenuItem.EXTRA_MILK, 1),
+                    new OrderItem(MenuItem.ROASTED_COFFEE, 1))))
             .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))
         ));
   }
