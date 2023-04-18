@@ -18,7 +18,7 @@ import org.swissre.assessment.service.order.OrderServiceImpl;
 public class Application {
 
   private static MenuState MENU_SELECTED = MenuState.MAIN_MENU;
-  private static MenuItem menuItemSelected = null;
+  private static MenuItem menuItemSelected;
   private static final List<MenuItem> selectedExtras = new ArrayList<>();
 
   private static boolean extraAlreadyChosen = false;
