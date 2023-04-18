@@ -7,6 +7,8 @@ import org.swissre.assessment.domain.OrderItem;
 public interface OrderStorageProvider {
 
   Map<Integer, List<OrderItem>> getAllOrders();
+
   void addNewOrder(List<OrderItem> order);
+  
   int getLastOrderIndex();
 }
