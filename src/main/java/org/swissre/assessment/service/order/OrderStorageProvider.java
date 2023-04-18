@@ -8,6 +8,5 @@ public interface OrderStorageProvider {
 
   Map<Integer, List<OrderItem>> getAllOrders();
   void addNewOrder(List<OrderItem> order);
-
-  Integer getLastOrderIndex();
+  int getLastOrderIndex();
 }

@@ -20,7 +20,7 @@ public class OrderStorageProviderImpl implements OrderStorageProvider {
   }
 
   @Override
-  public Integer getLastOrderIndex() {
+  public int getLastOrderIndex() {
     return INTERNAL_MAP.values().size() - 1;
   }
 }
