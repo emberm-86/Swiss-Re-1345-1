@@ -21,7 +21,7 @@ public class Application {
   private static MenuItem menuItemSelected;
   private static final List<MenuItem> selectedExtras = new ArrayList<>();
 
-  private static boolean extraAlreadyChosen = false;
+  private static boolean extraAlreadyChosen;
 
   private static OrderService orderService;
 
