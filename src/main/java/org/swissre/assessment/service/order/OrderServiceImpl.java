@@ -108,7 +108,7 @@ public class OrderServiceImpl implements OrderService {
     System.out.println("========================\n");
   }
 
-  public void printSingleOrder(Integer orderId, List<OrderItem> order,
+  private void printSingleOrder(Integer orderId, List<OrderItem> order,
       Map<Integer, List<OrderItem>> allOrders) {
     System.out.println("-------------------------------------------");
     prettyPrintOrder(order);
