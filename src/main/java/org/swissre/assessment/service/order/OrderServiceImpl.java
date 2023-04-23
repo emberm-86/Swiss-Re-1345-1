@@ -55,6 +55,7 @@ public class OrderServiceImpl implements OrderService {
         .map(OrderItem::getQuantity).reduce(0, Integer::sum);
   }
 
+  @Override
   public List<OrderItem> getDiscountsBeverage1Snack1(Integer orderId,
       Map<Integer, List<OrderItem>> allOrders) {
     List<OrderItem> order = allOrders.getOrDefault(orderId, new ArrayList<>());
@@ -78,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
     return convertMenuItemsToOrderItems(discountedExtraMenuItems);
   }
 
-  private static List<MenuItem> flattenOrder(List<OrderItem> order) {
+  private List<MenuItem> flattenOrder(List<OrderItem> order) {
     List<MenuItem> flattedOrderList = new ArrayList<>();
     for (OrderItem orderItem : order) {
       for (int k = orderItem.getQuantity(); k > 0; k--) {
@@ -156,6 +157,7 @@ public class OrderServiceImpl implements OrderService {
         billForOrderDisc, "CHF");
   }
 
+  @Override
   public List<OrderItem> getDisOrdItems5thBev(Integer orderId,
       Map<Integer, List<OrderItem>> allOrders) {
 
