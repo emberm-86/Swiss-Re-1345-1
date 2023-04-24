@@ -1,8 +1,6 @@
 package org.swissre.assessment.service.billing;
 
 import static java.math.BigDecimal.ZERO;
-import static java.util.stream.Collectors.summingInt;
-import static java.util.stream.Collectors.toList;
 
 import java.math.BigDecimal;
 import java.util.LinkedHashMap;
@@ -51,11 +49,11 @@ public class BillingServiceImpl implements BillingService {
   private List<OrderItem> normalizedOrder(List<OrderItem> orders) {
     Map<String, Integer> menuItems = orders.stream()
         .collect(Collectors.groupingBy(orderItem -> orderItem.getMenuItem().getCode(),
-            LinkedHashMap::new, summingInt(OrderItem::getQuantity)));
+            LinkedHashMap::new, Collectors.summingInt(OrderItem::getQuantity)));
 
     return menuItems.entrySet().stream()
         .map(menuItemOcc -> new OrderItem(MenuItem.getMenuItemByCode(menuItemOcc.getKey()),
             menuItemOcc.getValue()))
-        .collect(toList());
+        .collect(Collectors.toList());
   }
 }
