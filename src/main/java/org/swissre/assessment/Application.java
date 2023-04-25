@@ -29,6 +29,11 @@ public class Application {
       boolean extraAlreadyChosen = menuSelection.isExtraAlreadyChosen();
 
       String[] arguments = in.nextLine().split("\\s+");
+
+      if (arguments.length == 0) {
+        continue;
+      }
+
       String menuCode = arguments[0];
 
       if ((menuCode.equalsIgnoreCase("Q")
