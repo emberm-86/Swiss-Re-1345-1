@@ -16,7 +16,7 @@ import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.OrderItem;
 import org.swissre.assessment.domain.Type;
 
-public class DiscountServiceImpl implements DiscountService{
+public class DiscountServiceImpl implements DiscountService {
 
   @Override
   public List<OrderItem> getDiscBevSnack1(Integer orderId,
