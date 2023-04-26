@@ -1,6 +1,5 @@
 package org.swissre.assessment.service.discount;
 
-import static java.util.stream.Collectors.toList;
 import static org.swissre.assessment.service.menu.MenuUtil.flattenOrder;
 
 import java.util.AbstractMap.SimpleImmutableEntry;
@@ -30,7 +29,7 @@ public class DiscountServiceImpl implements DiscountService {
     List<MenuItem> extras = flattedOrderList.stream()
         .filter(menuItem -> menuItem.getType() == Type.EXTRA)
         .sorted(Comparator.comparing(MenuItem::getPrice).reversed())
-        .collect(toList());
+        .collect(Collectors.toList());
 
     Iterator<MenuItem> iterator = extras.iterator();
 
@@ -71,7 +70,7 @@ public class DiscountServiceImpl implements DiscountService {
   private Map<Integer, List<OrderItem>> convertBack(
       List<SimpleImmutableEntry<Integer, MenuItem>> extOrdsDisc) {
     return extOrdsDisc.stream().collect(Collectors.groupingBy(Entry::getKey,
-            Collectors.mapping(Entry::getValue, toList()))).entrySet().stream()
+            Collectors.mapping(Entry::getValue, Collectors.toList()))).entrySet().stream()
         .collect(Collectors.toMap(Entry::getKey, menuItemEntry -> {
 
           List<MenuItem> menuItems = menuItemEntry.getValue();
@@ -87,7 +86,7 @@ public class DiscountServiceImpl implements DiscountService {
     return menuItemOccurrences.entrySet().stream()
         .map(menuItemOcc -> new OrderItem(MenuItem.getMenuItemByCode(menuItemOcc.getKey()),
             menuItemOcc.getValue()))
-        .collect(toList());
+        .collect(Collectors.toList());
   }
 
   private void filterDiscounts(
@@ -122,6 +121,6 @@ public class DiscountServiceImpl implements DiscountService {
       Map<Integer, List<OrderItem>> allOrders) {
     return allOrders.entrySet().stream()
         .flatMap(e -> e.getValue().stream().map(v -> new SimpleImmutableEntry<>(e.getKey(), v)))
-        .collect(toList());
+        .collect(Collectors.toList());
   }
 }

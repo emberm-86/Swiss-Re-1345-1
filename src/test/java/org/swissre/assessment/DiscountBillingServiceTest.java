@@ -1,7 +1,6 @@
 package org.swissre.assessment;
 
 import static java.math.BigDecimal.ZERO;
-import static java.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -45,6 +44,7 @@ public class DiscountBillingServiceTest {
             .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
         .reduce(ZERO, BigDecimal::add);
 
+    assertEquals(origSumPrice, new BigDecimal("46.80"));
     assertEquals(expectedDiff, origSumPrice.subtract(discSumPrice));
   }
 
@@ -130,7 +130,7 @@ public class DiscountBillingServiceTest {
   private static Stream<Arguments> createOneComplexOrder() {
     return Stream.of(
         Arguments.of(Stream.of(
-                new SimpleEntry<>(0, asList(
+                new SimpleEntry<>(0, Arrays.asList(
                     new OrderItem(MenuItem.BACON_ROLL, 2),
                     new OrderItem(MenuItem.SMALL_COFFEE, 1),
                     new OrderItem(MenuItem.ORANGE_JUICE, 2),
@@ -147,7 +147,7 @@ public class DiscountBillingServiceTest {
   private static Stream<Arguments> createMultipleOrders() {
     return Stream.of(
         Arguments.of(Stream.of(
-                new SimpleEntry<>(0, asList(
+                new SimpleEntry<>(0, Arrays.asList(
                     new OrderItem(MenuItem.BACON_ROLL, 2),
                     new OrderItem(MenuItem.SMALL_COFFEE, 1),
                     new OrderItem(MenuItem.ORANGE_JUICE, 2),
@@ -177,7 +177,7 @@ public class DiscountBillingServiceTest {
             .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))
         ),
         Arguments.of(Stream.of(
-                new SimpleEntry<>(0, asList(
+                new SimpleEntry<>(0, Arrays.asList(
                     new OrderItem(MenuItem.SMALL_COFFEE, 2),
                     new OrderItem(MenuItem.MEDIUM_COFFEE, 2),
                     new OrderItem(MenuItem.EXTRA_MILK, 1),
@@ -186,7 +186,7 @@ public class DiscountBillingServiceTest {
             .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))
         ),
         Arguments.of(Stream.of(
-                new SimpleEntry<>(0, asList(
+                new SimpleEntry<>(0, Arrays.asList(
                     new OrderItem(MenuItem.BACON_ROLL, 6),
                     new OrderItem(MenuItem.MEDIUM_COFFEE, 2))))
             .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))

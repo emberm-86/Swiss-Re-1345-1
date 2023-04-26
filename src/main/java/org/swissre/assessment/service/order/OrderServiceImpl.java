@@ -1,12 +1,12 @@
 package org.swissre.assessment.service.order;
 
-import static java.util.stream.Collectors.toList;
 import static org.swissre.assessment.service.menu.MenuUtil.flattenOrder;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.OrderItem;
@@ -78,7 +78,7 @@ public class OrderServiceImpl implements OrderService {
     List<OrderItem> disOrderItemsBev1Snack1 = discountService.getDiscBevSnack1(orderId, allOrders);
 
     List<OrderItem> disOrderItems = Stream.concat(disOrderItems5thBev.stream(),
-        disOrderItemsBev1Snack1.stream()).collect(toList());
+        disOrderItemsBev1Snack1.stream()).collect(Collectors.toList());
 
     List<MenuItem> menuItems = flattenOrder(disOrderItems);
     int j = flattenOrder(disOrderItems5thBev).size();
