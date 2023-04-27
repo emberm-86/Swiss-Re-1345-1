@@ -39,6 +39,7 @@ public class DiscountBillingServiceTest {
 
     BigDecimal origSumPrice = billingService.calcSum(orders.get(0));
     BigDecimal discSumPrice = billingService.calcSumWithDisc(orders.get(0), disOrds5thBev);
+
     BigDecimal expectedDiff = disOrds5thBev.stream()
         .map(orderItem -> orderItem.getMenuItem().getPrice()
             .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
