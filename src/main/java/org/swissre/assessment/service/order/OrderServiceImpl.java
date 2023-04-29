@@ -155,10 +155,10 @@ public class OrderServiceImpl implements OrderService {
 
   private int maxQuantityAndSumPriceStrLength(List<OrderItem> orders) {
     return orders.stream().map(orderItem -> {
+          String quantityStr = String.valueOf(orderItem.getQuantity());
           BigDecimal sumPrice = orderItem.getMenuItem().getPrice()
-              .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity())));
-          return String.format("%.02f", sumPrice).length() + String.valueOf(orderItem.getQuantity())
-              .length();
+              .multiply(new BigDecimal(quantityStr));
+          return String.format("%.02f", sumPrice).length() + quantityStr.length();
         })
         .max(Integer::compareTo).orElse(0);
   }
