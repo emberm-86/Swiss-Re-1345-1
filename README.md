@@ -1,4 +1,4 @@
-# Swiss-Re-1345-1
+# Charlene's Coffee Corner
 Coffee Corner shop
 
 ## Prerequisites:
