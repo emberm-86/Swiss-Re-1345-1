@@ -79,21 +79,27 @@ Small coffee    (sc)    2,50 X 3  7,50 CHF
 Extra Milk      (xem)   0,30 X 3  0,90 CHF
 -------------------------------------------
 Total:                           17,40 CHF 
-beverage1snack1                  -0,30 CHF
-beverage1snack1                  -0,30 CHF
 -------------------------------------------
-Total with discount:             16,80 CHF 
+Discounts:
+-------------------------------------------
+beverage1snack1              2 X -0,30 CHF
+-------------------------------------------
+Total with discounts:            16,80 CHF 
 
 Order: 1
 -------------------------------------------
 Orange Juice    (oj)    3,95 X 3  11,85 CHF
 -------------------------------------------
 Total:                            11,85 CHF 
-beverage5th                       -3,95 CHF
 -------------------------------------------
-Total with discount:               7,90 CHF 
+Discounts:
+-------------------------------------------
+beverage5th                   1 X -3,95 CHF
+-------------------------------------------
+Total with discounts:              7,90 CHF 
 ========================
 
 Press X to return to the Main Menu!
+
 ```
 That's it :)
