@@ -1,7 +1,5 @@
 package org.swissre.assessment.service.order;
 
-import static org.swissre.assessment.service.menu.MenuUtil.flattenOrder;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +35,10 @@ public class OrderServiceImpl implements OrderService {
     orderStorageProvider.addNewOrder(new ArrayList<>(orderSelectionCurrent));
 
     System.out.println("You can check your bill here.");
+
     printSingleOrder(orderStorageProvider.getLastOrderIndex(), orderSelectionCurrent,
         orderStorageProvider.getAllOrders());
+
     orderSelectionCurrent.clear();
   }
 
@@ -80,24 +80,29 @@ public class OrderServiceImpl implements OrderService {
     List<OrderItem> disOrderItems = Stream.concat(disOrderItems5thBev.stream(),
         disOrderItemsBev1Snack1.stream()).collect(Collectors.toList());
 
-    List<MenuItem> menuItems = flattenOrder(disOrderItems);
-    int j = flattenOrder(disOrderItems5thBev).size();
+    int j = disOrderItems5thBev.size();
 
-    for (int i = 0; i < menuItems.size(); i++) {
-      MenuItem discountedMenuItem = menuItems.get(i);
-      BigDecimal discount = discountedMenuItem.getPrice();
-      int discountShift = baseShift - String.format("%.02f", discount).length();
+    System.out.println("-------------------------------------------");
+    System.out.println("Discounts:\n-------------------------------------------");
 
-      String discountType = i < j ? "beverage5th" : "beverage1snack1";
+    for (int i = 0; i < disOrderItems.size(); i++) {
+      MenuItem discountedMenuItem = disOrderItems.get(i).getMenuItem();
+      int quantity = disOrderItems.get(i).getQuantity();
+      BigDecimal disc = discountedMenuItem.getPrice();
 
-      System.out.printf("%-" + discountShift + "s%s%.02f %s", discountType, "-", discount, "CHF");
+      int qStrLen = String.valueOf(quantity).length();
+      int discShift = baseShift - String.format("%.02f", disc).length() - qStrLen - 3;
 
-      if (i < menuItems.size() - 1) {
+      String discType = i < j ? "beverage5th" : "beverage1snack1";
+
+      System.out.printf("%-" + discShift + "s%s%s%.02f %s", discType, quantity + " X ", "-", disc, "CHF");
+
+      if (i < disOrderItems.size() - 1) {
         System.out.println();
       }
     }
 
-    if (!menuItems.isEmpty()) {
+    if (!disOrderItems.isEmpty()) {
       System.out.println();
     }
     System.out.println("-------------------------------------------");

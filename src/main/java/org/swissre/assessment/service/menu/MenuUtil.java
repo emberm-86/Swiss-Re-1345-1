@@ -3,14 +3,11 @@ package org.swissre.assessment.service.menu;
 import static org.swissre.assessment.domain.MenuItem.checkIfExtraByCode;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.MenuSelection;
 import org.swissre.assessment.domain.MenuState;
-import org.swissre.assessment.domain.OrderItem;
 import org.swissre.assessment.service.order.OrderService;
 
 public class MenuUtil {
@@ -176,12 +173,5 @@ public class MenuUtil {
         .filter(menuItemExtra -> !selectedExtras.contains(menuItemExtra))
         .map(MenuItem::getCode)
         .collect(Collectors.joining(", "));
-  }
-
-  public static List<MenuItem> flattenOrder(List<OrderItem> order) {
-    return order.stream().map(orderItem ->
-            IntStream.range(0, orderItem.getQuantity()).mapToObj(i -> orderItem.getMenuItem())
-                .collect(Collectors.toList()))
-        .flatMap(Collection::stream).collect(Collectors.toList());
   }
 }

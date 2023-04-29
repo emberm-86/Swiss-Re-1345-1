@@ -5,7 +5,6 @@ import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.summingInt;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
-import static org.swissre.assessment.service.menu.MenuUtil.flattenOrder;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
@@ -119,5 +118,12 @@ public class DiscountServiceImpl implements DiscountService {
     return allOrders.entrySet().stream()
         .flatMap(e -> e.getValue().stream().map(v -> new SimpleEntry<>(e.getKey(), v)))
         .collect(toList());
+  }
+
+  private List<MenuItem> flattenOrder(List<OrderItem> order) {
+    return order.stream().map(orderItem ->
+            IntStream.range(0, orderItem.getQuantity()).mapToObj(i -> orderItem.getMenuItem())
+                .collect(toList()))
+        .flatMap(Collection::stream).collect(toList());
   }
 }
