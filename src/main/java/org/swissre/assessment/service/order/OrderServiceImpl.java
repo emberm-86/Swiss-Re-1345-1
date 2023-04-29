@@ -69,7 +69,7 @@ public class OrderServiceImpl implements OrderService {
     System.out.println("-------------------------------------------");
 
     BigDecimal billForOrder = billingService.calcSum(order);
-    int baseShift = 32 + maxQuantityAndSumPriceStrLength(order);
+    int baseShift = 32 + maxQuantityAndSumPriceStrLen(order);
     int shift = baseShift - String.format("%.02f", billForOrder).length();
 
     System.out.printf("%-" + shift + "s %.02f %s %n", "Total:", billForOrder, "CHF");
@@ -95,7 +95,8 @@ public class OrderServiceImpl implements OrderService {
 
       String discType = i < j ? "beverage5th" : "beverage1snack1";
 
-      System.out.printf("%-" + discShift + "s%s%s%.02f %s", discType, quantity + " X ", "-", disc, "CHF");
+      String format = "%-" + discShift + "s%s%s%.02f %s";
+      System.out.printf(format, discType, quantity + " X ", "-", disc, "CHF");
 
       if (i < disOrderItems.size() - 1) {
         System.out.println();
@@ -111,26 +112,26 @@ public class OrderServiceImpl implements OrderService {
 
     int discountSumShift = baseShift - String.format("%.02f", billForOrderDisc).length();
 
-    System.out.printf("%-" + discountSumShift + "s %.02f %s %n", "Total with discount:",
-        billForOrderDisc, "CHF");
+    String format = "%-" + discountSumShift + "s %.02f %s %n";
+    System.out.printf(format, "Total with discounts:", billForOrderDisc, "CHF");
   }
 
   private void prettyPrintOrder(List<OrderItem> orderItems) {
-    int maxQuantityStrLength = maxQuantityStrLength(orderItems);
-    int maxSumPriceStrLength = maxSumPriceStrLength(orderItems);
+    int maxQuantityStrLen = maxQuantityStrLen(orderItems);
+    int maxSumPriceStrLen = maxSumPriceStrLen(orderItems);
 
     orderItems.stream().map(orderItem ->
-            printOrder(orderItem, maxQuantityStrLength, maxSumPriceStrLength))
+            printOrder(orderItem, maxQuantityStrLen, maxSumPriceStrLen))
         .forEach(System.out::println);
   }
 
-  private String printOrder(OrderItem orderItem, int maxQuantityLength, int maxSumPriceStrLength) {
+  private String printOrder(OrderItem orderItem, int maxQuantityLen, int maxSumPriceStrLen) {
     MenuItem menuItem = orderItem.getMenuItem();
     BigDecimal sumPrice = menuItem.getPrice()
         .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity())));
 
-    int shiftQuantity = maxQuantityLength - String.valueOf(orderItem.getQuantity()).length();
-    int shiftSumPrice = maxSumPriceStrLength - String.format("%.02f", sumPrice).length();
+    int shiftQuantity = maxQuantityLen - String.valueOf(orderItem.getQuantity()).length();
+    int shiftSumPrice = maxSumPriceStrLen - String.format("%.02f", sumPrice).length();
     int shift = shiftQuantity + shiftSumPrice;
 
     String spaceBeforePrice = shift > 0 ? "%-" + shift + "s" : "%s";
@@ -140,12 +141,12 @@ public class OrderServiceImpl implements OrderService {
         menuItem.getPrice(), "X", orderItem.getQuantity(), "", sumPrice, "CHF");
   }
 
-  private int maxQuantityStrLength(List<OrderItem> orders) {
+  private int maxQuantityStrLen(List<OrderItem> orders) {
     return orders.stream().map(OrderItem::getQuantity).map(String::valueOf).map(String::length)
         .max(Integer::compareTo).orElse(0);
   }
 
-  private int maxSumPriceStrLength(List<OrderItem> orders) {
+  private int maxSumPriceStrLen(List<OrderItem> orders) {
     return orders.stream()
         .map(orderItem -> orderItem.getMenuItem().getPrice()
             .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
@@ -153,7 +154,7 @@ public class OrderServiceImpl implements OrderService {
         .max(Integer::compareTo).orElse(0);
   }
 
-  private int maxQuantityAndSumPriceStrLength(List<OrderItem> orders) {
+  private int maxQuantityAndSumPriceStrLen(List<OrderItem> orders) {
     return orders.stream().map(orderItem -> {
           String quantityStr = String.valueOf(orderItem.getQuantity());
           BigDecimal sumPrice = orderItem.getMenuItem().getPrice()
