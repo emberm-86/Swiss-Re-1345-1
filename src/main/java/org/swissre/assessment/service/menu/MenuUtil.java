@@ -38,7 +38,7 @@ public class MenuUtil {
     prettyPrintMenu(Arrays.asList(MenuItem.values()));
     System.out.println("========================");
     System.out.println(
-        "Please choose an other product with the code(second column) or submit your order(x), cancel(c): ");
+        "Please choose another product with the code(second column) or submit your order(x), cancel(c): ");
   }
 
   public static boolean isValidNum(String strNum) {
