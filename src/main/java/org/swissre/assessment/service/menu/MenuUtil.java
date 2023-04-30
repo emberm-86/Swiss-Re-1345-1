@@ -17,8 +17,9 @@ public class MenuUtil {
   }
 
   public static String printMenu(MenuItem menuItem) {
-    return String.format("%-14s %-8s %.02f %s", menuItem.getName(), " (" + menuItem.getCode() + ")",
-        menuItem.getPrice(), " CHF");
+    String format = "%-14s %-8s %.02f %s";
+    return String.format(format, menuItem.getName(), " (" + menuItem.getCode() + ")",
+        menuItem.getPrice(), "CHF");
   }
 
   public static void printMainMenu() {
