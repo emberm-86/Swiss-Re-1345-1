@@ -140,7 +140,7 @@ public class OrderServiceImpl implements OrderService {
     int shift = shiftQuantity + shiftSumPrice;
 
     String spaceBeforePrice = shift > 0 ? "%-" + shift + "s" : "%s";
-    String format = "%-14s %-8s %.02f %s %d " + spaceBeforePrice + " %.02f %s";
+    String format = "%-14s %-8s %.02f %s %s " + spaceBeforePrice + " %.02f %s";
 
     return String.format(format, menuItem.getName(), " (" + menuItem.getCode() + ")",
         menuItem.getPrice(), "X", quantityStr, "", sumPrice, "CHF");

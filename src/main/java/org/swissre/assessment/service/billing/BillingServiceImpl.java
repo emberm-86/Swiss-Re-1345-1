@@ -16,8 +16,13 @@ public class BillingServiceImpl implements BillingService {
   @Override
   public BigDecimal calcSum(List<OrderItem> order) {
 
-    return order.stream().map(orderItem -> orderItem.getMenuItem().getPrice().multiply(
-        new BigDecimal(String.valueOf(orderItem.getQuantity())))).reduce(ZERO, BigDecimal::add);
+    return order.stream().map(orderItem -> {
+
+      BigDecimal price = orderItem.getMenuItem().getPrice();
+      BigDecimal quantity = new BigDecimal(String.valueOf(orderItem.getQuantity()));
+
+      return price.multiply(quantity);
+    }).reduce(ZERO, BigDecimal::add);
   }
 
   @Override
@@ -26,24 +31,28 @@ public class BillingServiceImpl implements BillingService {
 
     return normalizedOrder(order).stream().map(orderItem -> {
 
-      BigDecimal basePrice = orderItem.getMenuItem().getPrice().multiply(
-          new BigDecimal(String.valueOf(orderItem.getQuantity())));
+      BigDecimal price = orderItem.getMenuItem().getPrice();
+      BigDecimal quantity = new BigDecimal(String.valueOf(orderItem.getQuantity()));
+      BigDecimal sumPrice = price.multiply(quantity);
 
       Optional<OrderItem> discounted = findInDiscountedList(discountedOrderItems, orderItem);
 
       return discounted.map(
-              item -> basePrice.subtract(item.getMenuItem().getPrice().multiply(
-                  new BigDecimal(String.valueOf(item.getQuantity())))))
-          .orElse(basePrice);
+              item -> {
+                BigDecimal disPrice = item.getMenuItem().getPrice();
+                BigDecimal disQuantity = new BigDecimal(String.valueOf(item.getQuantity()));
+
+                return sumPrice.subtract(disPrice.multiply(disQuantity));
+              })
+          .orElse(sumPrice);
     }).reduce(ZERO, BigDecimal::add);
   }
 
-  private Optional<OrderItem> findInDiscountedList(List<OrderItem> discountedOrderItems,
+  private Optional<OrderItem> findInDiscountedList(List<OrderItem> disOrderItems,
       OrderItem orderItem) {
 
-    return discountedOrderItems.stream().
-        filter(discountedOrderItem -> discountedOrderItem.getMenuItem().getCode()
-            .equals(orderItem.getMenuItem().getCode())).findFirst();
+    return disOrderItems.stream().filter(disOrderItem -> disOrderItem.getMenuItem().getCode()
+        .equals(orderItem.getMenuItem().getCode())).findFirst();
   }
 
   private List<OrderItem> normalizedOrder(List<OrderItem> orders) {
@@ -52,8 +61,10 @@ public class BillingServiceImpl implements BillingService {
             LinkedHashMap::new, Collectors.summingInt(OrderItem::getQuantity)));
 
     return menuItems.entrySet().stream()
-        .map(menuItemOcc -> new OrderItem(MenuItem.getMenuItemByCode(menuItemOcc.getKey()),
-            menuItemOcc.getValue()))
+        .map(menuItemOcc -> {
+          MenuItem menuItem = MenuItem.getMenuItemByCode(menuItemOcc.getKey());
+          return new OrderItem(menuItem, menuItemOcc.getValue());
+        })
         .collect(Collectors.toList());
   }
 }
