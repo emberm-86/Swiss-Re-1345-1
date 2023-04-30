@@ -83,6 +83,8 @@ Total:                           17,40 CHF
 Discounts:
 -------------------------------------------
 beverage1snack1              2 X -0,30 CHF
+===========================================
+beverage1snack1 sum:              0,60 CHF 
 -------------------------------------------
 Total with discounts:            16,80 CHF 
 
@@ -95,11 +97,13 @@ Total:                            11,85 CHF
 Discounts:
 -------------------------------------------
 beverage5th                   1 X -3,95 CHF
+===========================================
+beverage5th sum:                   3,95 CHF 
 -------------------------------------------
 Total with discounts:              7,90 CHF 
 ========================
 
 Press X to return to the Main Menu!
-
 ```
+
 That's it :)
