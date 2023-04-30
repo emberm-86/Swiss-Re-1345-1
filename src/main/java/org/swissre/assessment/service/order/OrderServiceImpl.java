@@ -64,6 +64,7 @@ public class OrderServiceImpl implements OrderService {
 
   private void printSingleOrder(Integer orderId, List<OrderItem> order,
       Map<Integer, List<OrderItem>> allOrders) {
+
     System.out.println("-------------------------------------------");
     prettyPrintOrder(order);
     System.out.println("-------------------------------------------");
@@ -88,6 +89,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     for (int i = 0; i < disOrderItems.size(); i++) {
+
       MenuItem discountedMenuItem = disOrderItems.get(i).getMenuItem();
       int quantity = disOrderItems.get(i).getQuantity();
       BigDecimal disc = discountedMenuItem.getPrice();
