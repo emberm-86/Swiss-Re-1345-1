@@ -24,7 +24,7 @@ import org.swissre.assessment.domain.Type;
 public class DiscountServiceImpl implements DiscountService {
 
   @Override
-  public List<OrderItem> getDiscBevSnack1(Integer orderId,
+  public List<OrderItem> getDiscBev1Snack1(Integer orderId,
       Map<Integer, List<OrderItem>> allOrders) {
 
     List<OrderItem> order = allOrders.getOrDefault(orderId, new ArrayList<>());

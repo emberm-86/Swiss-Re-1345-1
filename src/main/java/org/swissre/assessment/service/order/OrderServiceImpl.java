@@ -75,15 +75,17 @@ public class OrderServiceImpl implements OrderService {
     System.out.printf("%-" + shift + "s %.02f %s %n", "Total:", billForOrder, "CHF");
 
     List<OrderItem> disOrderItems5thBev = discountService.getDisOrdItems5thBev(orderId, allOrders);
-    List<OrderItem> disOrderItemsBev1Snack1 = discountService.getDiscBevSnack1(orderId, allOrders);
+    List<OrderItem> disOrderItemsBev1Snack1 = discountService.getDiscBev1Snack1(orderId, allOrders);
 
     List<OrderItem> disOrderItems = Stream.concat(disOrderItems5thBev.stream(),
         disOrderItemsBev1Snack1.stream()).collect(Collectors.toList());
 
     int j = disOrderItems5thBev.size();
 
-    System.out.println("-------------------------------------------");
-    System.out.println("Discounts:\n-------------------------------------------");
+    if (!disOrderItems.isEmpty()) {
+      System.out.println("-------------------------------------------");
+      System.out.println("Discounts:\n-------------------------------------------");
+    }
 
     for (int i = 0; i < disOrderItems.size(); i++) {
       MenuItem discountedMenuItem = disOrderItems.get(i).getMenuItem();

@@ -36,7 +36,7 @@ public class Application {
 
       String menuCode = arguments[0];
 
-      if ((menuCode.equalsIgnoreCase("Q")
+      if ((menuCode.equalsIgnoreCase("q")
           || (menuCode.equals("3")) && menuState == MenuState.MAIN_MENU)) {
         break;
       }

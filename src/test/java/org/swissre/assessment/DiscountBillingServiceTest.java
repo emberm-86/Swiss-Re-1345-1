@@ -82,17 +82,16 @@ public class DiscountBillingServiceTest {
   @ParameterizedTest
   @MethodSource("createOneComplexOrder")
   public void testBeverage1Snack1(Map<Integer, List<OrderItem>> orders) {
-    List<OrderItem> discountedBeverage1Snack1 = discountService.getDiscBevSnack1(0, orders);
+    List<OrderItem> discountedBev1Snack1 = discountService.getDiscBev1Snack1(0, orders);
 
-    assertEquals(1, discountedBeverage1Snack1.size());
-    assertEquals(discountedBeverage1Snack1.get(0), new OrderItem(MenuItem.ROASTED_COFFEE, 2));
+    assertEquals(1, discountedBev1Snack1.size());
+    assertEquals(discountedBev1Snack1.get(0), new OrderItem(MenuItem.ROASTED_COFFEE, 2));
 
     List<OrderItem> order1 = orders.get(0);
     BigDecimal origSumPrice = billingService.calcSum(order1);
-    BigDecimal discSumPrice = billingService.calcSumWithDisc(order1,
-        discountedBeverage1Snack1);
+    BigDecimal discSumPrice = billingService.calcSumWithDisc(order1, discountedBev1Snack1);
 
-    BigDecimal expectedDiff = discountedBeverage1Snack1.stream()
+    BigDecimal expectedDiff = discountedBev1Snack1.stream()
         .map(orderItem -> orderItem.getMenuItem().getPrice()
             .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
         .reduce(ZERO, BigDecimal::add);
@@ -117,7 +116,7 @@ public class DiscountBillingServiceTest {
   @ParameterizedTest
   @MethodSource("createOrdersNoDiscount")
   public void testBeverage1Snack1NoDiscount(Map<Integer, List<OrderItem>> orders) {
-    List<OrderItem> discountedBeverage1Snack1 = discountService.getDiscBevSnack1(0, orders);
+    List<OrderItem> discountedBeverage1Snack1 = discountService.getDiscBev1Snack1(0, orders);
 
     assertTrue(discountedBeverage1Snack1.isEmpty());
 

@@ -8,5 +8,5 @@ public interface DiscountService {
 
   List<OrderItem> getDisOrdItems5thBev(Integer orderId, Map<Integer, List<OrderItem>> allOrders);
 
-  List<OrderItem> getDiscBevSnack1(Integer orderId, Map<Integer, List<OrderItem>> allOrders);
+  List<OrderItem> getDiscBev1Snack1(Integer orderId, Map<Integer, List<OrderItem>> allOrders);
 }
