@@ -25,14 +25,14 @@ You can create orders with the first option and track them and 5th beverage disc
 ### II. Create Order
 ``` bash
 ========================
-Small coffee    (sc)    2,50  CHF
-Medium coffee   (mc)    3,00  CHF
-Large coffee    (lc)    3,50  CHF
-Bacon roll      (br)    4,50  CHF
-Orange Juice    (oj)    3,95  CHF
-Extra Milk      (xem)   0,30  CHF
-Foamed Milk     (xfm)   0,50  CHF
-Roasted Coffee  (rcf)   0,50  CHF
+Small coffee    (sc)    2,50 CHF
+Medium coffee   (mc)    3,00 CHF
+Large coffee    (lc)    3,50 CHF
+Bacon roll      (br)    4,50 CHF
+Orange Juice    (oj)    3,95 CHF
+Extra Milk      (xem)   0,30 CHF
+Foamed Milk     (xfm)   0,50 CHF
+Roasted Coffee  (rcf)   0,90 CHF
 ========================
 Please choose another product with the code(second column) or submit your order(x), cancel(c): 
 ```
