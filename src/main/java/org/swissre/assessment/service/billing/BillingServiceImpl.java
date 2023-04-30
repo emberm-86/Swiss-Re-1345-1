@@ -15,7 +15,6 @@ public class BillingServiceImpl implements BillingService {
 
   @Override
   public BigDecimal calcSum(List<OrderItem> order) {
-
     return order.stream().map(orderItem -> {
 
       BigDecimal price = orderItem.getMenuItem().getPrice();
@@ -26,16 +25,14 @@ public class BillingServiceImpl implements BillingService {
   }
 
   @Override
-  public BigDecimal calcSumWithDisc(List<OrderItem> order,
-      List<OrderItem> discountedOrderItems) {
-
+  public BigDecimal calcSumWithDisc(List<OrderItem> order, List<OrderItem> discOrderItems) {
     return normalizedOrder(order).stream().map(orderItem -> {
 
       BigDecimal price = orderItem.getMenuItem().getPrice();
       BigDecimal quantity = new BigDecimal(String.valueOf(orderItem.getQuantity()));
       BigDecimal sumPrice = price.multiply(quantity);
 
-      Optional<OrderItem> discounted = findInDiscountedList(discountedOrderItems, orderItem);
+      Optional<OrderItem> discounted = findInDiscountedList(discOrderItems, orderItem);
 
       return discounted.map(
               item -> {

@@ -53,8 +53,7 @@ public class DiscountServiceImpl implements DiscountService {
   }
 
   private Integer sumByType(List<OrderItem> order, Type snack) {
-    return order.stream()
-        .filter(orderItem -> orderItem.getMenuItem().getType() == snack)
+    return order.stream().filter(orderItem -> orderItem.getMenuItem().getType() == snack)
         .map(OrderItem::getQuantity).reduce(0, Integer::sum);
   }
 
@@ -62,7 +61,7 @@ public class DiscountServiceImpl implements DiscountService {
   public List<OrderItem> getDisOrdItems5thBev(Integer orderId,
       Map<Integer, List<OrderItem>> allOrders) {
 
-    List<SimpleEntry<Integer, OrderItem>> extOrds = extractOrders(allOrders);
+    List<SimpleEntry<Integer, OrderItem>> extOrds = extOrders(allOrders);
     List<SimpleEntry<Integer, MenuItem>> extOrdsWithReps = splitOrders(extOrds);
     List<SimpleEntry<Integer, MenuItem>> extOrdsDisc = filterDiscounts(extOrdsWithReps);
 
@@ -85,8 +84,10 @@ public class DiscountServiceImpl implements DiscountService {
         .collect(groupingBy(MenuItem::getCode, LinkedHashMap::new, summingInt(e -> 1)));
 
     return menuItemOccurrences.entrySet().stream()
-        .map(menuItemOcc -> new OrderItem(MenuItem.getMenuItemByCode(menuItemOcc.getKey()),
-            menuItemOcc.getValue()))
+        .map(menuItemOcc -> {
+          MenuItem menuItem = MenuItem.getMenuItemByCode(menuItemOcc.getKey());
+          return new OrderItem(menuItem, menuItemOcc.getValue());
+        })
         .collect(toList());
   }
 
@@ -112,9 +113,7 @@ public class DiscountServiceImpl implements DiscountService {
         .flatMap(Collection::stream).collect(toList());
   }
 
-  private List<SimpleEntry<Integer, OrderItem>> extractOrders(
-      Map<Integer, List<OrderItem>> allOrders) {
-
+  private List<SimpleEntry<Integer, OrderItem>> extOrders(Map<Integer, List<OrderItem>> allOrders) {
     return allOrders.entrySet().stream()
         .flatMap(e -> e.getValue().stream().map(v -> new SimpleEntry<>(e.getKey(), v)))
         .collect(toList());
