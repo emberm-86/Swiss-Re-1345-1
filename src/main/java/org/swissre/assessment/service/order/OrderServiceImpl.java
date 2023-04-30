@@ -128,19 +128,20 @@ public class OrderServiceImpl implements OrderService {
   }
 
   private String printOrder(OrderItem orderItem, int maxQuantityLen, int maxSumPriceStrLen) {
-    MenuItem menuItem = orderItem.getMenuItem();
-    BigDecimal sumPrice = menuItem.getPrice()
-        .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity())));
 
-    int shiftQuantity = maxQuantityLen - String.valueOf(orderItem.getQuantity()).length();
+    MenuItem menuItem = orderItem.getMenuItem();
+    String quantityStr = String.valueOf(orderItem.getQuantity());
+    BigDecimal sumPrice = menuItem.getPrice().multiply(new BigDecimal(quantityStr));
+
+    int shiftQuantity = maxQuantityLen - quantityStr.length();
     int shiftSumPrice = maxSumPriceStrLen - String.format("%.02f", sumPrice).length();
     int shift = shiftQuantity + shiftSumPrice;
 
     String spaceBeforePrice = shift > 0 ? "%-" + shift + "s" : "%s";
+    String format = "%-14s %-8s %.02f %s %d " + spaceBeforePrice + " %.02f %s";
 
-    return String.format("%-14s %-8s %.02f %s %d " + spaceBeforePrice + " %.02f %s",
-        menuItem.getName(), " (" + menuItem.getCode() + ")",
-        menuItem.getPrice(), "X", orderItem.getQuantity(), "", sumPrice, "CHF");
+    return String.format(format, menuItem.getName(), " (" + menuItem.getCode() + ")",
+        menuItem.getPrice(), "X", quantityStr, "", sumPrice, "CHF");
   }
 
   private int maxQuantityStrLen(List<OrderItem> orders) {
@@ -158,9 +159,11 @@ public class OrderServiceImpl implements OrderService {
 
   private int maxQuantityAndSumPriceStrLen(List<OrderItem> orders) {
     return orders.stream().map(orderItem -> {
+
           String quantityStr = String.valueOf(orderItem.getQuantity());
-          BigDecimal sumPrice = orderItem.getMenuItem().getPrice()
-              .multiply(new BigDecimal(quantityStr));
+          BigDecimal price = orderItem.getMenuItem().getPrice();
+          BigDecimal sumPrice = price.multiply(new BigDecimal(quantityStr));
+
           return String.format("%.02f", sumPrice).length() + quantityStr.length();
         })
         .max(Integer::compareTo).orElse(0);
