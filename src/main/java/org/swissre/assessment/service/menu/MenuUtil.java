@@ -54,6 +54,7 @@ public class MenuUtil {
 
   public static void launchSelectedMenu(String menuCode, MenuSelection menuSelection,
       OrderService orderService) {
+
     if (menuSelection.getMenuSelected() == MenuState.CREATE_ORDER) {
       launchCreateOrderMenu(menuCode, menuSelection, orderService);
     } else if (menuSelection.getMenuSelected() == MenuState.MAIN_MENU) {
@@ -63,16 +64,20 @@ public class MenuUtil {
 
   public static void launchMainMenu(String menuCode, MenuSelection menuSelection,
       OrderService orderService) {
+
     switch (menuCode) {
+
       case "1":
         menuSelection.setMenuSelected(MenuState.CREATE_ORDER);
         printCreateOrderMenu();
         break;
+
       case "2":
         menuSelection.setMenuSelected(MenuState.LIST_ORDERS);
         orderService.printAllOrders();
         System.out.println("Press X to return to the Main Menu!");
         break;
+
       default:
         break;
     }
