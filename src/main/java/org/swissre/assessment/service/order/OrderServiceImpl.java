@@ -101,8 +101,8 @@ public class OrderServiceImpl implements OrderService {
 
       String discType = i < j ? bev5thTitle : beverage1Snack1Title;
 
-      String format = "%-" + discShift + "s%s%s%.02f %s";
-      System.out.printf(format, discType, quantity + " X ", "-", disc, "CHF");
+      String format = "%-" + discShift + "s%s%.02f %s";
+      System.out.printf(format, discType, quantity + " X ", disc.negate(), "CHF");
 
       if (i < disOrderItems.size() - 1) {
         System.out.println();
