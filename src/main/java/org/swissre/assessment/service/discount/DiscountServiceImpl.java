@@ -10,7 +10,6 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,18 +31,11 @@ public class DiscountServiceImpl implements DiscountService {
 
     List<MenuItem> flattedOrderList = flattenOrder(order);
 
-    List<MenuItem> extras = flattedOrderList.stream()
+    List<MenuItem> discountedExtraMenuItems = flattedOrderList.stream()
         .filter(menuItem -> menuItem.getType() == Type.EXTRA)
         .sorted(Comparator.comparing(MenuItem::getPrice).reversed())
+        .limit(maxGiftCount)
         .collect(toList());
-
-    Iterator<MenuItem> iterator = extras.iterator();
-
-    List<MenuItem> discountedExtraMenuItems = new ArrayList<>();
-
-    for (int i = 0; i < maxGiftCount && iterator.hasNext(); i++) {
-      discountedExtraMenuItems.add(iterator.next());
-    }
 
     return convertMenuItemsToOrderItems(discountedExtraMenuItems);
   }
