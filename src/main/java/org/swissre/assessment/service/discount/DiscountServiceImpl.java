@@ -27,6 +27,7 @@ public class DiscountServiceImpl implements DiscountService {
       Map<Integer, List<OrderItem>> allOrders) {
 
     List<OrderItem> order = allOrders.getOrDefault(orderId, new ArrayList<>());
+
     int maxGiftCount = maxGiftCount(order);
 
     List<MenuItem> flattedOrderList = flattenOrder(order);
@@ -99,7 +100,8 @@ public class DiscountServiceImpl implements DiscountService {
       List<SimpleEntry<Integer, OrderItem>> extractedOrders) {
 
     return extractedOrders.stream().map(ordItemInt ->
-            IntStream.range(0, ordItemInt.getValue().getQuantity()).mapToObj(i ->
+            IntStream.range(0, ordItemInt.getValue().getQuantity())
+                .mapToObj(i ->
                     new SimpleEntry<>(ordItemInt.getKey(), ordItemInt.getValue().getMenuItem()))
                 .collect(toList()))
         .flatMap(Collection::stream).collect(toList());
@@ -113,7 +115,8 @@ public class DiscountServiceImpl implements DiscountService {
 
   private List<MenuItem> flattenOrder(List<OrderItem> order) {
     return order.stream().map(orderItem ->
-            IntStream.range(0, orderItem.getQuantity()).mapToObj(i -> orderItem.getMenuItem())
+            IntStream.range(0, orderItem.getQuantity())
+                .mapToObj(i -> orderItem.getMenuItem())
                 .collect(toList()))
         .flatMap(Collection::stream).collect(toList());
   }

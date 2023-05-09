@@ -47,11 +47,13 @@ public class OrderServiceImpl implements OrderService {
     System.out.println("========================");
 
     Map<Integer, List<OrderItem>> allOrders = orderStorageProvider.getAllOrders();
+
     if (allOrders.isEmpty()) {
       System.out.println("There is no order in the system.");
     }
 
     allOrders.forEach((orderId, order) -> {
+
       if (orderId > 0) {
         System.out.println();
       }
@@ -92,6 +94,7 @@ public class OrderServiceImpl implements OrderService {
     String beverage1Snack1Title = "beverage1snack1";
 
     for (int i = 0; i < disOrderItems.size(); i++) {
+
       MenuItem discountedMenuItem = disOrderItems.get(i).getMenuItem();
       int quantity = disOrderItems.get(i).getQuantity();
       BigDecimal disc = discountedMenuItem.getPrice();
@@ -134,6 +137,7 @@ public class OrderServiceImpl implements OrderService {
     if (disOrderItems.isEmpty()) {
       return;
     }
+
     BigDecimal distSum = billingService.calcSum(disOrderItems);
     int distShift = baseShift - String.format("%.02f", distSum).length();
 
@@ -151,6 +155,7 @@ public class OrderServiceImpl implements OrderService {
   }
 
   private String printOrder(OrderItem orderItem, int maxQuantityLen, int maxSumPriceStrLen) {
+
     MenuItem menuItem = orderItem.getMenuItem();
     String quantityStr = String.valueOf(orderItem.getQuantity());
     BigDecimal sumPrice = menuItem.getPrice().multiply(new BigDecimal(quantityStr));
@@ -167,7 +172,10 @@ public class OrderServiceImpl implements OrderService {
   }
 
   private int maxQuantityStrLen(List<OrderItem> orders) {
-    return orders.stream().map(OrderItem::getQuantity).map(String::valueOf).map(String::length)
+    return orders.stream()
+        .map(OrderItem::getQuantity)
+        .map(String::valueOf)
+        .map(String::length)
         .max(Integer::compareTo).orElse(0);
   }
 
@@ -175,12 +183,15 @@ public class OrderServiceImpl implements OrderService {
     return orders.stream()
         .map(orderItem -> orderItem.getMenuItem().getPrice()
             .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
-        .map(sumPrice -> String.format("%.02f", sumPrice)).map(String::length)
+        .map(sumPrice -> String.format("%.02f", sumPrice))
+        .map(String::length)
         .max(Integer::compareTo).orElse(0);
   }
 
   private int maxQuantityAndSumPriceStrLen(List<OrderItem> orders) {
+
     return orders.stream().map(orderItem -> {
+
           String quantityStr = String.valueOf(orderItem.getQuantity());
           BigDecimal price = orderItem.getMenuItem().getPrice();
           BigDecimal sumPrice = price.multiply(new BigDecimal(quantityStr));
