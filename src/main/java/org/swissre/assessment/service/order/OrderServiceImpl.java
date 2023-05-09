@@ -180,16 +180,19 @@ public class OrderServiceImpl implements OrderService {
   }
 
   private int maxSumPriceStrLen(List<OrderItem> orders) {
-    return orders.stream()
-        .map(orderItem -> orderItem.getMenuItem().getPrice()
-            .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
+    return orders.stream().map(orderItem -> {
+
+          BigDecimal price = orderItem.getMenuItem().getPrice();
+          BigDecimal quantity = new BigDecimal(String.valueOf(orderItem.getQuantity()));
+
+          return price.multiply(quantity);
+        })
         .map(sumPrice -> String.format("%.02f", sumPrice))
         .map(String::length)
         .max(Integer::compareTo).orElse(0);
   }
 
   private int maxQuantityAndSumPriceStrLen(List<OrderItem> orders) {
-
     return orders.stream().map(orderItem -> {
 
           String quantityStr = String.valueOf(orderItem.getQuantity());
