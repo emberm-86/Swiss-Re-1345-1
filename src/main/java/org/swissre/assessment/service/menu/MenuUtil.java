@@ -153,10 +153,10 @@ public class MenuUtil {
             if (!isValidNum(menuCode)) {
               System.out.println("Please give a valid number: > 0 as an input!");
             } else {
-              orderService.addNewOrder(menuItemSelected, menuCode);
+              orderService.addNewOrderItem(menuItemSelected, menuCode);
 
               selectedExtras.forEach(
-                  extraSelected -> orderService.addNewOrder(extraSelected, menuCode));
+                  extraSelected -> orderService.addNewOrderItem(extraSelected, menuCode));
               selectedExtras.clear();
 
               menuSelection.setMenuItemSelected(null);

@@ -21,7 +21,7 @@ public class OrderServiceImpl implements OrderService {
   BillingService billingService = new BillingServiceImpl();
 
   @Override
-  public void addNewOrder(MenuItem menuItemSelected, String menuCode) {
+  public void addNewOrderItem(MenuItem menuItemSelected, String menuCode) {
     orderSelectionCurrent.add(new OrderItem(menuItemSelected, Integer.parseInt(menuCode)));
   }
 

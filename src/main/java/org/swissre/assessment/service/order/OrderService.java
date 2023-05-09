@@ -4,7 +4,7 @@ import org.swissre.assessment.domain.MenuItem;
 
 public interface OrderService {
 
-  void addNewOrder(MenuItem menuItemSelected, String menuCode);
+  void addNewOrderItem(MenuItem menuItemSelected, String menuCode);
 
   void closeOrder();
 
