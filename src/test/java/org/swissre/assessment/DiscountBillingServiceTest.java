@@ -41,8 +41,12 @@ public class DiscountBillingServiceTest {
     BigDecimal discSumPrice = billingService.calcSumWithDisc(orders.get(0), disOrds5thBev);
 
     BigDecimal expectedDiff = disOrds5thBev.stream()
-        .map(orderItem -> orderItem.getMenuItem().getPrice()
-            .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
+        .map(orderItem -> {
+          BigDecimal price = orderItem.getMenuItem().getPrice();
+          BigDecimal quantity = new BigDecimal(String.valueOf(orderItem.getQuantity()));
+
+          return price.multiply(quantity);
+        })
         .reduce(ZERO, BigDecimal::add);
 
     assertEquals(origSumPrice, new BigDecimal("46.80"));
@@ -71,8 +75,12 @@ public class DiscountBillingServiceTest {
       BigDecimal discSumPrice = billingService.calcSumWithDisc(orders.get(i), disOrdItems5thBev);
 
       BigDecimal expectedDiff = disOrdItems5thBev.stream()
-          .map(orderItem -> orderItem.getMenuItem().getPrice()
-              .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
+          .map(orderItem -> {
+            BigDecimal price = orderItem.getMenuItem().getPrice();
+            BigDecimal quantity = new BigDecimal(String.valueOf(orderItem.getQuantity()));
+
+            return price.multiply(quantity);
+          })
           .reduce(ZERO, BigDecimal::add);
 
       assertEquals(expectedDiff, origSumPrice.subtract(discSumPrice));
@@ -92,8 +100,12 @@ public class DiscountBillingServiceTest {
     BigDecimal discSumPrice = billingService.calcSumWithDisc(order1, discountedBev1Snack1);
 
     BigDecimal expectedDiff = discountedBev1Snack1.stream()
-        .map(orderItem -> orderItem.getMenuItem().getPrice()
-            .multiply(new BigDecimal(String.valueOf(orderItem.getQuantity()))))
+        .map(orderItem -> {
+          BigDecimal price = orderItem.getMenuItem().getPrice();
+          BigDecimal quantity = new BigDecimal(String.valueOf(orderItem.getQuantity()));
+
+          return price.multiply(quantity);
+        })
         .reduce(ZERO, BigDecimal::add);
 
     assertEquals(expectedDiff, origSumPrice.subtract(discSumPrice));
