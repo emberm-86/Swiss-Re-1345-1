@@ -19,6 +19,7 @@ import java.util.stream.IntStream;
 import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.OrderItem;
 import org.swissre.assessment.domain.Type;
+import org.swissre.assessment.service.menu.MenuUtil;
 
 public class DiscountServiceImpl implements DiscountService {
 
@@ -46,8 +47,10 @@ public class DiscountServiceImpl implements DiscountService {
   }
 
   private Integer sumByType(List<OrderItem> order, Type snack) {
-    return order.stream().filter(orderItem -> orderItem.getMenuItem().getType() == snack)
-        .map(OrderItem::getQuantity).reduce(0, Integer::sum);
+    return order.stream()
+        .filter(orderItem -> orderItem.getMenuItem().getType() == snack)
+        .map(OrderItem::getQuantity)
+        .reduce(0, Integer::sum);
   }
 
   @Override
@@ -77,10 +80,7 @@ public class DiscountServiceImpl implements DiscountService {
         .collect(groupingBy(MenuItem::getCode, LinkedHashMap::new, summingInt(e -> 1)));
 
     return menuItemOccurrences.entrySet().stream()
-        .map(menuItemOcc -> {
-          MenuItem menuItem = MenuItem.getMenuItemByCode(menuItemOcc.getKey());
-          return new OrderItem(menuItem, menuItemOcc.getValue());
-        })
+        .map(MenuUtil::convertToOrderItem)
         .collect(toList());
   }
 

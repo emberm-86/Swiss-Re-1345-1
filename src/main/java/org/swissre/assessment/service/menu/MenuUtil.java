@@ -4,10 +4,12 @@ import static org.swissre.assessment.domain.MenuItem.checkIfExtraByCode;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.MenuSelection;
 import org.swissre.assessment.domain.MenuState;
+import org.swissre.assessment.domain.OrderItem;
 import org.swissre.assessment.service.order.OrderService;
 
 public class MenuUtil {
@@ -179,5 +181,10 @@ public class MenuUtil {
         .filter(menuItemExtra -> !selectedExtras.contains(menuItemExtra))
         .map(MenuItem::getCode)
         .collect(Collectors.joining(", "));
+  }
+
+  public static OrderItem convertToOrderItem(Entry<String, Integer> menuItemOcc) {
+    MenuItem menuItem = MenuItem.getMenuItemByCode(menuItemOcc.getKey());
+    return new OrderItem(menuItem, menuItemOcc.getValue());
   }
 }

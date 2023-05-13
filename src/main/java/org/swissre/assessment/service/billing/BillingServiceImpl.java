@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.OrderItem;
+import org.swissre.assessment.service.menu.MenuUtil;
 
 public class BillingServiceImpl implements BillingService {
 
@@ -61,10 +61,7 @@ public class BillingServiceImpl implements BillingService {
             LinkedHashMap::new, Collectors.summingInt(OrderItem::getQuantity)));
 
     return menuItems.entrySet().stream()
-        .map(menuItemOcc -> {
-          MenuItem menuItem = MenuItem.getMenuItemByCode(menuItemOcc.getKey());
-          return new OrderItem(menuItem, menuItemOcc.getValue());
-        })
+        .map(MenuUtil::convertToOrderItem)
         .collect(Collectors.toList());
   }
 }
