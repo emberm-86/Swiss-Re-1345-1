@@ -14,6 +14,7 @@
     <java.version>8</java.version>
     <junit.jupiter.version>5.9.2</junit.jupiter.version>
     <lombok.version>1.18.26</lombok.version>
+    <maven.compiler.plugin.version>3.10.1</maven.compiler.plugin.version>
     <maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
     <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -56,6 +57,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.plugin.version}</version>
         <configuration>
           <source>${java.version}</source>
           <target>${java.version}</target>
