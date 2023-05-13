@@ -23,6 +23,7 @@ public class Application {
     Scanner in = new Scanner(System.in);
 
     while (in.hasNext()) {
+
       MenuState menuState = menuSelection.getMenuSelected();
       MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
       List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
@@ -46,7 +47,9 @@ public class Application {
       }
 
       if (menuCode.equalsIgnoreCase("x")) {
+
         switch (menuState) {
+
           case LIST_ORDERS:
             menuSelection.setMenuSelected(MenuState.MAIN_MENU);
             printMainMenu();
