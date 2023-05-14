@@ -181,7 +181,6 @@ public class OrderServiceImpl implements OrderService {
 
   private int maxSumPriceStrLen(List<OrderItem> orders) {
     return orders.stream().map(orderItem -> {
-
           BigDecimal price = orderItem.getMenuItem().getPrice();
           BigDecimal quantity = new BigDecimal(String.valueOf(orderItem.getQuantity()));
 
@@ -194,7 +193,6 @@ public class OrderServiceImpl implements OrderService {
 
   private int maxQuantityAndSumPriceStrLen(List<OrderItem> orders) {
     return orders.stream().map(orderItem -> {
-
           String quantityStr = String.valueOf(orderItem.getQuantity());
           BigDecimal price = orderItem.getMenuItem().getPrice();
           BigDecimal sumPrice = price.multiply(new BigDecimal(quantityStr));

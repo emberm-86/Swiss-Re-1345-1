@@ -17,7 +17,6 @@ public class BillingServiceImpl implements BillingService {
   public BigDecimal calcSum(List<OrderItem> order) {
 
     return order.stream().map(orderItem -> {
-
       BigDecimal price = orderItem.getMenuItem().getPrice();
       BigDecimal quantity = new BigDecimal(String.valueOf(orderItem.getQuantity()));
 
@@ -29,7 +28,6 @@ public class BillingServiceImpl implements BillingService {
   public BigDecimal calcSumWithDisc(List<OrderItem> order, List<OrderItem> discOrderItems) {
 
     return normalizedOrder(order).stream().map(orderItem -> {
-
       BigDecimal price = orderItem.getMenuItem().getPrice();
       BigDecimal quantity = new BigDecimal(String.valueOf(orderItem.getQuantity()));
       BigDecimal sumPrice = price.multiply(quantity);
@@ -55,7 +53,6 @@ public class BillingServiceImpl implements BillingService {
   }
 
   private List<OrderItem> normalizedOrder(List<OrderItem> orders) {
-
     Map<String, Integer> menuItems = orders.stream()
         .collect(Collectors.groupingBy(orderItem -> orderItem.getMenuItem().getCode(),
             LinkedHashMap::new, Collectors.summingInt(OrderItem::getQuantity)));
