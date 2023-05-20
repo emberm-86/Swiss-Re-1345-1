@@ -7,6 +7,7 @@ import static org.swissre.assessment.service.menu.MenuPrinter.printMainMenu;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.MenuSelection;
 import org.swissre.assessment.domain.MenuState;
@@ -57,8 +58,7 @@ public class MenuUtil {
 
     if (menuItemSelected == null) {
 
-      if (Arrays.stream(MenuItem.codes())
-          .noneMatch(menuItemCode -> menuItemCode.equals(menuCode))) {
+      if (Arrays.stream(MenuItem.codes()).noneMatch(menuCode::equals)) {
         throw new IllegalArgumentException("You chose an invalid product code, please retry it!");
       }
 
@@ -78,17 +78,17 @@ public class MenuUtil {
       }
 
     } else {
-      if (!(menuItemSelected.isCoffee() && (menuCode.equalsIgnoreCase("n")
-          || menuCode.equalsIgnoreCase("no")))) {
+      if (menuItemSelected.isCoffee()
+          && Stream.of("n", "no").anyMatch(menuCode::equalsIgnoreCase)) {
 
+        menuSelection.setExtraSelectionDone(true);
+        System.out.println("Please type the quantity:");
+      } else {
         if (menuItemSelected.isCoffee() && MenuItem.checkIfExtraByCode(menuCode)) {
           addExtraMenuItem(menuCode, menuSelection, MenuItem.getMenuItemByCode(menuCode));
         } else {
           addNonExtraMenuItem(menuCode, menuSelection, orderService);
         }
-      } else {
-        menuSelection.setAllExtrasChosen(true);
-        System.out.println("Please type the quantity:");
       }
     }
   }
@@ -98,9 +98,9 @@ public class MenuUtil {
 
     MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
-    boolean allExtrasChosen = menuSelection.isAllExtrasChosen();
+    boolean extraSelectionDone = menuSelection.isExtraSelectionDone();
 
-    if (menuItemSelected.isCoffee() && !(checkIfExtraByCode(menuCode) || allExtrasChosen)) {
+    if (menuItemSelected.isCoffee() && !checkIfExtraByCode(menuCode) && !extraSelectionDone) {
       System.out.println(
           "Please choose a coffee with valid extra code: " +
               checkSelectableExtras(selectedExtras) + " or say no(n)!");
@@ -117,11 +117,12 @@ public class MenuUtil {
       MenuItem extra) {
 
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
-    boolean allExtrasChosen = menuSelection.isAllExtrasChosen();
+    boolean extraSelectionDone = menuSelection.isExtraSelectionDone();
 
     if (!selectedExtras.contains(extra)) {
       selectedExtras.add(MenuItem.getMenuItemByCode(menuCode));
-      if (allExtrasChosen) {
+
+      if (extraSelectionDone) {
         System.out.println("Please type the quantity:");
       } else {
         applySelectableCheck(menuSelection, null);
@@ -144,7 +145,7 @@ public class MenuUtil {
     selectedExtras.clear();
 
     menuSelection.setMenuItemSelected(null);
-    menuSelection.setAllExtrasChosen(false);
+    menuSelection.setExtraSelectionDone(false);
 
     System.out.println(
         "Please choose a product with the code(second column) or submit(x) or cancel(c) your order:");
@@ -166,16 +167,16 @@ public class MenuUtil {
       }
     } else {
       System.out.println("No selectable extras left, please type the quantity:");
-      menuSelection.setAllExtrasChosen(true);
+      menuSelection.setExtraSelectionDone(true);
     }
   }
 
   public static void createOrder(OrderService orderService, MenuSelection menuSelection) {
     MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
-    boolean allExtrasChosen = menuSelection.isAllExtrasChosen();
+    boolean extraSelectionDone = menuSelection.isExtraSelectionDone();
 
-    if (menuItemSelected != null && menuItemSelected.isCoffee() && !allExtrasChosen) {
+    if (menuItemSelected != null && menuItemSelected.isCoffee() && !extraSelectionDone) {
       System.out.println(
           "You can choose an extra with a code to add it to your coffee product: "
               + checkSelectableExtras(selectedExtras) + " or say no(n)!");
