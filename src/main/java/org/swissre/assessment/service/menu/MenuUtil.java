@@ -78,14 +78,14 @@ public class MenuUtil {
       }
 
     } else {
-      if (menuItemSelected.isCoffee()
-          && Stream.of("n", "no").anyMatch(menuCode::equalsIgnoreCase)) {
+      Stream<String> noOptions = Stream.of("n", "no");
 
+      if (menuItemSelected.isCoffee() && noOptions.anyMatch(menuCode::equalsIgnoreCase)) {
         menuSelection.setExtraSelectionDone(true);
         System.out.println("Please type the quantity:");
       } else {
         if (menuItemSelected.isCoffee() && MenuItem.checkIfExtraByCode(menuCode)) {
-          addExtraMenuItem(menuCode, menuSelection, MenuItem.getMenuItemByCode(menuCode));
+          addExtraMenuItem(menuSelection, MenuItem.getMenuItemByCode(menuCode));
         } else {
           addNonExtraMenuItem(menuCode, menuSelection, orderService);
         }
@@ -113,14 +113,12 @@ public class MenuUtil {
     }
   }
 
-  private static void addExtraMenuItem(String menuCode, MenuSelection menuSelection,
-      MenuItem extra) {
-
+  private static void addExtraMenuItem(MenuSelection menuSelection, MenuItem extra) {
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
     boolean extraSelectionDone = menuSelection.isExtraSelectionDone();
 
     if (!selectedExtras.contains(extra)) {
-      selectedExtras.add(MenuItem.getMenuItemByCode(menuCode));
+      selectedExtras.add(extra);
 
       if (extraSelectionDone) {
         System.out.println("Please type the quantity:");
@@ -163,7 +161,7 @@ public class MenuUtil {
       } else {
         System.out.println(
             "'" + extra.getCode() + "'" + " has already been chosen."
-                + " Choose another one: " + selectableExtras + " or say no(n)!");
+                + " Please choose another one: " + selectableExtras + " or say no(n)!");
       }
     } else {
       System.out.println("No selectable extras left, please type the quantity:");
