@@ -54,7 +54,6 @@ public class MenuUtil {
 
     MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
-    boolean extraAlreadyChosen = menuSelection.isExtraAlreadyChosen();
 
     if (menuItemSelected == null) {
 
@@ -72,82 +71,113 @@ public class MenuUtil {
 
       if (MenuItem.isCoffee(menuCode)) {
         System.out.println(
-            "You can choose an extra with codes to your coffee product: "
+            "You can choose an extra with a code to add it to your coffee product: "
                 + checkSelectableExtras(selectedExtras) + " or say no(n)!");
       } else {
-        System.out.println("Please type the quantity: ");
+        System.out.println("Please type the quantity:");
       }
+
     } else {
       if (!(menuItemSelected.isCoffee() && (menuCode.equalsIgnoreCase("n")
           || menuCode.equalsIgnoreCase("no")))) {
+
         if (menuItemSelected.isCoffee() && MenuItem.checkIfExtraByCode(menuCode)) {
-          MenuItem extra = MenuItem.getMenuItemByCode(menuCode);
-          if (!selectedExtras.contains(extra)) {
-            selectedExtras.add(MenuItem.getMenuItemByCode(menuCode));
-            if (extraAlreadyChosen) {
-              System.out.println("Please type the quantity: ");
-            } else {
-              String selectableExtras = checkSelectableExtras(selectedExtras);
-              if (!selectableExtras.isEmpty()) {
-                System.out.println(
-                    "You can choose an other coffee extra with valid code: " + selectableExtras
-                        + " or say no(n)!");
-              } else {
-                System.out.println(
-                    "No selectable extras left, please type the quantity:");
-                menuSelection.setExtraAlreadyChosen(true);
-              }
-            }
-          } else {
-            String selectableExtras = checkSelectableExtras(selectedExtras);
-            if (!selectableExtras.isEmpty()) {
-              System.out.println(
-                  "This has already been chosen: " + extra.getCode() + ". Choose an other one " +
-                      selectableExtras + " or say no(n)!");
-            } else {
-              System.out.println("No selectable extras left, please type the quantity:");
-              menuSelection.setExtraAlreadyChosen(true);
-            }
-          }
+          addExtraMenuItem(menuCode, menuSelection, MenuItem.getMenuItemByCode(menuCode));
         } else {
-          if (menuItemSelected.isCoffee() && !(checkIfExtraByCode(menuCode)
-              || extraAlreadyChosen)) {
-            System.out.println(
-                "Please choose a coffee with valid extra code: " +
-                    checkSelectableExtras(selectedExtras) + " or say no(n)!");
-          } else {
-            if (!isValidNum(menuCode)) {
-              System.out.println("Please give a valid number: > 0 as an input!");
-            } else {
-              orderService.addNewOrderItem(menuItemSelected, menuCode);
-
-              selectedExtras.forEach(
-                  extraSelected -> orderService.addNewOrderItem(extraSelected, menuCode));
-              selectedExtras.clear();
-
-              menuSelection.setMenuItemSelected(null);
-              menuSelection.setExtraAlreadyChosen(false);
-
-              System.out.println(
-                  "Please choose a product with the code(second column) or submit(x) or cancel(c) your order:");
-            }
-          }
+          addNonExtraMenuItem(menuCode, menuSelection, orderService);
         }
       } else {
-        menuSelection.setExtraAlreadyChosen(true);
-        System.out.println("Please type the quantity: ");
+        menuSelection.setAllExtrasChosen(true);
+        System.out.println("Please type the quantity:");
       }
+    }
+  }
+
+  private static void addNonExtraMenuItem(String menuCode, MenuSelection menuSelection,
+      OrderService orderService) {
+
+    MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
+    List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
+    boolean allExtrasChosen = menuSelection.isAllExtrasChosen();
+
+    if (menuItemSelected.isCoffee() && !(checkIfExtraByCode(menuCode) || allExtrasChosen)) {
+      System.out.println(
+          "Please choose a coffee with valid extra code: " +
+              checkSelectableExtras(selectedExtras) + " or say no(n)!");
+    } else {
+      if (!isValidNum(menuCode)) {
+        System.out.println("Please give a valid number: > 0 as an input!");
+      } else {
+        addNewOrderItemWithExtras(menuCode, menuSelection, orderService);
+      }
+    }
+  }
+
+  private static void addExtraMenuItem(String menuCode, MenuSelection menuSelection,
+      MenuItem extra) {
+
+    List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
+    boolean allExtrasChosen = menuSelection.isAllExtrasChosen();
+
+    if (!selectedExtras.contains(extra)) {
+      selectedExtras.add(MenuItem.getMenuItemByCode(menuCode));
+      if (allExtrasChosen) {
+        System.out.println("Please type the quantity:");
+      } else {
+        applySelectableCheck(menuSelection, null);
+      }
+    } else {
+      applySelectableCheck(menuSelection, extra);
+    }
+  }
+
+  private static void addNewOrderItemWithExtras(String menuCode, MenuSelection menuSelection,
+      OrderService orderService) {
+
+    MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
+    List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
+
+    orderService.addNewOrderItem(menuItemSelected, menuCode);
+
+    selectedExtras.forEach(
+        extraSelected -> orderService.addNewOrderItem(extraSelected, menuCode));
+    selectedExtras.clear();
+
+    menuSelection.setMenuItemSelected(null);
+    menuSelection.setAllExtrasChosen(false);
+
+    System.out.println(
+        "Please choose a product with the code(second column) or submit(x) or cancel(c) your order:");
+  }
+
+  private static void applySelectableCheck(MenuSelection menuSelection, MenuItem extra) {
+    List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
+    String selectableExtras = checkSelectableExtras(selectedExtras);
+
+    if (!selectableExtras.isEmpty()) {
+      if (extra == null) {
+        System.out.println(
+            "You can choose another coffee extra with valid code: " + selectableExtras
+                + " or say no(n)!");
+      } else {
+        System.out.println(
+            "'" + extra.getCode() + "'" + " has already been chosen."
+                + " Choose another one: " + selectableExtras + " or say no(n)!");
+      }
+    } else {
+      System.out.println("No selectable extras left, please type the quantity:");
+      menuSelection.setAllExtrasChosen(true);
     }
   }
 
   public static void createOrder(OrderService orderService, MenuSelection menuSelection) {
     MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
-    boolean extraAlreadyChosen = menuSelection.isExtraAlreadyChosen();
+    boolean allExtrasChosen = menuSelection.isAllExtrasChosen();
 
-    if (menuItemSelected != null && menuItemSelected.isCoffee() && !extraAlreadyChosen) {
+    if (menuItemSelected != null && menuItemSelected.isCoffee() && !allExtrasChosen) {
       System.out.println(
-          "You can choose an extra with codes to your coffee product: "
+          "You can choose an extra with a code to add it to your coffee product: "
               + checkSelectableExtras(selectedExtras) + " or say no(n)!");
     } else {
       orderService.closeOrder();
