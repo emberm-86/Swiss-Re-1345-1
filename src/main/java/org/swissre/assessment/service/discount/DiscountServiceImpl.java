@@ -19,7 +19,7 @@ import java.util.stream.IntStream;
 import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.OrderItem;
 import org.swissre.assessment.domain.Type;
-import org.swissre.assessment.service.menu.MenuUtil;
+import org.swissre.assessment.service.menu.MenuItemConverter;
 
 public class DiscountServiceImpl implements DiscountService {
 
@@ -80,7 +80,7 @@ public class DiscountServiceImpl implements DiscountService {
         .collect(groupingBy(MenuItem::getCode, LinkedHashMap::new, summingInt(e -> 1)));
 
     return menuItemOccurrences.entrySet().stream()
-        .map(MenuUtil::convertToOrderItem)
+        .map(MenuItemConverter::convertToOrderItem)
         .collect(toList());
   }
 

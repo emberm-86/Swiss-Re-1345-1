@@ -4,24 +4,16 @@ import static org.swissre.assessment.domain.MenuItem.checkIfExtraByCode;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.stream.Collectors;
 import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.MenuSelection;
 import org.swissre.assessment.domain.MenuState;
-import org.swissre.assessment.domain.OrderItem;
 import org.swissre.assessment.service.order.OrderService;
 
 public class MenuUtil {
 
   public static void prettyPrintMenu(List<MenuItem> menuItems) {
-    menuItems.stream().map(MenuUtil::convertMenuItemToStr).forEach(System.out::println);
-  }
-
-  public static String convertMenuItemToStr(MenuItem menuItem) {
-    String format = "%-14s %-8s %.02f %s";
-    return String.format(format, menuItem.getName(), " (" + menuItem.getCode() + ")",
-        menuItem.getPrice(), "CHF");
+    menuItems.stream().map(MenuItemConverter::convertMenuItemToStr).forEach(System.out::println);
   }
 
   public static void printMainMenu() {
@@ -41,17 +33,6 @@ public class MenuUtil {
     System.out.println("================================");
     System.out.println(
         "Please choose a product with the code(second column) or submit(x) or cancel(c) your order:");
-  }
-
-  public static boolean isValidNum(String strNum) {
-    if (strNum == null) {
-      return false;
-    }
-    try {
-      return Integer.parseInt(strNum) > 0;
-    } catch (NumberFormatException nfe) {
-      return false;
-    }
   }
 
   public static void launchSelectedMenu(String menuCode, MenuSelection menuSelection,
@@ -82,6 +63,11 @@ public class MenuUtil {
       default:
         break;
     }
+  }
+
+  public static void backToMainMenu(MenuSelection menuSelection) {
+    menuSelection.setMenuSelected(MenuState.MAIN_MENU);
+    printMainMenu();
   }
 
   public static void launchCreateOrderMenu(String menuCode, MenuSelection menuSelection,
@@ -175,15 +161,36 @@ public class MenuUtil {
     }
   }
 
-  public static String checkSelectableExtras(List<MenuItem> selectedExtras) {
+  public static void createOrder(OrderService orderService, MenuSelection menuSelection) {
+    MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
+    List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
+    boolean extraAlreadyChosen = menuSelection.isExtraAlreadyChosen();
+
+    if (menuItemSelected != null && menuItemSelected.isCoffee() && !extraAlreadyChosen) {
+      System.out.println(
+          "You can choose an extra with codes to your coffee product: "
+              + checkSelectableExtras(selectedExtras) + " or say no(n)!");
+    } else {
+      orderService.closeOrder();
+      backToMainMenu(menuSelection);
+    }
+  }
+
+  private static String checkSelectableExtras(List<MenuItem> selectedExtras) {
     return MenuItem.extras().stream()
         .filter(menuItemExtra -> !selectedExtras.contains(menuItemExtra))
         .map(MenuItem::getCode)
         .collect(Collectors.joining(", "));
   }
 
-  public static OrderItem convertToOrderItem(Entry<String, Integer> menuItemOcc) {
-    MenuItem menuItem = MenuItem.getMenuItemByCode(menuItemOcc.getKey());
-    return new OrderItem(menuItem, menuItemOcc.getValue());
+  private static boolean isValidNum(String strNum) {
+    if (strNum == null) {
+      return false;
+    }
+    try {
+      return Integer.parseInt(strNum) > 0;
+    } catch (NumberFormatException nfe) {
+      return false;
+    }
   }
 }

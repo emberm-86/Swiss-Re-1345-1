@@ -1,12 +1,11 @@
 package org.swissre.assessment;
 
-import static org.swissre.assessment.service.menu.MenuUtil.checkSelectableExtras;
+import static org.swissre.assessment.service.menu.MenuUtil.backToMainMenu;
+import static org.swissre.assessment.service.menu.MenuUtil.createOrder;
 import static org.swissre.assessment.service.menu.MenuUtil.launchSelectedMenu;
 import static org.swissre.assessment.service.menu.MenuUtil.printMainMenu;
 
-import java.util.List;
 import java.util.Scanner;
-import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.MenuSelection;
 import org.swissre.assessment.domain.MenuState;
 import org.swissre.assessment.service.order.OrderService;
@@ -24,10 +23,6 @@ public class Application {
 
     while (in.hasNext()) {
       MenuState menuState = menuSelection.getMenuSelected();
-      MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
-      List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
-      boolean extraAlreadyChosen = menuSelection.isExtraAlreadyChosen();
-
       String[] arguments = in.nextLine().split("\\s+");
 
       if (arguments.length == 0) {
@@ -48,29 +43,19 @@ public class Application {
       if (menuCode.equalsIgnoreCase("x")) {
         switch (menuState) {
           case LIST_ORDERS:
-            menuSelection.setMenuSelected(MenuState.MAIN_MENU);
-            printMainMenu();
+            backToMainMenu(menuSelection);
             break;
 
           case CREATE_ORDER:
-            if (menuItemSelected != null && menuItemSelected.isCoffee() && !extraAlreadyChosen) {
-              System.out.println(
-                  "You can choose an extra with codes to your coffee product: "
-                      + checkSelectableExtras(selectedExtras) + " or say no(n)!");
-            } else {
-              orderService.closeOrder();
-              menuSelection.setMenuSelected(MenuState.MAIN_MENU);
-              printMainMenu();
-            }
+            createOrder(orderService, menuSelection);
             break;
         }
         continue;
       }
 
       if ((menuCode.equalsIgnoreCase("c") && menuState == MenuState.CREATE_ORDER)) {
-        menuSelection.setMenuSelected(MenuState.MAIN_MENU);
         System.out.println("You have cancelled your order, no worries! :)");
-        printMainMenu();
+        backToMainMenu(menuSelection);
         continue;
       }
 

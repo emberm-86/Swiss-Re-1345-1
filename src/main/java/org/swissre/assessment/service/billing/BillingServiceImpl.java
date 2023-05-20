@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.swissre.assessment.domain.OrderItem;
-import org.swissre.assessment.service.menu.MenuUtil;
+import org.swissre.assessment.service.menu.MenuItemConverter;
 
 public class BillingServiceImpl implements BillingService {
 
@@ -56,7 +56,7 @@ public class BillingServiceImpl implements BillingService {
             LinkedHashMap::new, Collectors.summingInt(OrderItem::getQuantity)));
 
     return menuItems.entrySet().stream()
-        .map(MenuUtil::convertToOrderItem)
+        .map(MenuItemConverter::convertToOrderItem)
         .collect(Collectors.toList());
   }
 }
