@@ -1,6 +1,8 @@
 package org.swissre.assessment.service.menu;
 
 import static org.swissre.assessment.domain.MenuItem.checkIfExtraByCode;
+import static org.swissre.assessment.service.menu.MenuPrinter.printCreateOrderMenu;
+import static org.swissre.assessment.service.menu.MenuPrinter.printMainMenu;
 
 import java.util.Arrays;
 import java.util.List;
@@ -11,29 +13,6 @@ import org.swissre.assessment.domain.MenuState;
 import org.swissre.assessment.service.order.OrderService;
 
 public class MenuUtil {
-
-  public static void prettyPrintMenu(List<MenuItem> menuItems) {
-    menuItems.stream().map(MenuItemConverter::convertMenuItemToStr).forEach(System.out::println);
-  }
-
-  public static void printMainMenu() {
-    System.out.println("========================");
-    System.out.println("Coffee Corner");
-    System.out.println("========================");
-    System.out.println("1. Create new order");
-    System.out.println("2. List previous orders");
-    System.out.println("3. Quit (Q)");
-    System.out.println("========================");
-    System.out.println("Please choose from the menu: ");
-  }
-
-  public static void printCreateOrderMenu() {
-    System.out.println("================================");
-    prettyPrintMenu(Arrays.asList(MenuItem.values()));
-    System.out.println("================================");
-    System.out.println(
-        "Please choose a product with the code(second column) or submit(x) or cancel(c) your order:");
-  }
 
   public static void launchSelectedMenu(String menuCode, MenuSelection menuSelection,
       OrderService orderService) {

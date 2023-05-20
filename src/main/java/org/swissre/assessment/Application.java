@@ -1,9 +1,9 @@
 package org.swissre.assessment;
 
+import static org.swissre.assessment.service.menu.MenuPrinter.printMainMenu;
 import static org.swissre.assessment.service.menu.MenuUtil.backToMainMenu;
 import static org.swissre.assessment.service.menu.MenuUtil.createOrder;
 import static org.swissre.assessment.service.menu.MenuUtil.launchSelectedMenu;
-import static org.swissre.assessment.service.menu.MenuUtil.printMainMenu;
 
 import java.util.Scanner;
 import org.swissre.assessment.domain.MenuSelection;
