@@ -34,12 +34,12 @@ Extra Milk      (xem)   0,30 CHF
 Foamed Milk     (xfm)   0,50 CHF
 Roasted Coffee  (rcf)   0,90 CHF
 ================================
-Please choose another product with the code(second column) or submit your order(x), cancel(c): 
+Please choose a product with the code (second column) or submit your order(x), cancel(c): 
 ```
 
 #### II/a non-coffee product: type the code and the quantity
 ``` bash
-Please choose another product with the code(second column) or submit your order(x), cancel(c):
+Please choose a product with the code (second column) or submit your order(x), cancel(c):
 br
 Please type the quantity:
 2
@@ -47,7 +47,7 @@ Please type the quantity:
 
 #### II/b coffee product: type the code, then the type of extra and the quantity, you can ignore the further extra selection with 'n' 
 ``` bash
-Please choose another product with the code(second column) or submit your order(x), cancel(c):
+Please choose a product with the code (second column) or submit your order(x), cancel(c):
 sc
 You can choose an extra with codes to your coffee product: xem, xfm, rcf or say no(n)
 xem
@@ -57,7 +57,7 @@ Please type the quantity:
 3
 ```
 
-#### II/c Please choose another product with the code(second column) or submit your order(x), cancel(c): 
+#### II/c Please choose a product with the code (second column) or submit your order(x), cancel(c): 
 You can continue or submit or cancel your order here.
 
 ### III. List orders.
@@ -69,7 +69,7 @@ Coffee Corner
 2. List previous orders
 3. Quit (Q)
 ========================
-Please choose with a number: 
+Please choose from the menu: 
 2
 ========================
 Order: 0
