@@ -15,10 +15,10 @@ import org.swissre.assessment.service.order.OrderService;
 public class MenuUtil {
 
   public static void prettyPrintMenu(List<MenuItem> menuItems) {
-    menuItems.stream().map(MenuUtil::printMenu).forEach(System.out::println);
+    menuItems.stream().map(MenuUtil::convertMenuItemToStr).forEach(System.out::println);
   }
 
-  public static String printMenu(MenuItem menuItem) {
+  public static String convertMenuItemToStr(MenuItem menuItem) {
     String format = "%-14s %-8s %.02f %s";
     return String.format(format, menuItem.getName(), " (" + menuItem.getCode() + ")",
         menuItem.getPrice(), "CHF");
@@ -36,9 +36,9 @@ public class MenuUtil {
   }
 
   public static void printCreateOrderMenu() {
-    System.out.println("========================");
+    System.out.println("================================");
     prettyPrintMenu(Arrays.asList(MenuItem.values()));
-    System.out.println("========================");
+    System.out.println("================================");
     System.out.println(
         "Please choose another product with the code(second column) or submit your order(x), cancel(c): ");
   }
@@ -68,7 +68,6 @@ public class MenuUtil {
       OrderService orderService) {
 
     switch (menuCode) {
-
       case "1":
         menuSelection.setMenuSelected(MenuState.CREATE_ORDER);
         printCreateOrderMenu();

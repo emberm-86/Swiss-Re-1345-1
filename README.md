@@ -24,7 +24,7 @@ You can create orders with the first option and track them and 5th beverage disc
 
 ### II. Create Order
 ``` bash
-========================
+================================
 Small coffee    (sc)    2,50 CHF
 Medium coffee   (mc)    3,00 CHF
 Large coffee    (lc)    3,50 CHF
@@ -33,7 +33,7 @@ Orange Juice    (oj)    3,95 CHF
 Extra Milk      (xem)   0,30 CHF
 Foamed Milk     (xfm)   0,50 CHF
 Roasted Coffee  (rcf)   0,90 CHF
-========================
+================================
 Please choose another product with the code(second column) or submit your order(x), cancel(c): 
 ```
 
@@ -73,34 +73,34 @@ Please choose with a number:
 2
 ========================
 Order: 0
--------------------------------------------
-Bacon roll      (br)    4,50 X 2  9,00 CHF
-Small coffee    (sc)    2,50 X 3  7,50 CHF
-Extra Milk      (xem)   0,30 X 3  0,90 CHF
--------------------------------------------
-Total:                           17,40 CHF 
--------------------------------------------
+-----------------------------------------
+Bacon roll     (br)   2 X 4,50   9,00 CHF
+Small coffee   (sc)   3 X 2,50   7,50 CHF
+Extra Milk     (xem)  3 X 0,30   0,90 CHF
+-----------------------------------------
+Total:                          17,40 CHF 
+-----------------------------------------
 Discounts:
--------------------------------------------
-beverage1snack1              2 X -0,30 CHF
-===========================================
-beverage1snack1 sum:              0,60 CHF 
--------------------------------------------
-Total with discounts:            16,80 CHF 
+-----------------------------------------
+beverage1snack1             2 X -0,30 CHF
+=========================================
+beverage1snack1 sum:             0,60 CHF 
+-----------------------------------------
+Total with discounts:           16,80 CHF 
 
 Order: 1
--------------------------------------------
-Orange Juice    (oj)    3,95 X 3  11,85 CHF
--------------------------------------------
-Total:                            11,85 CHF 
--------------------------------------------
+------------------------------------------
+Orange Juice   (oj)   3 X 3,95   11,85 CHF
+------------------------------------------
+Total:                           11,85 CHF 
+------------------------------------------
 Discounts:
--------------------------------------------
-beverage5th                   1 X -3,95 CHF
-===========================================
-beverage5th sum:                   3,95 CHF 
--------------------------------------------
-Total with discounts:              7,90 CHF 
+------------------------------------------
+beverage5th                  1 X -3,95 CHF
+==========================================
+beverage5th sum:                  3,95 CHF 
+------------------------------------------
+Total with discounts:             7,90 CHF 
 ========================
 
 Press X to return to the Main Menu!
