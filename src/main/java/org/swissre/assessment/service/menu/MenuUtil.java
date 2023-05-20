@@ -40,7 +40,7 @@ public class MenuUtil {
     prettyPrintMenu(Arrays.asList(MenuItem.values()));
     System.out.println("================================");
     System.out.println(
-        "Please choose a product with the code (second column) or submit your order(x), cancel(c): ");
+        "Please choose a product with the code(second column) or submit(x) or cancel(c) your order:");
   }
 
   public static boolean isValidNum(String strNum) {
@@ -164,7 +164,7 @@ public class MenuUtil {
               menuSelection.setExtraAlreadyChosen(false);
 
               System.out.println(
-                  "Please choose a product with the code (second column) or submit your order(x) or cancel(c): ");
+                  "Please choose a product with the code(second column) or submit(x) or cancel(c) your order:");
             }
           }
         }
