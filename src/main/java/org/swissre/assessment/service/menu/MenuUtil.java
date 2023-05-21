@@ -89,9 +89,7 @@ public class MenuUtil {
 
     if (menuItemSelected.isCoffee() && noOptions.anyMatch(menuCode::equalsIgnoreCase)) {
       if (menuSelection.isExtraSelectionDone()) {
-        if (!isValidNum(menuCode)) {
-          System.out.println("Please give a valid number: > 0 as an input!");
-        }
+        System.out.println("Please give a valid number: > 0 as an input!");
       } else {
         System.out.println("Please type the quantity:");
       }
@@ -141,13 +139,11 @@ public class MenuUtil {
 
   private static void addExtraMenuItem(MenuSelection menuSelection, MenuItem extra) {
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
-
-    if (!selectedExtras.contains(extra)) {
+    boolean extraIsIn = selectedExtras.contains(extra);
+    if (!extraIsIn) {
       selectedExtras.add(extra);
-      applySelectableCheck(menuSelection, null);
-    } else {
-      applySelectableCheck(menuSelection, extra);
     }
+    applySelectableCheck(menuSelection, extraIsIn ? extra : null);
   }
 
   private static void addNewOrderItemWithExtras(String menuCode, MenuSelection menuSelection,
