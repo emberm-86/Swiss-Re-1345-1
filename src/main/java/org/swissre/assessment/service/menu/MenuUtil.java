@@ -76,40 +76,60 @@ public class MenuUtil {
       } else {
         System.out.println("Please type the quantity:");
       }
-
     } else {
-      Stream<String> noOptions = Stream.of("n", "no");
+      addMenuItem(menuCode, menuSelection, orderService);
+    }
+  }
 
-      if (menuItemSelected.isCoffee() && noOptions.anyMatch(menuCode::equalsIgnoreCase)) {
-        menuSelection.setExtraSelectionDone(true);
-        System.out.println("Please type the quantity:");
-      } else {
-        if (menuItemSelected.isCoffee() && MenuItem.checkIfExtraByCode(menuCode)) {
-          addExtraMenuItem(menuSelection, MenuItem.getMenuItemByCode(menuCode));
-        } else {
-          addNonExtraMenuItem(menuCode, menuSelection, orderService);
+  private static void addMenuItem(String menuCode, MenuSelection menuSelection,
+      OrderService orderService) {
+
+    MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
+    Stream<String> noOptions = Stream.of("n", "no");
+
+    if (menuItemSelected.isCoffee() && noOptions.anyMatch(menuCode::equalsIgnoreCase)) {
+      if (menuSelection.isExtraSelectionDone()) {
+        if (!isValidNum(menuCode)) {
+          System.out.println("Please give a valid number: > 0 as an input!");
         }
+      } else {
+        System.out.println("Please type the quantity:");
       }
+      menuSelection.setExtraSelectionDone(true);
+    } else {
+      addMenuItemWithExtraCheck(menuCode, menuSelection, orderService);
+    }
+  }
+
+  private static void addMenuItemWithExtraCheck(String menuCode, MenuSelection menuSelection,
+      OrderService orderService) {
+
+    boolean extraSelectionDone = menuSelection.isExtraSelectionDone();
+    MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
+    List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
+
+    if (menuItemSelected.isCoffee()) {
+      if (MenuItem.checkIfExtraByCode(menuCode)) {
+        addExtraMenuItem(menuSelection, MenuItem.getMenuItemByCode(menuCode));
+      } else if (!extraSelectionDone) {
+        System.out.println(
+            "Please choose the coffee with valid extra code: " +
+                checkSelectableExtras(selectedExtras) + " or say no(n)!");
+      } else {
+        addNonExtraMenuItem(menuCode, menuSelection, orderService);
+      }
+    } else {
+      addNonExtraMenuItem(menuCode, menuSelection, orderService);
     }
   }
 
   private static void addNonExtraMenuItem(String menuCode, MenuSelection menuSelection,
       OrderService orderService) {
 
-    MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
-    List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
-    boolean extraSelectionDone = menuSelection.isExtraSelectionDone();
-
-    if (menuItemSelected.isCoffee() && !checkIfExtraByCode(menuCode) && !extraSelectionDone) {
-      System.out.println(
-          "Please choose a coffee with valid extra code: " +
-              checkSelectableExtras(selectedExtras) + " or say no(n)!");
+    if (!isValidNum(menuCode)) {
+      System.out.println("Please give a valid number: > 0 as an input!");
     } else {
-      if (!isValidNum(menuCode)) {
-        System.out.println("Please give a valid number: > 0 as an input!");
-      } else {
-        addNewOrderItemWithExtras(menuCode, menuSelection, orderService);
-      }
+      addNewOrderItemWithExtras(menuCode, menuSelection, orderService);
     }
   }
 
