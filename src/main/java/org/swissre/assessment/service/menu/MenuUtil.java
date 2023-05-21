@@ -110,7 +110,11 @@ public class MenuUtil {
 
     if (menuItemSelected.isCoffee()) {
       if (MenuItem.checkIfExtraByCode(menuCode)) {
-        addExtraMenuItem(menuSelection, MenuItem.getMenuItemByCode(menuCode));
+        if (extraSelectionDone) {
+          System.out.println("Please give a valid number: > 0 as an input!");
+        } else {
+          addExtraMenuItem(menuSelection, MenuItem.getMenuItemByCode(menuCode));
+        }
       } else if (!extraSelectionDone) {
         System.out.println(
             "Please choose the coffee with valid extra code: " +
@@ -135,16 +139,10 @@ public class MenuUtil {
 
   private static void addExtraMenuItem(MenuSelection menuSelection, MenuItem extra) {
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
-    boolean extraSelectionDone = menuSelection.isExtraSelectionDone();
 
     if (!selectedExtras.contains(extra)) {
       selectedExtras.add(extra);
-
-      if (extraSelectionDone) {
-        System.out.println("Please type the quantity:");
-      } else {
-        applySelectableCheck(menuSelection, null);
-      }
+      applySelectableCheck(menuSelection, null);
     } else {
       applySelectableCheck(menuSelection, extra);
     }
