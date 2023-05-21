@@ -109,18 +109,20 @@ public class MenuUtil {
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
 
     if (menuItemSelected.isCoffee()) {
-      if (MenuItem.checkIfExtraByCode(menuCode)) {
-        if (extraSelectionDone) {
+      if (extraSelectionDone) {
+        if (MenuItem.checkIfExtraByCode(menuCode)) {
           System.out.println("Please give a valid number: > 0 as an input!");
         } else {
-          addExtraMenuItem(menuSelection, MenuItem.getMenuItemByCode(menuCode));
+          addNonExtraMenuItem(menuCode, menuSelection, orderService);
         }
-      } else if (!extraSelectionDone) {
-        System.out.println(
-            "Please choose the coffee with valid extra code: " +
-                checkSelectableExtras(selectedExtras) + " or say no(n)!");
       } else {
-        addNonExtraMenuItem(menuCode, menuSelection, orderService);
+        if (MenuItem.checkIfExtraByCode(menuCode)) {
+          addExtraMenuItem(menuSelection, MenuItem.getMenuItemByCode(menuCode));
+        } else {
+          System.out.println(
+              "Please choose the coffee with valid extra code: " +
+                  checkSelectableExtras(selectedExtras) + " or say no(n)!");
+        }
       }
     } else {
       addNonExtraMenuItem(menuCode, menuSelection, orderService);
