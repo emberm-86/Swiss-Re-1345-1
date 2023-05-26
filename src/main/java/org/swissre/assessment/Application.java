@@ -42,12 +42,12 @@ public class Application {
 
       if (menuCode.equalsIgnoreCase("x")) {
         switch (menuState) {
-          case LIST_ORDERS:
-            backToMainMenu(menuSelection);
-            break;
-
           case CREATE_ORDER:
             createOrder(orderService, menuSelection);
+            break;
+            
+          case LIST_ORDERS:
+            backToMainMenu(menuSelection);
             break;
         }
         continue;
