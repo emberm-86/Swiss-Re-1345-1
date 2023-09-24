@@ -71,13 +71,8 @@ public class OrderServiceImpl implements OrderService {
     int baseShift = 31 + maxQuantityAndSumPriceStrLen(order);
     int separatorLength = baseShift + 5;
 
-    printSeparator(separatorLength, '-');
+    printSeparator(separatorLength, '=');
     prettyPrintOrder(order);
-    printSeparator(separatorLength, '-');
-
-    int shift = baseShift - String.format("%.02f", billForOrder).length();
-
-    System.out.printf("%-" + shift + "s %.02f %s %n", "Total:", billForOrder, "CHF");
 
     List<OrderItem> disOrderItems5thBev = discountService.getDisOrdItems5thBev(orderId, allOrders);
     List<OrderItem> disOrderItemsBev1Snack1 = discountService.getDiscBev1Snack1(orderId, allOrders);
@@ -86,9 +81,13 @@ public class OrderServiceImpl implements OrderService {
         disOrderItemsBev1Snack1.stream()).collect(Collectors.toList());
 
     int j = disOrderItems5thBev.size();
+    int totalShift = baseShift - String.format("%.02f", billForOrder).length();
 
     if (!disOrderItems.isEmpty()) {
       printSeparator(separatorLength, '-');
+      System.out.printf("%-" + totalShift + "s %.02f %s %n", "Total:", billForOrder, "CHF");
+
+      printSeparator(separatorLength, '=');
       System.out.println("Discounts:");
       printSeparator(separatorLength, '-');
     }
@@ -116,18 +115,15 @@ public class OrderServiceImpl implements OrderService {
 
     if (!disOrderItems.isEmpty()) {
       System.out.println();
-      printSeparator(separatorLength, '=');
-    }
-
-    printDistSum(baseShift, disOrderItems5thBev, bev5thTitle);
-
-    if (!disOrderItems5thBev.isEmpty() && !disOrderItemsBev1Snack1.isEmpty()) {
       printSeparator(separatorLength, '-');
     }
 
+    printDistSum(baseShift, disOrderItems5thBev, bev5thTitle);
     printDistSum(baseShift, disOrderItemsBev1Snack1, beverage1Snack1Title);
+    printSeparator(separatorLength, '=');
 
-    printSeparator(separatorLength, '-');
+    System.out.printf("%-" + totalShift + "s %.02f %s %n", "Total:", billForOrder, "CHF");
+    printDistSum(baseShift, disOrderItems, "All discounts", true);
 
     BigDecimal billForOrderDisc = billingService.calcSumWithDisc(order, disOrderItems);
     int discountSumShift = baseShift - String.format("%.02f", billForOrderDisc).length();
@@ -142,7 +138,11 @@ public class OrderServiceImpl implements OrderService {
   }
 
   private void printDistSum(int baseShift, List<OrderItem> disOrderItems, String title) {
-    if (disOrderItems.isEmpty()) {
+    printDistSum(baseShift, disOrderItems, title, false);
+  }
+
+  private void printDistSum(int baseShift, List<OrderItem> disOrderItems, String title, boolean all) {
+    if (disOrderItems.isEmpty() && !all) {
       return;
     }
 
