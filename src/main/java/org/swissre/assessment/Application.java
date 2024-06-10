@@ -36,7 +36,7 @@ public class Application {
         break;
       }
 
-      if (menuCode.equals("")) {
+      if (menuCode.isEmpty()) {
         continue;
       }
 

@@ -57,7 +57,6 @@ public class MenuUtil {
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
 
     if (menuItemSelected == null) {
-
       if (Arrays.stream(MenuItem.codes()).noneMatch(menuCode::equals)) {
         throw new IllegalArgumentException("You chose an invalid product code, please retry it!");
       }
@@ -106,24 +105,20 @@ public class MenuUtil {
     MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
 
-    if (menuItemSelected.isCoffee()) {
-      if (extraSelectionDone) {
-        if (MenuItem.checkIfExtraByCode(menuCode)) {
-          System.out.println("Please give a valid number: > 0 as an input!");
-        } else {
-          addNonExtraMenuItem(menuCode, menuSelection, orderService);
-        }
-      } else {
-        if (MenuItem.checkIfExtraByCode(menuCode)) {
-          addExtraMenuItem(menuSelection, MenuItem.getMenuItemByCode(menuCode));
-        } else {
-          System.out.println(
-              "Please choose the coffee with valid extra code: " +
-                  checkSelectableExtras(selectedExtras) + " or say no(n)!");
-        }
-      }
-    } else {
+    if (!menuItemSelected.isCoffee()) {
       addNonExtraMenuItem(menuCode, menuSelection, orderService);
+    } else if (extraSelectionDone) {
+      if (MenuItem.checkIfExtraByCode(menuCode)) {
+        System.out.println("Please give a valid number: > 0 as an input!");
+      } else {
+        addNonExtraMenuItem(menuCode, menuSelection, orderService);
+      }
+    } else if (MenuItem.checkIfExtraByCode(menuCode)) {
+      addExtraMenuItem(menuSelection, MenuItem.getMenuItemByCode(menuCode));
+    } else {
+      System.out.println(
+              "Please choose the coffee with valid extra code: " +
+                      checkSelectableExtras(selectedExtras) + " or say no(n)!");
     }
   }
 
@@ -140,6 +135,7 @@ public class MenuUtil {
   private static void addExtraMenuItem(MenuSelection menuSelection, MenuItem extra) {
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
     boolean extraIsIn = selectedExtras.contains(extra);
+
     if (!extraIsIn) {
       selectedExtras.add(extra);
     }
@@ -169,19 +165,17 @@ public class MenuUtil {
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
     String selectableExtras = checkSelectableExtras(selectedExtras);
 
-    if (!selectableExtras.isEmpty()) {
-      if (extra == null) {
-        System.out.println(
-            "You can choose another coffee extra with valid code: " + selectableExtras
-                + " or say no(n)!");
-      } else {
-        System.out.println(
-            "'" + extra.getCode() + "'" + " has already been chosen."
-                + " Please choose another one: " + selectableExtras + " or say no(n)!");
-      }
-    } else {
+    if (selectableExtras.isEmpty()) {
       System.out.println("No selectable extras left, please type the quantity:");
       menuSelection.setExtraSelectionDone(true);
+    } else if (extra == null) {
+      System.out.println(
+              "You can choose another coffee extra with valid code: " + selectableExtras
+                      + " or say no(n)!");
+    } else {
+      System.out.println(
+              "'" + extra.getCode() + "'" + " has already been chosen."
+                      + " Please choose another one: " + selectableExtras + " or say no(n)!");
     }
   }
 
@@ -211,6 +205,7 @@ public class MenuUtil {
     if (strNum == null) {
       return false;
     }
+
     try {
       return Integer.parseInt(strNum) > 0;
     } catch (NumberFormatException nfe) {
