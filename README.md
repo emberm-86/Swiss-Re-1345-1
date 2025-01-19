@@ -15,8 +15,8 @@ Java 8 or higher, Maven, IntelliJ or other ide
 ========================
 Coffee Corner
 ========================
-1. Create new order
-2. List previous orders
+1. Create a new order
+2. List all of the orders
 3. Quit (Q)
 ========================
 ```
@@ -51,7 +51,7 @@ Please choose a product with the code(second column) or submit(x) or cancel(c) y
 sc
 You can choose an extra with codes to your coffee product: xem, xfm, rcf or say no(n)
 xem
-You can choose another coffee extra with valid code: xfm, rcf or say no(n)!
+You can choose another coffee extra with a valid code: xfm, rcf or say no(n)!
 n
 Please type the quantity: 
 3
@@ -65,8 +65,8 @@ You can continue or submit or cancel your order here.
 ========================
 Coffee Corner
 ========================
-1. Create new order
-2. List previous orders
+1. Create a new order
+2. List all of the orders
 3. Quit (Q)
 ========================
 Please choose from the menu: 
