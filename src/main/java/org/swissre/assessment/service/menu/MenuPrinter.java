@@ -10,8 +10,8 @@ public class MenuPrinter {
     System.out.println("========================");
     System.out.println("Coffee Corner");
     System.out.println("========================");
-    System.out.println("1. Create new order");
-    System.out.println("2. List previous orders");
+    System.out.println("1. Create a new order");
+    System.out.println("2. List all of the orders");
     System.out.println("3. Quit (Q)");
     System.out.println("========================");
     System.out.println("Please choose from the menu: ");

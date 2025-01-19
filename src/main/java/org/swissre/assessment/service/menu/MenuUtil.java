@@ -117,7 +117,7 @@ public class MenuUtil {
       addExtraMenuItem(menuSelection, MenuItem.getMenuItemByCode(menuCode));
     } else {
       System.out.println(
-              "Please choose the coffee with valid extra code: " +
+              "Please choose the coffee with a valid extra code: " +
                       checkSelectableExtras(selectedExtras) + " or say no(n)!");
     }
   }
