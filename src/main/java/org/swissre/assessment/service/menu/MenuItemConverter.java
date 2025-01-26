@@ -11,9 +11,7 @@ public class MenuItemConverter {
     return new OrderItem(menuItem, menuItemOcc.getValue());
   }
 
-  public static String convertMenuItemToStr(MenuItem menuItem) {
-    String format = "%-14s %-8s %.02f %s";
-    return String.format(format, menuItem.getName(), " (" + menuItem.getCode() + ")",
-        menuItem.getPrice(), "CHF");
+  public static String convertMenuItemToStr(String format, MenuItem menuItem) {
+    return String.format(format, menuItem.getName(), menuItem.getCode(), menuItem.getPrice(), "CHF");
   }
 }

@@ -72,7 +72,14 @@ public class OrderServiceImpl implements OrderService {
     int separatorLength = baseShift + 5;
 
     printSeparator(separatorLength, '=');
-    prettyPrintOrder(order);
+
+    int maxQuantityStrLen = maxQuantityStrLen(order);
+    int maxSumPriceStrLen = maxSumPriceStrLen(order);
+
+    printHeader(maxQuantityStrLen);
+
+    printSeparator(separatorLength, '-');
+    prettyPrintOrder(order, maxQuantityStrLen, maxSumPriceStrLen);
 
     List<OrderItem> disOrderItems5thBev = discountService.getDisOrdItems5thBev(orderId, allOrders);
     List<OrderItem> disOrderItemsBev1Snack1 = discountService.getDiscBev1Snack1(orderId, allOrders);
@@ -132,6 +139,13 @@ public class OrderServiceImpl implements OrderService {
     System.out.printf(format, "Total with discounts:", billForOrderDisc, "CHF");
   }
 
+  private static void printHeader(int maxQuantityStrLen) {
+    String sumPriceWithSpace = "%-" + (11 + (maxQuantityStrLen - 1)) + "s";
+
+    String headerFormat = "%-16s" + "%-6s" + sumPriceWithSpace + "%s";
+    System.out.printf((headerFormat) + "%n", "Product", "Code", "Qty X UP", "Sum price");
+  }
+
   private void printSeparator(int shift, char sep) {
     IntStream.range(0, shift).forEach(i -> System.out.print(sep));
     System.out.println();
@@ -147,35 +161,33 @@ public class OrderServiceImpl implements OrderService {
     }
 
     BigDecimal distSum = billingService.calcSum(disOrderItems);
-    int distShift = baseShift - String.format("%.02f", distSum).length();
+    int negSignLen = distSum.compareTo(BigDecimal.ZERO) > 0 ? 1 : 0;
+    int distShift = baseShift - String.format("%.02f", distSum).length() - negSignLen;
 
     String format = "%-" + distShift + "s %.02f %s %n";
-    System.out.printf(format, title + " sum:", distSum, "CHF");
+    System.out.printf(format, title + " sum:", distSum.negate(), "CHF");
   }
 
-  private void prettyPrintOrder(List<OrderItem> orderItems) {
-    int maxQuantityStrLen = maxQuantityStrLen(orderItems);
-    int maxSumPriceStrLen = maxSumPriceStrLen(orderItems);
-
+  private void prettyPrintOrder(List<OrderItem> orderItems, int maxQuantityStrLen, int maxSumPriceStrLen) {
     orderItems.stream().map(orderItem ->
-            printOrder(orderItem, maxQuantityStrLen, maxSumPriceStrLen))
+            createPrintableOrder(orderItem, maxQuantityStrLen, maxSumPriceStrLen))
         .forEach(System.out::println);
   }
 
-  private String printOrder(OrderItem orderItem, int maxQuantityLen, int maxSumPriceStrLen) {
+  private String createPrintableOrder(OrderItem orderItem, int maxQuantityStrLen, int maxSumPriceStrLen) {
     MenuItem menuItem = orderItem.getMenuItem();
     String quantityStr = String.valueOf(orderItem.getQuantity());
     BigDecimal sumPrice = menuItem.getPrice().multiply(new BigDecimal(quantityStr));
 
-    int shiftQuantity = maxQuantityLen - quantityStr.length() + 8;
+    int shiftQuantity = maxQuantityStrLen - quantityStr.length() + 6;
     int shiftSumPrice = maxSumPriceStrLen - String.format("%.02f", sumPrice).length() + 3;
 
     String quantityWithSpace = "%-" + shiftQuantity + "s";
     String sumPriceWithSpace = "%-" + shiftSumPrice + "s";
 
-    String format = "%-14s" + quantityWithSpace + "%s %s %.02f" + sumPriceWithSpace + "%.02f %s";
+    String format = "%-16s" + quantityWithSpace + "%s %s %.02f" + sumPriceWithSpace + "%.02f %s";
 
-    return String.format(format, menuItem.getName(), " (" + menuItem.getCode() + ")",
+    return String.format(format, menuItem.getName(), menuItem.getCode(),
         quantityStr, "X", menuItem.getPrice(), "", sumPrice, "CHF");
   }
 

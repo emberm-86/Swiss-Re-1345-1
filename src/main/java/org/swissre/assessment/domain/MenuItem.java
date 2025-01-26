@@ -22,11 +22,11 @@ public enum MenuItem {
   MEDIUM_COFFEE("mc", "Medium coffee", BEVERAGE, new BigDecimal("3.00")),
   LARGE_COFFEE("lc", "Large coffee", BEVERAGE, new BigDecimal("3.50")),
   BACON_ROLL("br", "Bacon roll", SNACK, new BigDecimal("4.50")),
-  ORANGE_JUICE("oj", "Orange Juice", BEVERAGE, new BigDecimal("3.95")),
+  ORANGE_JUICE("oj", "Orange juice", BEVERAGE, new BigDecimal("3.95")),
 
-  EXTRA_MILK("xem", "Extra Milk", EXTRA, new BigDecimal("0.30")),
-  FOAMED_MILK("xfm", "Foamed Milk", EXTRA, new BigDecimal("0.50")),
-  ROASTED_COFFEE("rcf", "Roasted Coffee", EXTRA, new BigDecimal("0.90"));
+  EXTRA_MILK("xem", "Extra milk", EXTRA, new BigDecimal("0.30")),
+  FOAMED_MILK("xfm", "Foamed milk", EXTRA, new BigDecimal("0.50")),
+  ROASTED_COFFEE("rcf", "Roasted coffee", EXTRA, new BigDecimal("0.90"));
 
   String code;
   String name;
