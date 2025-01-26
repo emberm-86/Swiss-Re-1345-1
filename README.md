@@ -20,20 +20,21 @@ Coffee Corner
 3. Quit (Q)
 =========================
 ```
-You can create orders with the first option and track them and 5th beverage discounts with the second option from the main menu
 
 ### II. Create Order
 ``` bash
-================================
-Small coffee    (sc)    2,50 CHF
-Medium coffee   (mc)    3,00 CHF
-Large coffee    (lc)    3,50 CHF
-Bacon roll      (br)    4,50 CHF
-Orange Juice    (oj)    3,95 CHF
-Extra Milk      (xem)   0,30 CHF
-Foamed Milk     (xfm)   0,50 CHF
-Roasted Coffee  (rcf)   0,90 CHF
-================================
+=================================
+Product         Code     Price
+---------------------------------
+Small coffee    sc       2,50 CHF
+Medium coffee   mc       3,00 CHF
+Large coffee    lc       3,50 CHF
+Bacon roll      br       4,50 CHF
+Orange juice    oj       3,95 CHF
+Extra milk      xem      0,30 CHF
+Foamed milk     xfm      0,50 CHF
+Roasted coffee  rcf      0,90 CHF
+=================================
 Please choose a product with the code(second column) or submit(x) or cancel(c) your order:
 ```
 
@@ -58,7 +59,7 @@ Please type the quantity:
 ```
 
 #### II/c Please choose a product with the code(second column) or submit(x) or cancel(c) your order: 
-You can continue or submit or cancel your order here.
+You can continue or submit, cancel your order here.
 
 ### III. List orders.
 ``` bash
