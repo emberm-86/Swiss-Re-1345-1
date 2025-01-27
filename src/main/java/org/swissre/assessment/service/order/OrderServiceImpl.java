@@ -68,14 +68,14 @@ public class OrderServiceImpl implements OrderService {
       Map<Integer, List<OrderItem>> allOrders) {
 
     BigDecimal billForOrder = billingService.calcSum(order);
-    int baseShift = 31 + maxQuantityAndSumPriceStrLen(order);
-    int separatorLength = baseShift + 5;
-
-    printSeparator(separatorLength, '=');
 
     int maxQuantityStrLen = maxQuantityStrLen(order);
     int maxSumPriceStrLen = maxSumPriceStrLen(order);
 
+    int baseShift = 31 + maxQuantityStrLen + maxSumPriceStrLen;
+    int separatorLength = baseShift + 5;
+
+    printSeparator(separatorLength, '=');
     printHeader(maxQuantityStrLen);
 
     printSeparator(separatorLength, '-');
@@ -208,17 +208,6 @@ public class OrderServiceImpl implements OrderService {
         })
         .map(sumPrice -> String.format("%.02f", sumPrice))
         .map(String::length)
-        .max(Integer::compareTo).orElse(0);
-  }
-
-  private int maxQuantityAndSumPriceStrLen(List<OrderItem> orders) {
-    return orders.stream().map(orderItem -> {
-          String quantityStr = String.valueOf(orderItem.getQuantity());
-          BigDecimal price = orderItem.getMenuItem().getPrice();
-          BigDecimal sumPrice = price.multiply(new BigDecimal(quantityStr));
-
-          return String.format("%.02f", sumPrice).length() + quantityStr.length();
-        })
         .max(Integer::compareTo).orElse(0);
   }
 }
