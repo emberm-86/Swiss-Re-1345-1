@@ -24,7 +24,7 @@ Coffee Corner
 ### II. Create Order
 ``` bash
 =================================
-Product         Code     Price
+Product         Code        Price
 ---------------------------------
 Small coffee    sc       2,50 CHF
 Medium coffee   mc       3,00 CHF
@@ -75,7 +75,7 @@ Please choose from the menu:
 ========================
 Order: 0
 =========================================
-Product         Code  Qty X UP   Sum price
+Product         Code  Qty X UP  Sum price
 -----------------------------------------
 Bacon roll      br    2 X 4,50   9,00 CHF
 Small coffee    sc    3 X 2,50   7,50 CHF
