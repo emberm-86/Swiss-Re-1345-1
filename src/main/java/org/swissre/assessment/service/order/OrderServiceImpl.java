@@ -76,7 +76,7 @@ public class OrderServiceImpl implements OrderService {
     int separatorLength = baseShift + 5;
 
     printSeparator(separatorLength, '=');
-    printHeader(maxQuantityStrLen);
+    printHeader(maxQuantityStrLen, maxSumPriceStrLen);
 
     printSeparator(separatorLength, '-');
     prettyPrintOrder(order, maxQuantityStrLen, maxSumPriceStrLen);
@@ -139,10 +139,11 @@ public class OrderServiceImpl implements OrderService {
     System.out.printf(format, "Total with discounts:", billForOrderDisc, "CHF");
   }
 
-  private static void printHeader(int maxQuantityStrLen) {
-    String sumPriceWithSpace = "%-" + (11 + (maxQuantityStrLen - 1)) + "s";
+  private static void printHeader(int maxQuantityStrLen, int maxSumPriceStrLen) {
+    String sumQuantityWithSpace = "%" + (9 + maxQuantityStrLen) + "s";
+    String sumPriceWithSpace = "%" + (7 + maxSumPriceStrLen) + "s";
 
-    String headerFormat = "%-16s" + "%-6s" + sumPriceWithSpace + "%s";
+    String headerFormat = "%-16s" + "%s" + sumQuantityWithSpace + sumPriceWithSpace;
     System.out.printf((headerFormat) + "%n", "Product", "Code", "Qty X UP", "Sum price");
   }
 
