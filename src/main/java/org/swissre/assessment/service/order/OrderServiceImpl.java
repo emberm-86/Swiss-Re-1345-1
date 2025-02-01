@@ -80,9 +80,9 @@ public class OrderServiceImpl implements OrderService {
 
     // Provide formatted output.
     int maxQuantityStrLen = maxQuantityStrLen(order);
-    int maxSumPriceStrLen = maxSumPriceStrLen(order);
+    int maxSumPriceStrLen = String.format("%.02f", billForOrder).length();
 
-    int baseShift = 33;
+    int baseShift = 34;
     int priceShift = baseShift - 32;
     int rightMargin = baseShift + maxQuantityStrLen + maxSumPriceStrLen;
     int separatorLength = rightMargin + 5;
@@ -207,18 +207,6 @@ public class OrderServiceImpl implements OrderService {
     return orders.stream()
         .map(OrderItem::getQuantity)
         .map(String::valueOf)
-        .map(String::length)
-        .max(Integer::compareTo).orElse(0);
-  }
-
-  private int maxSumPriceStrLen(List<OrderItem> orders) {
-    return orders.stream().map(orderItem -> {
-          BigDecimal price = orderItem.getMenuItem().getPrice();
-          BigDecimal quantity = new BigDecimal(String.valueOf(orderItem.getQuantity()));
-
-          return price.multiply(quantity);
-        })
-        .map(sumPrice -> String.format("%.02f", sumPrice))
         .map(String::length)
         .max(Integer::compareTo).orElse(0);
   }
