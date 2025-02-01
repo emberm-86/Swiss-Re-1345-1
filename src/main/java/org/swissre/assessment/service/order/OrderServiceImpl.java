@@ -82,8 +82,8 @@ public class OrderServiceImpl implements OrderService {
     int maxQuantityStrLen = maxQuantityStrLen(order);
     int maxSumPriceStrLen = maxSumPriceStrLen(order);
 
-    int baseShift = 32;
-    int priceShift = baseShift - 31;
+    int baseShift = 33;
+    int priceShift = baseShift - 32;
     int rightMargin = baseShift + maxQuantityStrLen + maxSumPriceStrLen;
     int separatorLength = rightMargin + 5;
 
@@ -147,7 +147,7 @@ public class OrderServiceImpl implements OrderService {
   private static void printHeader(int maxQuantityStrLen, int maxSumPriceStrLen,
                                   int priceShift) {
 
-    String sumQuantityWithSpace = "%" + (9 + maxQuantityStrLen) + "s";
+    String sumQuantityWithSpace = "%" + (10 + maxQuantityStrLen) + "s";
     String sumPriceWithSpace = "%" + (priceShift + 7 + maxSumPriceStrLen) + "s";
 
     String headerFormat = "%-16s" + "%s" + sumQuantityWithSpace + sumPriceWithSpace;
@@ -190,7 +190,7 @@ public class OrderServiceImpl implements OrderService {
     String quantityStr = String.valueOf(orderItem.getQuantity());
     BigDecimal sumPrice = menuItem.getPrice().multiply(new BigDecimal(quantityStr));
 
-    int shiftQuantity = maxQuantityStrLen - quantityStr.length() + 6;
+    int shiftQuantity = maxQuantityStrLen - quantityStr.length() + 7;
     int shiftSumPrice = maxSumPriceStrLen - String.format("%.02f", sumPrice).length() + 3
             + priceShift;
 
