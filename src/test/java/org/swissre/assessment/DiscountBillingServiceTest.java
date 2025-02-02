@@ -82,8 +82,9 @@ public class DiscountBillingServiceTest {
   public void testBeverage1Snack1(Map<Integer, List<OrderItem>> orders) {
     List<OrderItem> discountedBev1Snack1 = discountService.getDiscBev1Snack1(0, orders);
 
-    assertEquals(1, discountedBev1Snack1.size());
-    assertEquals(discountedBev1Snack1.get(0), new OrderItem(MenuItem.ROASTED_COFFEE, 2));
+    assertEquals(2, discountedBev1Snack1.size());
+    assertEquals(discountedBev1Snack1.get(0), new OrderItem(MenuItem.EXTRA_MILK, 1));
+    assertEquals(discountedBev1Snack1.get(1), new OrderItem(MenuItem.FOAMED_MILK, 1));
 
     List<OrderItem> order1 = orders.get(0);
     BigDecimal origSumPrice = billingService.calcSum(order1);
