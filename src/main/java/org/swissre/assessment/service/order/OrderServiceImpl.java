@@ -87,6 +87,9 @@ public class OrderServiceImpl implements OrderService {
     // Provide formatted output.
     int maxQuantityStrLen = maxQuantityStrLen(order);
     int maxSumPriceStrLen = String.format(FLT_FMT, billForOrder).length();
+    if (!disOrderItems.isEmpty() && maxSumPriceStrLen < 5) {
+      maxSumPriceStrLen = 5;
+    }
 
     int rightMargin = BASE_SHIFT + maxQuantityStrLen + maxSumPriceStrLen;
     int separatorLength = rightMargin + 5;
