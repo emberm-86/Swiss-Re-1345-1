@@ -5,6 +5,8 @@ import org.swissre.assessment.domain.MenuItem;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.swissre.assessment.domain.Constants.FLT_FMT;
+
 public class MenuPrinter {
 
   public static void printMainMenu() {
@@ -28,7 +30,7 @@ public class MenuPrinter {
 
   public static void prettyPrintMenuItems(List<MenuItem> menuItems) {
     String headerFormat = "%-17s %-9s %s";
-    String rowFormat = "%-17s %-6s %.02f %s";
+    String rowFormat = "%-17s %-6s " + FLT_FMT + " %s";
 
     System.out.printf((headerFormat) + "%n", "Product", "Code", "Price");
     System.out.println("---------------------------------");

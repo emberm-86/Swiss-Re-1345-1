@@ -4,6 +4,8 @@ import java.util.Map.Entry;
 import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.OrderItem;
 
+import static org.swissre.assessment.domain.Constants.CURRENCY;
+
 public class MenuItemConverter {
 
   public static OrderItem convertToOrderItem(Entry<String, Integer> menuItemOcc) {
@@ -12,6 +14,7 @@ public class MenuItemConverter {
   }
 
   public static String convertMenuItemToStr(String format, MenuItem menuItem) {
-    return String.format(format, menuItem.getName(), menuItem.getCode(), menuItem.getPrice(), "CHF");
+    return String.format(format, menuItem.getName(), menuItem.getCode(),
+            menuItem.getPrice(), CURRENCY);
   }
 }

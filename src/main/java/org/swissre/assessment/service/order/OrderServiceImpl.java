@@ -14,13 +14,14 @@ import org.swissre.assessment.service.billing.BillingServiceImpl;
 import org.swissre.assessment.service.discount.DiscountService;
 import org.swissre.assessment.service.discount.DiscountServiceImpl;
 
+import static org.swissre.assessment.domain.Constants.CURRENCY;
+import static org.swissre.assessment.domain.Constants.FLT_FMT;
+
 public class OrderServiceImpl implements OrderService {
 
   private static final int BASE_SHIFT = 35;
   private static final int PRICE_SHIFT = BASE_SHIFT - 33;
   private static final int QUANTITY_SHIFT = 8;
-  private static final String CURRENCY = "CHF";
-  private static final String FLT_FMT = "%.02f";
 
   List<OrderItem> orderSelectionCurrent = new ArrayList<>();
   OrderStorageProvider orderStorageProvider = new OrderStorageProviderImpl();
