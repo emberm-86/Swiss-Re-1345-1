@@ -45,7 +45,7 @@ public class Application {
           case CREATE_ORDER:
             createOrder(orderService, menuSelection);
             break;
-            
+
           case LIST_ORDERS:
             backToMainMenu(menuSelection);
             break;

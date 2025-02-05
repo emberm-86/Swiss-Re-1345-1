@@ -20,12 +20,17 @@ public class BillingServiceImpl implements BillingService {
 
   @Override
   public BigDecimal calcSumWithDisc(List<OrderItem> order, List<OrderItem> discOrderItems) {
-    return normalizedOrder(order).stream().map(orderItem -> {
-      BigDecimal sumPrice = getSumPrice(orderItem);
-      Optional<OrderItem> discounted = findInDiscountedList(discOrderItems, orderItem);
+    return normalizedOrder(order).stream()
+        .map(
+            orderItem -> {
+              BigDecimal sumPrice = getSumPrice(orderItem);
+              Optional<OrderItem> discounted = findInDiscountedList(discOrderItems, orderItem);
 
-      return discounted.map(item -> calculateDiscountedPrice(item, sumPrice)).orElse(sumPrice);
-    }).reduce(ZERO, BigDecimal::add);
+              return discounted
+                  .map(item -> calculateDiscountedPrice(item, sumPrice))
+                  .orElse(sumPrice);
+            })
+        .reduce(ZERO, BigDecimal::add);
   }
 
   private static BigDecimal calculateDiscountedPrice(OrderItem item, BigDecimal sumPrice) {
@@ -34,21 +39,26 @@ public class BillingServiceImpl implements BillingService {
     return sumPrice.subtract(disPrice.multiply(disQuantity));
   }
 
-  private Optional<OrderItem> findInDiscountedList(List<OrderItem> disOrderItems,
-      OrderItem orderItem) {
-
-    return disOrderItems.stream().filter(disOrderItem -> disOrderItem.getMenuItem().getCode()
-        .equals(orderItem.getMenuItem().getCode())).findFirst();
+  private Optional<OrderItem> findInDiscountedList(List<OrderItem> disOrdItems, OrderItem ordItem) {
+    return disOrdItems.stream()
+        .filter(
+            disOrderItem ->
+                disOrderItem.getMenuItem().getCode().equals(ordItem.getMenuItem().getCode()))
+        .findFirst();
   }
 
   private List<OrderItem> normalizedOrder(List<OrderItem> orders) {
-    Map<String, Integer> menuItems = orders.stream()
-            .collect(Collectors.groupingBy(orderItem -> orderItem.getMenuItem().getCode(),
-                    LinkedHashMap::new, Collectors.summingInt(OrderItem::getQuantity)));
+    Map<String, Integer> menuItems =
+        orders.stream()
+            .collect(
+                Collectors.groupingBy(
+                    orderItem -> orderItem.getMenuItem().getCode(),
+                    LinkedHashMap::new,
+                    Collectors.summingInt(OrderItem::getQuantity)));
 
     return menuItems.entrySet().stream()
-            .map(MenuItemConverter::convertToOrderItem)
-            .collect(Collectors.toList());
+        .map(MenuItemConverter::convertToOrderItem)
+        .collect(Collectors.toList());
   }
 
   private static BigDecimal getSumPrice(OrderItem orderItem) {

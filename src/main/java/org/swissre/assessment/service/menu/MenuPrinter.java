@@ -24,8 +24,7 @@ public class MenuPrinter {
     System.out.println("=================================");
     prettyPrintMenuItems(Arrays.asList(MenuItem.values()));
     System.out.println("=================================");
-    System.out.println(
-        "Please choose a product with the code or submit(x), cancel(c) your order:");
+    System.out.println("Please choose a product with the code or submit(x), cancel(c) your order:");
   }
 
   public static void prettyPrintMenuItems(List<MenuItem> menuItems) {
@@ -36,7 +35,7 @@ public class MenuPrinter {
     System.out.println("---------------------------------");
 
     menuItems.stream()
-            .map(menuItem -> MenuItemConverter.convertMenuItemToStr(rowFormat, menuItem))
-            .forEach(System.out::println);
+        .map(menuItem -> MenuItemConverter.convertMenuItemToStr(rowFormat, menuItem))
+        .forEach(System.out::println);
   }
 }

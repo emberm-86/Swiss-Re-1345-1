@@ -30,8 +30,7 @@ public class DiscountBillingServiceTest {
   @ParameterizedTest
   @MethodSource("createOneComplexOrder")
   public void test5thBeverageInSameOrder(Map<Integer, List<OrderItem>> orders) {
-    List<OrderItem> disOrds5thBev = discountService.getDisOrdItems5thBev(
-        orders.size() - 1, orders);
+    List<OrderItem> disOrds5thBev = discountService.getDisOrdItems5thBev(orders.size() - 1, orders);
 
     assertEquals(2, disOrds5thBev.size());
     assertEquals(disOrds5thBev.get(0), new OrderItem(MenuItem.MEDIUM_COFFEE, 1));
@@ -40,9 +39,10 @@ public class DiscountBillingServiceTest {
     BigDecimal origSumPrice = billingService.calcSum(orders.get(0));
     BigDecimal discSumPrice = billingService.calcSumWithDisc(orders.get(0), disOrds5thBev);
 
-    BigDecimal expectedDiff = disOrds5thBev.stream()
-        .map(DiscountBillingServiceTest::getSumPrice)
-        .reduce(ZERO, BigDecimal::add);
+    BigDecimal expectedDiff =
+        disOrds5thBev.stream()
+            .map(DiscountBillingServiceTest::getSumPrice)
+            .reduce(ZERO, BigDecimal::add);
 
     assertEquals(origSumPrice, new BigDecimal("46.80"));
     assertEquals(expectedDiff, origSumPrice.subtract(discSumPrice));
@@ -69,9 +69,10 @@ public class DiscountBillingServiceTest {
       BigDecimal origSumPrice = billingService.calcSum(orders.get(i));
       BigDecimal discSumPrice = billingService.calcSumWithDisc(orders.get(i), disOrdItems5thBev);
 
-      BigDecimal expectedDiff = disOrdItems5thBev.stream()
-          .map(DiscountBillingServiceTest::getSumPrice)
-          .reduce(ZERO, BigDecimal::add);
+      BigDecimal expectedDiff =
+          disOrdItems5thBev.stream()
+              .map(DiscountBillingServiceTest::getSumPrice)
+              .reduce(ZERO, BigDecimal::add);
 
       assertEquals(expectedDiff, origSumPrice.subtract(discSumPrice));
     }
@@ -90,9 +91,10 @@ public class DiscountBillingServiceTest {
     BigDecimal origSumPrice = billingService.calcSum(order1);
     BigDecimal discSumPrice = billingService.calcSumWithDisc(order1, discountedBev1Snack1);
 
-    BigDecimal expectedDiff = discountedBev1Snack1.stream()
-        .map(DiscountBillingServiceTest::getSumPrice)
-        .reduce(ZERO, BigDecimal::add);
+    BigDecimal expectedDiff =
+        discountedBev1Snack1.stream()
+            .map(DiscountBillingServiceTest::getSumPrice)
+            .reduce(ZERO, BigDecimal::add);
 
     assertEquals(expectedDiff, origSumPrice.subtract(discSumPrice));
   }
@@ -127,69 +129,78 @@ public class DiscountBillingServiceTest {
 
   private static Stream<Arguments> createOneComplexOrder() {
     return Stream.of(
-        Arguments.of(Stream.of(
-                new SimpleEntry<>(0, Arrays.asList(
-                    new OrderItem(MenuItem.BACON_ROLL, 2),
-                    new OrderItem(MenuItem.SMALL_COFFEE, 1),
-                    new OrderItem(MenuItem.ORANGE_JUICE, 2),
-                    new OrderItem(MenuItem.MEDIUM_COFFEE, 3),
-                    new OrderItem(MenuItem.ORANGE_JUICE, 4),
-                    new OrderItem(MenuItem.ROASTED_COFFEE, 1),
-                    new OrderItem(MenuItem.FOAMED_MILK, 1),
-                    new OrderItem(MenuItem.EXTRA_MILK, 1),
-                    new OrderItem(MenuItem.ROASTED_COFFEE, 1))))
-            .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))
-        ));
+        Arguments.of(
+            Stream.of(
+                    new SimpleEntry<>(
+                        0,
+                        Arrays.asList(
+                            new OrderItem(MenuItem.BACON_ROLL, 2),
+                            new OrderItem(MenuItem.SMALL_COFFEE, 1),
+                            new OrderItem(MenuItem.ORANGE_JUICE, 2),
+                            new OrderItem(MenuItem.MEDIUM_COFFEE, 3),
+                            new OrderItem(MenuItem.ORANGE_JUICE, 4),
+                            new OrderItem(MenuItem.ROASTED_COFFEE, 1),
+                            new OrderItem(MenuItem.FOAMED_MILK, 1),
+                            new OrderItem(MenuItem.EXTRA_MILK, 1),
+                            new OrderItem(MenuItem.ROASTED_COFFEE, 1))))
+                .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))));
   }
 
   private static Stream<Arguments> createMultipleOrders() {
     return Stream.of(
-        Arguments.of(Stream.of(
-                new SimpleEntry<>(0, Arrays.asList(
-                    new OrderItem(MenuItem.BACON_ROLL, 2),
-                    new OrderItem(MenuItem.SMALL_COFFEE, 1),
-                    new OrderItem(MenuItem.ORANGE_JUICE, 2),
-                    new OrderItem(MenuItem.MEDIUM_COFFEE, 3),
-                    new OrderItem(MenuItem.ORANGE_JUICE, 2),
-                    new OrderItem(MenuItem.EXTRA_MILK, 1),
-                    new OrderItem(MenuItem.FOAMED_MILK, 1),
-                    new OrderItem(MenuItem.ROASTED_COFFEE, 1),
-                    new OrderItem(MenuItem.EXTRA_MILK, 1))),
-
-                new SimpleEntry<>(1, Arrays.asList(
-                    new OrderItem(MenuItem.ORANGE_JUICE, 3),
-                    new OrderItem(MenuItem.BACON_ROLL, 4))),
-
-                new SimpleEntry<>(2, Arrays.asList(
-                    new OrderItem(MenuItem.LARGE_COFFEE, 4),
-                    new OrderItem(MenuItem.MEDIUM_COFFEE, 5))))
-            .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))
-        ));
+        Arguments.of(
+            Stream.of(
+                    new SimpleEntry<>(
+                        0,
+                        Arrays.asList(
+                            new OrderItem(MenuItem.BACON_ROLL, 2),
+                            new OrderItem(MenuItem.SMALL_COFFEE, 1),
+                            new OrderItem(MenuItem.ORANGE_JUICE, 2),
+                            new OrderItem(MenuItem.MEDIUM_COFFEE, 3),
+                            new OrderItem(MenuItem.ORANGE_JUICE, 2),
+                            new OrderItem(MenuItem.EXTRA_MILK, 1),
+                            new OrderItem(MenuItem.FOAMED_MILK, 1),
+                            new OrderItem(MenuItem.ROASTED_COFFEE, 1),
+                            new OrderItem(MenuItem.EXTRA_MILK, 1))),
+                    new SimpleEntry<>(
+                        1,
+                        Arrays.asList(
+                            new OrderItem(MenuItem.ORANGE_JUICE, 3),
+                            new OrderItem(MenuItem.BACON_ROLL, 4))),
+                    new SimpleEntry<>(
+                        2,
+                        Arrays.asList(
+                            new OrderItem(MenuItem.LARGE_COFFEE, 4),
+                            new OrderItem(MenuItem.MEDIUM_COFFEE, 5))))
+                .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))));
   }
 
   private static Stream<Arguments> createOrdersNoDiscount() {
     return Stream.of(
-        Arguments.of(Stream.of(
-                new SimpleEntry<>(0, Collections.singletonList(
-                    new OrderItem(MenuItem.ORANGE_JUICE, 4))))
-            .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))
-        ),
-        Arguments.of(Stream.of(
-                new SimpleEntry<>(0, Arrays.asList(
-                    new OrderItem(MenuItem.SMALL_COFFEE, 2),
-                    new OrderItem(MenuItem.MEDIUM_COFFEE, 2),
-                    new OrderItem(MenuItem.EXTRA_MILK, 1),
-                    new OrderItem(MenuItem.FOAMED_MILK, 1),
-                    new OrderItem(MenuItem.ROASTED_COFFEE, 1))))
-            .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))
-        ),
-        Arguments.of(Stream.of(
-                new SimpleEntry<>(0, Arrays.asList(
-                    new OrderItem(MenuItem.BACON_ROLL, 6),
-                    new OrderItem(MenuItem.MEDIUM_COFFEE, 2))))
-            .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))
-        )
-    );
+        Arguments.of(
+            Stream.of(
+                    new SimpleEntry<>(
+                        0, Collections.singletonList(new OrderItem(MenuItem.ORANGE_JUICE, 4))))
+                .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))),
+        Arguments.of(
+            Stream.of(
+                    new SimpleEntry<>(
+                        0,
+                        Arrays.asList(
+                            new OrderItem(MenuItem.SMALL_COFFEE, 2),
+                            new OrderItem(MenuItem.MEDIUM_COFFEE, 2),
+                            new OrderItem(MenuItem.EXTRA_MILK, 1),
+                            new OrderItem(MenuItem.FOAMED_MILK, 1),
+                            new OrderItem(MenuItem.ROASTED_COFFEE, 1))))
+                .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))),
+        Arguments.of(
+            Stream.of(
+                    new SimpleEntry<>(
+                        0,
+                        Arrays.asList(
+                            new OrderItem(MenuItem.BACON_ROLL, 6),
+                            new OrderItem(MenuItem.MEDIUM_COFFEE, 2))))
+                .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))));
   }
 
   private static BigDecimal getSumPrice(OrderItem orderItem) {

@@ -15,6 +15,6 @@ public class MenuItemConverter {
 
   public static String convertMenuItemToStr(String format, MenuItem menuItem) {
     return String.format(
-            format, menuItem.getName(), menuItem.getCode(), menuItem.getPrice(), CURRENCY);
+        format, menuItem.getName(), menuItem.getCode(), menuItem.getPrice(), CURRENCY);
   }
 }

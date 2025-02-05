@@ -17,7 +17,6 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @FieldDefaults(makeFinal = true)
 public enum MenuItem {
-
   SMALL_COFFEE("sc", "Small coffee", BEVERAGE, new BigDecimal("2.50")),
   MEDIUM_COFFEE("mc", "Medium coffee", BEVERAGE, new BigDecimal("3.00")),
   LARGE_COFFEE("lc", "Large coffee", BEVERAGE, new BigDecimal("3.50")),
@@ -38,27 +37,33 @@ public enum MenuItem {
   }
 
   public static MenuItem getMenuItemByCode(String code) {
-    return Arrays.stream(values()).filter(menuItem -> menuItem.getCode().equalsIgnoreCase(code))
-        .findFirst().orElse(null);
+    return Arrays.stream(values())
+        .filter(menuItem -> menuItem.getCode().equalsIgnoreCase(code))
+        .findFirst()
+        .orElse(null);
   }
 
   public static boolean checkIfExtraByCode(String code) {
-    return Arrays.stream(values()).anyMatch(menuItem -> menuItem.getCode().equalsIgnoreCase(code)
-        && menuItem.getType() == EXTRA);
+    return Arrays.stream(values())
+        .anyMatch(
+            menuItem -> menuItem.getCode().equalsIgnoreCase(code) && menuItem.getType() == EXTRA);
   }
 
   public static boolean isCoffee(String menuCode) {
-    return Stream.of(SMALL_COFFEE, MEDIUM_COFFEE, LARGE_COFFEE).collect(Collectors.toSet())
+    return Stream.of(SMALL_COFFEE, MEDIUM_COFFEE, LARGE_COFFEE)
+        .collect(Collectors.toSet())
         .contains(getMenuItemByCode(menuCode));
   }
 
   public boolean isCoffee() {
-    return Stream.of(SMALL_COFFEE, MEDIUM_COFFEE, LARGE_COFFEE).collect(Collectors.toSet())
+    return Stream.of(SMALL_COFFEE, MEDIUM_COFFEE, LARGE_COFFEE)
+        .collect(Collectors.toSet())
         .contains(this);
   }
 
   public static List<MenuItem> extras() {
-    return Arrays.stream(values()).filter(menuItem -> menuItem.getType() == EXTRA)
+    return Arrays.stream(values())
+        .filter(menuItem -> menuItem.getType() == EXTRA)
         .collect(Collectors.toList());
   }
 }

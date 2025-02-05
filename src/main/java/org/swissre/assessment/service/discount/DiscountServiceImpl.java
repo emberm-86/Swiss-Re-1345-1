@@ -24,20 +24,20 @@ import org.swissre.assessment.service.menu.MenuItemConverter;
 public class DiscountServiceImpl implements DiscountService {
 
   @Override
-  public List<OrderItem> getDiscBev1Snack1(Integer orderId,
-      Map<Integer, List<OrderItem>> allOrders) {
+  public List<OrderItem> getDiscBev1Snack1(Integer orderId, Map<Integer, List<OrderItem>> allOrds) {
 
-    List<OrderItem> order = allOrders.getOrDefault(orderId, new ArrayList<>());
+    List<OrderItem> order = allOrds.getOrDefault(orderId, new ArrayList<>());
 
     int maxGiftCount = maxGiftCount(order);
 
     List<MenuItem> flattedOrderList = flattenOrder(order);
 
-    List<MenuItem> discountedExtraMenuItems = flattedOrderList.stream()
-        .filter(menuItem -> menuItem.getType() == Type.EXTRA)
-        .sorted(Comparator.comparing(MenuItem::getPrice))
-        .limit(maxGiftCount)
-        .collect(toList());
+    List<MenuItem> discountedExtraMenuItems =
+        flattedOrderList.stream()
+            .filter(menuItem -> menuItem.getType() == Type.EXTRA)
+            .sorted(Comparator.comparing(MenuItem::getPrice))
+            .limit(maxGiftCount)
+            .collect(toList());
 
     return convertMenuItemsToOrderItems(discountedExtraMenuItems);
   }
@@ -54,10 +54,10 @@ public class DiscountServiceImpl implements DiscountService {
   }
 
   @Override
-  public List<OrderItem> getDisOrdItems5thBev(Integer orderId,
-      Map<Integer, List<OrderItem>> allOrders) {
+  public List<OrderItem> getDisOrdItems5thBev(
+      Integer orderId, Map<Integer, List<OrderItem>> allOrds) {
 
-    List<SimpleEntry<Integer, OrderItem>> extOrds = extOrders(allOrders);
+    List<SimpleEntry<Integer, OrderItem>> extOrds = extOrders(allOrds);
     List<SimpleEntry<Integer, MenuItem>> extOrdsWithReps = splitOrders(extOrds);
     List<SimpleEntry<Integer, MenuItem>> extOrdsDisc = filterDiscounts(extOrdsWithReps);
 
@@ -71,13 +71,18 @@ public class DiscountServiceImpl implements DiscountService {
 
     return extOrdsDisc.stream()
         .collect(groupingBy(Entry::getKey, mapping(Entry::getValue, toList())))
-        .entrySet().stream().collect(toMap(Entry::getKey,
-            menuItemEntry -> convertMenuItemsToOrderItems(menuItemEntry.getValue())));
+        .entrySet()
+        .stream()
+        .collect(
+            toMap(
+                Entry::getKey,
+                menuItemEntry -> convertMenuItemsToOrderItems(menuItemEntry.getValue())));
   }
 
   private List<OrderItem> convertMenuItemsToOrderItems(List<MenuItem> menuItems) {
-    Map<String, Integer> menuItemOccurrences = menuItems.stream()
-        .collect(groupingBy(MenuItem::getCode, LinkedHashMap::new, summingInt(e -> 1)));
+    Map<String, Integer> menuItemOccurrences =
+        menuItems.stream()
+            .collect(groupingBy(MenuItem::getCode, LinkedHashMap::new, summingInt(e -> 1)));
 
     return menuItemOccurrences.entrySet().stream()
         .map(MenuItemConverter::convertToOrderItem)
@@ -87,24 +92,31 @@ public class DiscountServiceImpl implements DiscountService {
   private List<SimpleEntry<Integer, MenuItem>> filterDiscounts(
       List<SimpleEntry<Integer, MenuItem>> extOrdersWithReps) {
 
-    List<SimpleEntry<Integer, MenuItem>> beverages = extOrdersWithReps.stream()
-        .filter(menuItemEntry -> menuItemEntry.getValue().getType() == Type.BEVERAGE)
-        .collect(toList());
+    List<SimpleEntry<Integer, MenuItem>> beverages =
+        extOrdersWithReps.stream()
+            .filter(menuItemEntry -> menuItemEntry.getValue().getType() == Type.BEVERAGE)
+            .collect(toList());
 
     return IntStream.range(0, beverages.size())
         .mapToObj(i -> (i + 1) % 5 == 0 ? beverages.get(i) : null)
-        .filter(Objects::nonNull).collect(toList());
+        .filter(Objects::nonNull)
+        .collect(toList());
   }
 
   private List<SimpleEntry<Integer, MenuItem>> splitOrders(
       List<SimpleEntry<Integer, OrderItem>> extractedOrders) {
 
-    return extractedOrders.stream().map(ordItemInt ->
-            IntStream.range(0, ordItemInt.getValue().getQuantity())
-                .mapToObj(i ->
-                    new SimpleEntry<>(ordItemInt.getKey(), ordItemInt.getValue().getMenuItem()))
-                .collect(toList()))
-        .flatMap(Collection::stream).collect(toList());
+    return extractedOrders.stream()
+        .map(
+            ordItemInt ->
+                IntStream.range(0, ordItemInt.getValue().getQuantity())
+                    .mapToObj(
+                        i ->
+                            new SimpleEntry<>(
+                                ordItemInt.getKey(), ordItemInt.getValue().getMenuItem()))
+                    .collect(toList()))
+        .flatMap(Collection::stream)
+        .collect(toList());
   }
 
   private List<SimpleEntry<Integer, OrderItem>> extOrders(Map<Integer, List<OrderItem>> allOrders) {
@@ -114,10 +126,13 @@ public class DiscountServiceImpl implements DiscountService {
   }
 
   private List<MenuItem> flattenOrder(List<OrderItem> order) {
-    return order.stream().map(orderItem ->
-            IntStream.range(0, orderItem.getQuantity())
-                .mapToObj(i -> orderItem.getMenuItem())
-                .collect(toList()))
-        .flatMap(Collection::stream).collect(toList());
+    return order.stream()
+        .map(
+            orderItem ->
+                IntStream.range(0, orderItem.getQuantity())
+                    .mapToObj(i -> orderItem.getMenuItem())
+                    .collect(toList()))
+        .flatMap(Collection::stream)
+        .collect(toList());
   }
 }
