@@ -118,7 +118,7 @@ public class MenuUtil {
     if (!isValidNum(mCode)) {
       System.out.println("Please give a valid number: > 0 as an input!");
     } else {
-      addNewOrdItAndExt(mCode, menuSlc, ordSrv);
+      addNewOrdItemAndExt(mCode, menuSlc, ordSrv);
     }
   }
 
@@ -132,18 +132,16 @@ public class MenuUtil {
     applySelectableCheck(menuSelection, extraIsIn ? extra : null);
   }
 
-  private static void addNewOrdItAndExt(String menuCode, MenuSelection menuSlc, OrderService oSrv) {
+  private static void addNewOrdItemAndExt(String mCode, MenuSelection menuSlc, OrderService oSrv) {
     MenuItem menuItemSelected = menuSlc.getMenuItemSelected();
     List<MenuItem> selectedExtras = menuSlc.getSelectedExtras();
+    oSrv.addNewOrderItem(menuItemSelected, mCode);
 
-    oSrv.addNewOrderItem(menuItemSelected, menuCode);
-
-    selectedExtras.forEach(extraSelected -> oSrv.addNewOrderItem(extraSelected, menuCode));
+    selectedExtras.forEach(extraSelected -> oSrv.addNewOrderItem(extraSelected, mCode));
     selectedExtras.clear();
 
     menuSlc.setMenuItemSelected(null);
     menuSlc.setExtraSelectionDone(false);
-
     System.out.println("Please choose a product with the code or submit(x), cancel(c) your order:");
   }
 
@@ -198,7 +196,6 @@ public class MenuUtil {
     if (strNum == null) {
       return false;
     }
-
     try {
       return Integer.parseInt(strNum) > 0;
     } catch (NumberFormatException nfe) {

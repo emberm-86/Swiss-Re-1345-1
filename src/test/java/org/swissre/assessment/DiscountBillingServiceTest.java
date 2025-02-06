@@ -9,7 +9,7 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -17,6 +17,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.OrderItem;
+import org.swissre.assessment.domain.datastructure.OrderMap;
 import org.swissre.assessment.service.billing.BillingService;
 import org.swissre.assessment.service.billing.BillingServiceImpl;
 import org.swissre.assessment.service.discount.DiscountService;
@@ -29,7 +30,7 @@ public class DiscountBillingServiceTest {
 
   @ParameterizedTest
   @MethodSource("createOneComplexOrder")
-  public void test5thBeverageInSameOrder(Map<Integer, List<OrderItem>> orders) {
+  public void test5thBeverageInSameOrder(OrderMap orders) {
     List<OrderItem> disOrds5thBev = discountService.getDisOrdItems5thBev(orders.size() - 1, orders);
 
     assertEquals(2, disOrds5thBev.size());
@@ -50,7 +51,7 @@ public class DiscountBillingServiceTest {
 
   @ParameterizedTest
   @MethodSource("createMultipleOrders")
-  public void test5thBeverageInSameOrderMultipleOrders(Map<Integer, List<OrderItem>> orders) {
+  public void test5thBeverageInSameOrderMultipleOrders(OrderMap orders) {
     List<OrderItem> discOrders1 = discountService.getDisOrdItems5thBev(0, orders);
     List<OrderItem> discOrders2 = discountService.getDisOrdItems5thBev(1, orders);
     List<OrderItem> discOrders3 = discountService.getDisOrdItems5thBev(2, orders);
@@ -80,7 +81,7 @@ public class DiscountBillingServiceTest {
 
   @ParameterizedTest
   @MethodSource("createOneComplexOrder")
-  public void testBeverage1Snack1(Map<Integer, List<OrderItem>> orders) {
+  public void testBeverage1Snack1(OrderMap orders) {
     List<OrderItem> discountedBev1Snack1 = discountService.getDiscBev1Snack1(0, orders);
 
     assertEquals(2, discountedBev1Snack1.size());
@@ -101,7 +102,7 @@ public class DiscountBillingServiceTest {
 
   @ParameterizedTest
   @MethodSource("createOrdersNoDiscount")
-  public void test5thBeverageInSameOrderNoDiscount(Map<Integer, List<OrderItem>> orders) {
+  public void test5thBeverageInSameOrderNoDiscount(OrderMap orders) {
     List<OrderItem> discOrders5thBeverage = discountService.getDisOrdItems5thBev(0, orders);
 
     assertTrue(discOrders5thBeverage.isEmpty());
@@ -115,7 +116,7 @@ public class DiscountBillingServiceTest {
 
   @ParameterizedTest
   @MethodSource("createOrdersNoDiscount")
-  public void testBeverage1Snack1NoDiscount(Map<Integer, List<OrderItem>> orders) {
+  public void testBeverage1Snack1NoDiscount(OrderMap orders) {
     List<OrderItem> discountedBeverage1Snack1 = discountService.getDiscBev1Snack1(0, orders);
 
     assertTrue(discountedBeverage1Snack1.isEmpty());
@@ -143,7 +144,7 @@ public class DiscountBillingServiceTest {
                             new OrderItem(MenuItem.FOAMED_MILK, 1),
                             new OrderItem(MenuItem.EXTRA_MILK, 1),
                             new OrderItem(MenuItem.ROASTED_COFFEE, 1))))
-                .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))));
+                .collect(createOrderMap())));
   }
 
   private static Stream<Arguments> createMultipleOrders() {
@@ -172,7 +173,7 @@ public class DiscountBillingServiceTest {
                         Arrays.asList(
                             new OrderItem(MenuItem.LARGE_COFFEE, 4),
                             new OrderItem(MenuItem.MEDIUM_COFFEE, 5))))
-                .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))));
+                .collect(createOrderMap())));
   }
 
   private static Stream<Arguments> createOrdersNoDiscount() {
@@ -181,7 +182,7 @@ public class DiscountBillingServiceTest {
             Stream.of(
                     new SimpleEntry<>(
                         0, Collections.singletonList(new OrderItem(MenuItem.ORANGE_JUICE, 4))))
-                .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))),
+                .collect(createOrderMap())),
         Arguments.of(
             Stream.of(
                     new SimpleEntry<>(
@@ -192,7 +193,7 @@ public class DiscountBillingServiceTest {
                             new OrderItem(MenuItem.EXTRA_MILK, 1),
                             new OrderItem(MenuItem.FOAMED_MILK, 1),
                             new OrderItem(MenuItem.ROASTED_COFFEE, 1))))
-                .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))),
+                .collect(createOrderMap())),
         Arguments.of(
             Stream.of(
                     new SimpleEntry<>(
@@ -200,7 +201,12 @@ public class DiscountBillingServiceTest {
                         Arrays.asList(
                             new OrderItem(MenuItem.BACON_ROLL, 6),
                             new OrderItem(MenuItem.MEDIUM_COFFEE, 2))))
-                .collect(Collectors.toMap(SimpleEntry::getKey, SimpleEntry::getValue))));
+                .collect(createOrderMap())));
+  }
+
+  private static Collector<SimpleEntry<Integer, List<OrderItem>>, ?, OrderMap> createOrderMap() {
+    return Collectors.toMap(
+            SimpleEntry::getKey, SimpleEntry::getValue, (e1, e2) -> e1, OrderMap::new);
   }
 
   private static BigDecimal getSumPrice(OrderItem orderItem) {

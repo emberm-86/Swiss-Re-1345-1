@@ -15,21 +15,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.swissre.assessment.domain.MenuItem;
+import org.swissre.assessment.domain.datastructure.MenuItemList;
 import org.swissre.assessment.domain.OrderItem;
 import org.swissre.assessment.domain.Type;
+import org.swissre.assessment.domain.datastructure.OrderItemList;
+import org.swissre.assessment.domain.datastructure.OrderMap;
 import org.swissre.assessment.service.menu.MenuItemConverter;
 
 public class DiscountServiceImpl implements DiscountService {
 
   @Override
-  public List<OrderItem> getDiscBev1Snack1(Integer orderId, Map<Integer, List<OrderItem>> allOrds) {
-
+  public List<OrderItem> getDiscBev1Snack1(Integer orderId, OrderMap allOrds) {
     List<OrderItem> order = allOrds.getOrDefault(orderId, new ArrayList<>());
-
     int maxGiftCount = maxGiftCount(order);
-
     List<MenuItem> flattedOrderList = flattenOrder(order);
 
     List<MenuItem> discountedExtraMenuItems =
@@ -54,21 +55,17 @@ public class DiscountServiceImpl implements DiscountService {
   }
 
   @Override
-  public List<OrderItem> getDisOrdItems5thBev(
-      Integer orderId, Map<Integer, List<OrderItem>> allOrds) {
-
-    List<SimpleEntry<Integer, OrderItem>> extOrds = extOrders(allOrds);
-    List<SimpleEntry<Integer, MenuItem>> extOrdsWithReps = splitOrders(extOrds);
-    List<SimpleEntry<Integer, MenuItem>> extOrdsDisc = filterDiscounts(extOrdsWithReps);
+  public List<OrderItem> getDisOrdItems5thBev(Integer orderId, OrderMap allOrds) {
+    OrderItemList extOrds = extOrders(allOrds);
+    MenuItemList extOrdsWithReps = splitOrders(extOrds);
+    MenuItemList extOrdsDisc = filterDiscounts(extOrdsWithReps);
 
     Map<Integer, List<OrderItem>> discountedOrdersMap = convertBack(extOrdsDisc);
 
     return discountedOrdersMap.getOrDefault(orderId, new ArrayList<>());
   }
 
-  private Map<Integer, List<OrderItem>> convertBack(
-      List<SimpleEntry<Integer, MenuItem>> extOrdsDisc) {
-
+  private Map<Integer, List<OrderItem>> convertBack(MenuItemList extOrdsDisc) {
     return extOrdsDisc.stream()
         .collect(groupingBy(Entry::getKey, mapping(Entry::getValue, toList())))
         .entrySet()
@@ -89,9 +86,7 @@ public class DiscountServiceImpl implements DiscountService {
         .collect(toList());
   }
 
-  private List<SimpleEntry<Integer, MenuItem>> filterDiscounts(
-      List<SimpleEntry<Integer, MenuItem>> extOrdersWithReps) {
-
+  private MenuItemList filterDiscounts(MenuItemList extOrdersWithReps) {
     List<SimpleEntry<Integer, MenuItem>> beverages =
         extOrdersWithReps.stream()
             .filter(menuItemEntry -> menuItemEntry.getValue().getType() == Type.BEVERAGE)
@@ -100,12 +95,10 @@ public class DiscountServiceImpl implements DiscountService {
     return IntStream.range(0, beverages.size())
         .mapToObj(i -> (i + 1) % 5 == 0 ? beverages.get(i) : null)
         .filter(Objects::nonNull)
-        .collect(toList());
+        .collect(Collectors.toCollection(MenuItemList::new));
   }
 
-  private List<SimpleEntry<Integer, MenuItem>> splitOrders(
-      List<SimpleEntry<Integer, OrderItem>> extractedOrders) {
-
+  private MenuItemList splitOrders(OrderItemList extractedOrders) {
     return extractedOrders.stream()
         .map(
             ordItemInt ->
@@ -116,13 +109,13 @@ public class DiscountServiceImpl implements DiscountService {
                                 ordItemInt.getKey(), ordItemInt.getValue().getMenuItem()))
                     .collect(toList()))
         .flatMap(Collection::stream)
-        .collect(toList());
+        .collect(Collectors.toCollection(MenuItemList::new));
   }
 
-  private List<SimpleEntry<Integer, OrderItem>> extOrders(Map<Integer, List<OrderItem>> allOrders) {
+  private OrderItemList extOrders(Map<Integer, List<OrderItem>> allOrders) {
     return allOrders.entrySet().stream()
         .flatMap(e -> e.getValue().stream().map(v -> new SimpleEntry<>(e.getKey(), v)))
-        .collect(toList());
+        .collect(Collectors.toCollection(OrderItemList::new));
   }
 
   private List<MenuItem> flattenOrder(List<OrderItem> order) {

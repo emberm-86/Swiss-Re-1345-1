@@ -1,12 +1,12 @@
 package org.swissre.assessment.service.order;
 
 import java.util.List;
-import java.util.Map;
 import org.swissre.assessment.domain.OrderItem;
+import org.swissre.assessment.domain.datastructure.OrderMap;
 
 public interface OrderStorageProvider {
 
-  Map<Integer, List<OrderItem>> getAllOrders();
+  OrderMap getAllOrders();
 
   void addNewOrder(List<OrderItem> order);
   

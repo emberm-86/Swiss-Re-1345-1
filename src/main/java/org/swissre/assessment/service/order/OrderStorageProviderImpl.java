@@ -1,16 +1,15 @@
 package org.swissre.assessment.service.order;
 
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import org.swissre.assessment.domain.OrderItem;
+import org.swissre.assessment.domain.datastructure.OrderMap;
 
 public class OrderStorageProviderImpl implements OrderStorageProvider {
 
-  private static final Map<Integer, List<OrderItem>> INTERNAL_MAP = new LinkedHashMap<>();
+  private static final OrderMap INTERNAL_MAP = new OrderMap();
 
   @Override
-  public Map<Integer, List<OrderItem>> getAllOrders() {
+  public OrderMap getAllOrders() {
     return INTERNAL_MAP;
   }
 

@@ -1,21 +1,21 @@
 package org.swissre.assessment.service.order;
 
+import static org.swissre.assessment.domain.Constants.CURRENCY;
+import static org.swissre.assessment.domain.Constants.FLT_FMT;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.OrderItem;
+import org.swissre.assessment.domain.datastructure.OrderMap;
 import org.swissre.assessment.service.billing.BillingService;
 import org.swissre.assessment.service.billing.BillingServiceImpl;
 import org.swissre.assessment.service.discount.DiscountService;
 import org.swissre.assessment.service.discount.DiscountServiceImpl;
-
-import static org.swissre.assessment.domain.Constants.CURRENCY;
-import static org.swissre.assessment.domain.Constants.FLT_FMT;
 
 public class OrderServiceImpl implements OrderService {
 
@@ -54,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
   public void printAllOrders() {
     System.out.println("========================");
 
-    Map<Integer, List<OrderItem>> allOrders = ordStgProvider.getAllOrders();
+    OrderMap allOrders = ordStgProvider.getAllOrders();
 
     if (allOrders.isEmpty()) {
       System.out.println("There is no order in the system.");
@@ -72,9 +72,7 @@ public class OrderServiceImpl implements OrderService {
     System.out.println("========================\n");
   }
 
-  private void printSingleOrder(
-      Integer orderId, List<OrderItem> order, Map<Integer, List<OrderItem>> allOrders) {
-
+  private void printSingleOrder(Integer orderId, List<OrderItem> order, OrderMap allOrders) {
     // Do all the calculations here.
     BigDecimal billForOrder = billingService.calcSum(order);
 
