@@ -13,8 +13,7 @@ public class MenuItemConverter {
     return new OrderItem(menuItem, menuItemOcc.getValue());
   }
 
-  public static String convertMenuItemToStr(String format, MenuItem menuItem) {
-    return String.format(
-        format, menuItem.getName(), menuItem.getCode(), menuItem.getPrice(), CURRENCY);
+  public static String convertMenuItemToStr(String format, MenuItem menuIt) {
+    return String.format(format, menuIt.getName(), menuIt.getCode(), menuIt.getPrice(), CURRENCY);
   }
 }

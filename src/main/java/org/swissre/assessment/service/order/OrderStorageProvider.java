@@ -9,6 +9,6 @@ public interface OrderStorageProvider {
   OrderMap getAllOrders();
 
   void addNewOrder(List<OrderItem> order);
-  
+
   int getLastOrderIndex();
 }

@@ -1,6 +1,7 @@
 package org.swissre.assessment;
 
 import static java.math.BigDecimal.ZERO;
+import static java.util.stream.Collectors.toMap;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -10,7 +11,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collector;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -205,8 +205,7 @@ public class DiscountBillingServiceTest {
   }
 
   private static Collector<SimpleEntry<Integer, List<OrderItem>>, ?, OrderMap> createOrderMap() {
-    return Collectors.toMap(
-            SimpleEntry::getKey, SimpleEntry::getValue, (e1, e2) -> e1, OrderMap::new);
+    return toMap(SimpleEntry::getKey, SimpleEntry::getValue, (e1, e2) -> e1, OrderMap::new);
   }
 
   private static BigDecimal getSumPrice(OrderItem orderItem) {
