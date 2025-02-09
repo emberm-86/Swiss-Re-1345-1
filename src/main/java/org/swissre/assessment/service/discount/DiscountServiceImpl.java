@@ -28,10 +28,10 @@ import org.swissre.assessment.service.util.MenuItemConverter;
 public class DiscountServiceImpl implements DiscountService {
 
   @Override
-  public List<OrderItem> getDiscBev1Snack1(Integer orderId, OrderMap allOrds) {
-    List<OrderItem> order = allOrds.getOrDefault(orderId, new ArrayList<>());
+  public List<OrderItem> getDiscBev1Snack1(Integer orderId, OrderMap allOrders) {
+    List<OrderItem> order = allOrders.getOrDefault(orderId, new ArrayList<>());
     int maxGiftCount = maxGiftCount(order);
-    List<MenuItem> flattedOrderList = flattenOrder(order);
+    List<MenuItem> flattedOrderList = flattenAnOrder(order);
 
     List<MenuItem> discountedExtraMenuItems =
         flattedOrderList.stream()
@@ -55,25 +55,26 @@ public class DiscountServiceImpl implements DiscountService {
   }
 
   @Override
-  public List<OrderItem> getDisOrdItems5thBev(Integer orderId, OrderMap allOrds) {
-    OrderItemList extOrds = extOrders(allOrds);
-    MenuItemList extOrdsWithReps = splitOrders(extOrds);
-    MenuItemList extOrdsDisc = filterDiscounts(extOrdsWithReps);
+  public List<OrderItem> getDisOrdItems5thBev(Integer orderId, OrderMap allOrders) {
+    OrderItemList extractedOrders = extractOrders(allOrders);
+    MenuItemList extractedOrdersWithReps = splitOrders(extractedOrders);
+    MenuItemList discountedMenuItemsFromExtractedOrders = filterDiscounts(extractedOrdersWithReps);
 
-    Map<Integer, List<OrderItem>> discountedOrdersMap = convertBack(extOrdsDisc);
+    Map<Integer, List<OrderItem>> discountedOrdersMap =
+        convertBack(discountedMenuItemsFromExtractedOrders);
 
     return discountedOrdersMap.getOrDefault(orderId, new ArrayList<>());
   }
 
-  private Map<Integer, List<OrderItem>> convertBack(MenuItemList extOrdsDisc) {
-    return extOrdsDisc.stream()
+  private Map<Integer, List<OrderItem>> convertBack(MenuItemList discMenuItemsFromExtOrders) {
+    return discMenuItemsFromExtOrders.stream()
         .collect(groupingBy(Entry::getKey, mapping(Entry::getValue, toList())))
         .entrySet()
         .stream()
         .collect(
             toMap(
                 Entry::getKey,
-                menuItemEntry -> convertMenuItemsToOrderItems(menuItemEntry.getValue())));
+                menuItemListEntry -> convertMenuItemsToOrderItems(menuItemListEntry.getValue())));
   }
 
   private List<OrderItem> convertMenuItemsToOrderItems(List<MenuItem> menuItems) {
@@ -101,24 +102,22 @@ public class DiscountServiceImpl implements DiscountService {
   private MenuItemList splitOrders(OrderItemList extractedOrders) {
     return extractedOrders.stream()
         .map(
-            ordItemInt ->
-                IntStream.range(0, ordItemInt.getValue().getQuantity())
+            extOrd ->
+                IntStream.range(0, extOrd.getValue().getQuantity())
                     .mapToObj(
-                        i ->
-                            new SimpleEntry<>(
-                                ordItemInt.getKey(), ordItemInt.getValue().getMenuItem()))
+                        i -> new SimpleEntry<>(extOrd.getKey(), extOrd.getValue().getMenuItem()))
                     .collect(toList()))
         .flatMap(Collection::stream)
         .collect(Collectors.toCollection(MenuItemList::new));
   }
 
-  private OrderItemList extOrders(Map<Integer, List<OrderItem>> allOrders) {
+  private OrderItemList extractOrders(OrderMap allOrders) {
     return allOrders.entrySet().stream()
         .flatMap(e -> e.getValue().stream().map(v -> new SimpleEntry<>(e.getKey(), v)))
         .collect(Collectors.toCollection(OrderItemList::new));
   }
 
-  private List<MenuItem> flattenOrder(List<OrderItem> order) {
+  private List<MenuItem> flattenAnOrder(List<OrderItem> order) {
     return order.stream()
         .map(
             orderItem ->
