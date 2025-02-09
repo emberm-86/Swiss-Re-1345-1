@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.MenuSelection;
 import org.swissre.assessment.domain.MenuState;
@@ -19,16 +20,17 @@ import org.swissre.assessment.service.order.OrderService;
 public class MenuController {
 
   private OrderService orderService;
+  @Getter private MenuSelection menuSelection;
 
-  public void launchSelectedMenu(String menuCode, MenuSelection menuSelection) {
+  public void launchSelectedMenu(String menuCode) {
     if (menuSelection.getMenuSelected() == MenuState.CREATE_ORDER) {
-      launchCreateOrderMenu(menuCode, menuSelection);
+      launchCreateOrderMenu(menuCode);
     } else if (menuSelection.getMenuSelected() == MenuState.MAIN_MENU) {
-      launchMainMenu(menuCode, menuSelection);
+      launchMainMenu(menuCode);
     }
   }
 
-  public void launchMainMenu(String menuCode, MenuSelection menuSelection) {
+  public void launchMainMenu(String menuCode) {
     switch (menuCode) {
       case "1":
         menuSelection.setMenuSelected(MenuState.CREATE_ORDER);
@@ -46,12 +48,12 @@ public class MenuController {
     }
   }
 
-  public void backToMainMenu(MenuSelection menuSelection) {
+  public void backToMainMenu() {
     menuSelection.setMenuSelected(MenuState.MAIN_MENU);
     printMainMenu();
   }
 
-  public void launchCreateOrderMenu(String menuCode, MenuSelection menuSelection) {
+  public void launchCreateOrderMenu(String menuCode) {
     MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
 
@@ -76,27 +78,27 @@ public class MenuController {
         System.out.println("Please type the quantity:");
       }
     } else {
-      addMenuItem(menuCode, menuSelection);
+      addMenuItem(menuCode);
     }
   }
 
-  public void createOrder(MenuSelection menuSelection) {
+  public void createOrder() {
     MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
     boolean extraSelectionDone = menuSelection.isExtraSelectionDone();
 
     if (menuItemSelected != null && menuItemSelected.isCoffee() && !extraSelectionDone) {
       System.out.println(
-              "You can choose an extra with it's code for your coffee product: "
-                      + checkSelectableExtras(selectedExtras)
-                      + " or say no(n)!");
+          "You can choose an extra with it's code for your coffee product: "
+              + checkSelectableExtras(selectedExtras)
+              + " or say no(n)!");
     } else {
       orderService.closeOrder();
-      backToMainMenu(menuSelection);
+      backToMainMenu();
     }
   }
 
-  private void addMenuItem(String menuCode, MenuSelection menuSelection) {
+  private void addMenuItem(String menuCode) {
     MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
     Stream<String> noOptions = Stream.of("n", "no");
 
@@ -108,25 +110,25 @@ public class MenuController {
       }
       menuSelection.setExtraSelectionDone(true);
     } else {
-      addMenuItemWithExtraCheck(menuCode, menuSelection);
+      addMenuItemWithExtraCheck(menuCode);
     }
   }
 
-  private void addMenuItemWithExtraCheck(String menuCode, MenuSelection menuSelection) {
+  private void addMenuItemWithExtraCheck(String menuCode) {
     boolean extraSelectionDone = menuSelection.isExtraSelectionDone();
     MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
 
     if (!menuItemSelected.isCoffee()) {
-      addNonExtraMenuItem(menuCode, menuSelection);
+      addNonExtraMenuItem(menuCode);
     } else if (extraSelectionDone) {
       if (MenuItem.checkIfExtraByCode(menuCode)) {
         System.out.println("Please give a valid number: > 0 as an input!");
       } else {
-        addNonExtraMenuItem(menuCode, menuSelection);
+        addNonExtraMenuItem(menuCode);
       }
     } else if (MenuItem.checkIfExtraByCode(menuCode)) {
-      addExtraMenuItem(menuSelection, MenuItem.getMenuItemByCode(menuCode));
+      addExtraMenuItem(MenuItem.getMenuItemByCode(menuCode));
     } else {
       System.out.println(
           "Please choose the coffee with a valid extra code: "
@@ -135,25 +137,25 @@ public class MenuController {
     }
   }
 
-  private void addNonExtraMenuItem(String quantity, MenuSelection menuSelection) {
+  private void addNonExtraMenuItem(String quantity) {
     if (!isValidNum(quantity)) {
       System.out.println("Please give a valid number: > 0 as an input!");
     } else {
-      addNewOrderItemWithExtras(quantity, menuSelection);
+      addNewOrderItemWithExtras(quantity);
     }
   }
 
-  private void addExtraMenuItem(MenuSelection menuSelection, MenuItem extra) {
+  private void addExtraMenuItem(MenuItem extra) {
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
     boolean extraIsIn = selectedExtras.contains(extra);
 
     if (!extraIsIn) {
       selectedExtras.add(extra);
     }
-    applySelectableCheck(menuSelection, extraIsIn ? extra : null);
+    applySelectableCheck(extraIsIn ? extra : null);
   }
 
-  private void addNewOrderItemWithExtras(String quantity, MenuSelection menuSelection) {
+  private void addNewOrderItemWithExtras(String quantity) {
     MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
     orderService.addNewOrderItem(menuItemSelected, quantity);
@@ -167,7 +169,7 @@ public class MenuController {
         "Please choose a product with it's code or submit(x), cancel(c) your order:");
   }
 
-  private void applySelectableCheck(MenuSelection menuSelection, MenuItem extra) {
+  private void applySelectableCheck(MenuItem extra) {
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
     String selectableExtras = checkSelectableExtras(selectedExtras);
 

@@ -1,27 +1,25 @@
 package org.swissre.assessment;
 
-import static org.swissre.assessment.service.util.MenuPrinter.printMainMenu;
-
 import java.util.Scanner;
 import org.swissre.assessment.domain.MenuSelection;
 import org.swissre.assessment.domain.MenuState;
 import org.swissre.assessment.service.menu.MenuController;
 import org.swissre.assessment.service.order.OrderService;
 import org.swissre.assessment.service.order.OrderServiceImpl;
+import org.swissre.assessment.service.util.MenuPrinter;
 
 public class Application {
 
   public static void main(String[] args) {
     OrderService orderService = new OrderServiceImpl();
-    MenuController menuController = new MenuController(orderService);
-    MenuSelection menuSelection = new MenuSelection();
+    MenuController menuController = new MenuController(orderService, new MenuSelection());
 
-    printMainMenu();
+    MenuPrinter.printMainMenu();
 
     Scanner in = new Scanner(System.in);
 
     while (in.hasNext()) {
-      MenuState menuState = menuSelection.getMenuSelected();
+      MenuState menuState = menuController.getMenuSelection().getMenuSelected();
       String[] arguments = in.nextLine().split("\\s+");
 
       if (arguments.length == 0) {
@@ -42,11 +40,11 @@ public class Application {
       if (menuCode.equalsIgnoreCase("x")) {
         switch (menuState) {
           case CREATE_ORDER:
-            menuController.createOrder(menuSelection);
+            menuController.createOrder();
             break;
 
           case LIST_ORDERS:
-            menuController.backToMainMenu(menuSelection);
+            menuController.backToMainMenu();
             break;
         }
         continue;
@@ -54,12 +52,12 @@ public class Application {
 
       if ((menuCode.equalsIgnoreCase("c") && menuState == MenuState.CREATE_ORDER)) {
         System.out.println("You have cancelled your order, no worries! :)");
-        menuController.backToMainMenu(menuSelection);
+        menuController.backToMainMenu();
         continue;
       }
 
       try {
-        menuController.launchSelectedMenu(menuCode, menuSelection);
+        menuController.launchSelectedMenu(menuCode);
       } catch (IllegalArgumentException e) {
         System.out.println(e.getMessage());
       }
