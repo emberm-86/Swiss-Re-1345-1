@@ -142,7 +142,7 @@ public class MenuUtil {
 
     menuSlc.setMenuItemSelected(null);
     menuSlc.setExtraSelectionDone(false);
-    System.out.println("Please choose a product with the code or submit(x), cancel(c) your order:");
+    System.out.println("Please choose a product with it's code or submit(x), cancel(c) your order:");
   }
 
   private static void applySelectableCheck(MenuSelection menuSelection, MenuItem extra) {
