@@ -53,7 +53,7 @@ public enum MenuItem {
   }
 
   public static boolean isCoffee(String menuCode) {
-    return COFFEE_PRODUCTS.contains(getMenuItemByCode(menuCode));
+    return getMenuItemByCode(menuCode).isCoffee();
   }
 
   public boolean isCoffee() {

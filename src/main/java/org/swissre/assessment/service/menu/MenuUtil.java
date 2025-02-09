@@ -64,7 +64,7 @@ public class MenuUtil {
 
       if (MenuItem.isCoffee(mCode)) {
         System.out.println(
-            "You can choose an extra with a code to add it to your coffee product: "
+            "You can choose an extra with it's code for your coffee product: "
                 + checkSelectableExtras(selectedExtras)
                 + " or say no(n)!");
       } else {
@@ -176,7 +176,7 @@ public class MenuUtil {
 
     if (menuItemSelected != null && menuItemSelected.isCoffee() && !extraSelectionDone) {
       System.out.println(
-          "You can choose an extra with a code to add it to your coffee product: "
+          "You can choose an extra with it's code for your coffee product: "
               + checkSelectableExtras(selectedExtras)
               + " or say no(n)!");
     } else {
