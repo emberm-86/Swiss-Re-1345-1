@@ -1,4 +1,4 @@
-package org.swissre.assessment.service.menu;
+package org.swissre.assessment.service.util;
 
 import org.swissre.assessment.domain.MenuItem;
 
@@ -24,7 +24,8 @@ public class MenuPrinter {
     System.out.println("=================================");
     prettyPrintMenuItems(Arrays.asList(MenuItem.values()));
     System.out.println("=================================");
-    System.out.println("Please choose a product with it's code or submit(x), cancel(c) your order:");
+    System.out.println(
+        "Please choose a product with it's code or submit(x), cancel(c) your order:");
   }
 
   public static void prettyPrintMenuItems(List<MenuItem> menuItems) {
@@ -35,7 +36,7 @@ public class MenuPrinter {
     System.out.println("---------------------------------");
 
     menuItems.stream()
-        .map(menuItem -> MenuItemConverter.convertMenuItemToStr(rowFormat, menuItem))
+        .map(menuItem -> MenuItemConverter.convertMenuItemToString(rowFormat, menuItem))
         .forEach(System.out::println);
   }
 }

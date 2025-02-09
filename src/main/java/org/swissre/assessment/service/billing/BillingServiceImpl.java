@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.swissre.assessment.domain.OrderItem;
-import org.swissre.assessment.service.menu.MenuItemConverter;
+import org.swissre.assessment.service.util.MenuItemConverter;
 
 public class BillingServiceImpl implements BillingService {
 

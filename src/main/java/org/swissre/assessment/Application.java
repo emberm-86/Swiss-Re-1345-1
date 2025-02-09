@@ -1,13 +1,11 @@
 package org.swissre.assessment;
 
-import static org.swissre.assessment.service.menu.MenuPrinter.printMainMenu;
-import static org.swissre.assessment.service.menu.MenuUtil.backToMainMenu;
-import static org.swissre.assessment.service.menu.MenuUtil.createOrder;
-import static org.swissre.assessment.service.menu.MenuUtil.launchSelectedMenu;
+import static org.swissre.assessment.service.util.MenuPrinter.printMainMenu;
 
 import java.util.Scanner;
 import org.swissre.assessment.domain.MenuSelection;
 import org.swissre.assessment.domain.MenuState;
+import org.swissre.assessment.service.menu.MenuController;
 import org.swissre.assessment.service.order.OrderService;
 import org.swissre.assessment.service.order.OrderServiceImpl;
 
@@ -15,6 +13,7 @@ public class Application {
 
   public static void main(String[] args) {
     OrderService orderService = new OrderServiceImpl();
+    MenuController menuController = new MenuController(orderService);
     MenuSelection menuSelection = new MenuSelection();
 
     printMainMenu();
@@ -43,11 +42,11 @@ public class Application {
       if (menuCode.equalsIgnoreCase("x")) {
         switch (menuState) {
           case CREATE_ORDER:
-            createOrder(orderService, menuSelection);
+            menuController.createOrder(menuSelection);
             break;
 
           case LIST_ORDERS:
-            backToMainMenu(menuSelection);
+            menuController.backToMainMenu(menuSelection);
             break;
         }
         continue;
@@ -55,12 +54,12 @@ public class Application {
 
       if ((menuCode.equalsIgnoreCase("c") && menuState == MenuState.CREATE_ORDER)) {
         System.out.println("You have cancelled your order, no worries! :)");
-        backToMainMenu(menuSelection);
+        menuController.backToMainMenu(menuSelection);
         continue;
       }
 
       try {
-        launchSelectedMenu(menuCode, menuSelection, orderService);
+        menuController.launchSelectedMenu(menuCode, menuSelection);
       } catch (IllegalArgumentException e) {
         System.out.println(e.getMessage());
       }

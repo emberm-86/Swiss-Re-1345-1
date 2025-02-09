@@ -23,7 +23,7 @@ import org.swissre.assessment.domain.OrderItem;
 import org.swissre.assessment.domain.Type;
 import org.swissre.assessment.domain.datastructure.OrderItemList;
 import org.swissre.assessment.domain.datastructure.OrderMap;
-import org.swissre.assessment.service.menu.MenuItemConverter;
+import org.swissre.assessment.service.util.MenuItemConverter;
 
 public class DiscountServiceImpl implements DiscountService {
 
