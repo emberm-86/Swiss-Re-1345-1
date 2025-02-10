@@ -6,7 +6,6 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class OrderItem {
-
   MenuItem menuItem;
   int quantity;
 }
