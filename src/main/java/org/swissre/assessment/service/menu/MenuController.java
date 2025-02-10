@@ -22,6 +22,38 @@ public class MenuController {
   private OrderService orderService;
   @Getter private MenuSelection menuSelection;
 
+  public boolean checkExit(String menuCode) {
+    return ((menuCode.equalsIgnoreCase("q")
+        || (menuCode.equals("3")) && menuSelection.getMenuSelected() == MenuState.MAIN_MENU));
+  }
+
+  public boolean preCheckMenuCode(String menuCode) {
+    if (menuCode.isEmpty()) {
+      return true;
+    }
+    MenuState menuSelected = menuSelection.getMenuSelected();
+
+    if (menuCode.equalsIgnoreCase("x")) {
+      switch (menuSelected) {
+        case CREATE_ORDER:
+          createOrder();
+          break;
+
+        case LIST_ORDERS:
+          backToMainMenu();
+          break;
+      }
+      return true;
+    }
+
+    if ((menuCode.equalsIgnoreCase("c") && menuSelected == MenuState.CREATE_ORDER)) {
+      System.out.println("You have cancelled your order, no worries! :)");
+      backToMainMenu();
+      return true;
+    }
+    return false;
+  }
+
   public void launchSelectedMenu(String menuCode) {
     if (menuSelection.getMenuSelected() == MenuState.CREATE_ORDER) {
       launchCreateOrderMenu(menuCode);
