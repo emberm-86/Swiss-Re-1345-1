@@ -32,30 +32,31 @@ public class MenuController {
   }
 
   private boolean keyXPressed(String menuCode) {
-    if (menuCode.equalsIgnoreCase("x")) {
-      switch (menuSelection.getMenuSelected()) {
-        case CREATE_ORDER:
-          createOrder();
-          break;
-
-        case LIST_ORDERS:
-          backToMainMenu();
-          break;
-      }
-      return true;
+    if (!menuCode.equalsIgnoreCase("x")) {
+      return false;
     }
-    return false;
+
+    switch (menuSelection.getMenuSelected()) {
+      case CREATE_ORDER:
+        createOrder();
+        break;
+
+      case LIST_ORDERS:
+        backToMainMenu();
+        break;
+    }
+    return true;
   }
 
   private boolean orderCancelled(String menuCode) {
     MenuState menuSelected = menuSelection.getMenuSelected();
 
-    if ((menuCode.equalsIgnoreCase("c") && menuSelected == MenuState.CREATE_ORDER)) {
-      System.out.println("You have cancelled your order, no worries! :)");
-      backToMainMenu();
-      return true;
+    if ((!menuCode.equalsIgnoreCase("c") || menuSelected != MenuState.CREATE_ORDER)) {
+      return false;
     }
-    return false;
+    System.out.println("You have cancelled your order, no worries! :)");
+    backToMainMenu();
+    return true;
   }
 
   public void launchSelectedMenu(String menuCode) {
