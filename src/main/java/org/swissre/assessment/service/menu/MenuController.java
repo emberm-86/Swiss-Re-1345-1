@@ -28,13 +28,12 @@ public class MenuController {
   }
 
   public boolean preCheckMenuCode(String menuCode) {
-    if (menuCode.isEmpty()) {
-      return true;
-    }
-    MenuState menuSelected = menuSelection.getMenuSelected();
+    return menuCode.isEmpty() || keyXPressed(menuCode) || orderCancelled(menuCode);
+  }
 
+  private boolean keyXPressed(String menuCode) {
     if (menuCode.equalsIgnoreCase("x")) {
-      switch (menuSelected) {
+      switch (menuSelection.getMenuSelected()) {
         case CREATE_ORDER:
           createOrder();
           break;
@@ -45,6 +44,11 @@ public class MenuController {
       }
       return true;
     }
+    return false;
+  }
+
+  private boolean orderCancelled(String menuCode) {
+    MenuState menuSelected = menuSelection.getMenuSelected();
 
     if ((menuCode.equalsIgnoreCase("c") && menuSelected == MenuState.CREATE_ORDER)) {
       System.out.println("You have cancelled your order, no worries! :)");
