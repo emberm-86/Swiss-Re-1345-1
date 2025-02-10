@@ -39,11 +39,9 @@ public class BillingServiceImpl implements BillingService {
     return sumPrice.subtract(disPrice.multiply(disQuantity));
   }
 
-  private Optional<OrderItem> findInDiscountedList(List<OrderItem> disOrdItems, OrderItem ordItem) {
+  private Optional<OrderItem> findInDiscountedList(List<OrderItem> disOrdItems, OrderItem ordIt) {
     return disOrdItems.stream()
-        .filter(
-            disOrderItem ->
-                disOrderItem.getMenuItem().getCode().equals(ordItem.getMenuItem().getCode()))
+        .filter(disOrdIt -> disOrdIt.getMenuItem().getCode().equals(ordIt.getMenuItem().getCode()))
         .findFirst();
   }
 
