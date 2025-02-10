@@ -47,7 +47,7 @@ public class DiscountServiceImpl implements DiscountService {
     return Math.min(sumByType(order, Type.BEVERAGE), sumByType(order, Type.SNACK));
   }
 
-  private Integer sumByType(List<OrderItem> order, Type snack) {
+  private int sumByType(List<OrderItem> order, Type snack) {
     return order.stream()
         .filter(orderItem -> orderItem.getMenuItem().getType() == snack)
         .map(OrderItem::getQuantity)
