@@ -56,7 +56,7 @@ public class BillingServiceImpl implements BillingService {
 
     return menuItems.entrySet().stream()
         .map(MenuItemConverter::convertToOrderItem)
-        .collect(Collectors.toList());
+        .toList();
   }
 
   private static BigDecimal getSumPrice(OrderItem orderItem) {

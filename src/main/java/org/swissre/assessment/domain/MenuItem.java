@@ -63,6 +63,6 @@ public enum MenuItem {
   public static List<MenuItem> extras() {
     return Arrays.stream(values())
         .filter(menuItem -> menuItem.getType() == EXTRA)
-        .collect(Collectors.toList());
+        .toList();
   }
 }

@@ -38,7 +38,7 @@ public class DiscountServiceImpl implements DiscountService {
             .filter(menuItem -> menuItem.getType() == Type.EXTRA)
             .sorted(Comparator.comparing(MenuItem::getPrice))
             .limit(maxGiftCount)
-            .collect(toList());
+            .toList();
 
     return convertMenuItemsToOrderItems(discountedExtraMenuItems);
   }
@@ -79,14 +79,14 @@ public class DiscountServiceImpl implements DiscountService {
 
     return menuItemOccurrences.entrySet().stream()
         .map(MenuItemConverter::convertToOrderItem)
-        .collect(toList());
+        .toList();
   }
 
   private MenuItemList filterDiscounts(MenuItemList listOfMenuItemEntries) {
     List<SimpleEntry<Integer, MenuItem>> beverages =
         listOfMenuItemEntries.stream()
             .filter(menuItemEntry -> menuItemEntry.getValue().getType() == Type.BEVERAGE)
-            .collect(toList());
+            .toList();
 
     return IntStream.range(0, beverages.size())
         .mapToObj(i -> (i + 1) % 5 == 0 ? beverages.get(i) : null)
@@ -101,7 +101,7 @@ public class DiscountServiceImpl implements DiscountService {
                 IntStream.range(0, ordItE.getValue().getQuantity())
                     .mapToObj(
                         i -> new SimpleEntry<>(ordItE.getKey(), ordItE.getValue().getMenuItem()))
-                    .collect(toList()))
+                    .toList())
         .flatMap(Collection::stream)
         .collect(Collectors.toCollection(MenuItemList::new));
   }
@@ -118,8 +118,8 @@ public class DiscountServiceImpl implements DiscountService {
             orderItem ->
                 IntStream.range(0, orderItem.getQuantity())
                     .mapToObj(i -> orderItem.getMenuItem())
-                    .collect(toList()))
+                    .toList())
         .flatMap(Collection::stream)
-        .collect(toList());
+        .toList();
   }
 }

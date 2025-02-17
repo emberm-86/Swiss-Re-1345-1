@@ -37,13 +37,8 @@ public class MenuController {
     }
 
     switch (menuSelection.getMenuSelected()) {
-      case CREATE_ORDER:
-        createOrder();
-        break;
-
-      case LIST_ORDERS:
-        backToMainMenu();
-        break;
+      case CREATE_ORDER -> createOrder();
+      case LIST_ORDERS -> backToMainMenu();
     }
     return true;
   }
@@ -69,19 +64,15 @@ public class MenuController {
 
   public void launchMainMenu(String menuCode) {
     switch (menuCode) {
-      case "1":
+      case "1" -> {
         menuSelection.setMenuSelected(MenuState.CREATE_ORDER);
         printCreateOrderMenu();
-        break;
-
-      case "2":
+      }
+      case "2" -> {
         menuSelection.setMenuSelected(MenuState.LIST_ORDERS);
         orderService.printAllOrders();
         System.out.println("Press X to return to the Main Menu!");
-        break;
-
-      default:
-        break;
+      }
     }
   }
 

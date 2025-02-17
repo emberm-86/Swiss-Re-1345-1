@@ -6,7 +6,6 @@ import static org.swissre.assessment.domain.Constants.FLT_FMT;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.swissre.assessment.domain.MenuItem;
@@ -81,7 +80,7 @@ public class OrderServiceImpl implements OrderService {
 
     List<OrderItem> disOrderItems =
         Stream.concat(disOrderItems5thBev.stream(), disOrderItemsBev1Snack1.stream())
-            .collect(Collectors.toList());
+            .toList();
 
     BigDecimal billForOrderDisc = billingService.calcSumWithDisc(order, disOrderItems);
 
