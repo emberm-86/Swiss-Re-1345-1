@@ -36,7 +36,7 @@ public class DiscountServiceImpl implements DiscountService {
     List<MenuItem> discountedExtraMenuItems =
         flattedOrderList.stream()
             .filter(menuItem -> menuItem.getType() == Type.EXTRA)
-            .sorted(Comparator.comparing(MenuItem::getPrice))
+            .sorted(Comparator.comparing(MenuItem::getPrice).reversed())
             .limit(maxGiftCount)
             .toList();
 
