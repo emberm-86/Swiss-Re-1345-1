@@ -6,15 +6,9 @@ import static java.util.stream.Collectors.summingInt;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
+import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import org.swissre.assessment.domain.MenuItem;
@@ -58,7 +52,7 @@ public class DiscountServiceImpl implements DiscountService {
   public List<OrderItem> getDisOrdItems5thBev(Integer orderId, OrderMap allOrders) {
     OrderItemList listOfOrderItemEntries = convertOrdersToOrderItemList(allOrders);
     MenuItemList listOfMenuItemEntries = splitOrderItemListToMenuItemList(listOfOrderItemEntries);
-    MenuItemList discountedMenuItems = filterDiscounts(listOfMenuItemEntries);
+    MenuItemList discountedMenuItems = filter5thBevDiscounts(listOfMenuItemEntries);
     Map<Integer, List<OrderItem>> discountedOrderMap = convertToOrderMap(discountedMenuItems);
 
     return discountedOrderMap.getOrDefault(orderId, new ArrayList<>());
@@ -82,16 +76,42 @@ public class DiscountServiceImpl implements DiscountService {
         .toList();
   }
 
-  private MenuItemList filterDiscounts(MenuItemList listOfMenuItemEntries) {
+  private MenuItemList filter5thBevDiscounts(MenuItemList listOfMenuItemEntries) {
     List<SimpleEntry<Integer, MenuItem>> beverages =
         listOfMenuItemEntries.stream()
             .filter(menuItemEntry -> menuItemEntry.getValue().getType() == Type.BEVERAGE)
             .toList();
 
-    return IntStream.range(0, beverages.size())
-        .mapToObj(i -> (i + 1) % 5 == 0 ? beverages.get(i) : null)
-        .filter(Objects::nonNull)
-        .collect(Collectors.toCollection(MenuItemList::new));
+    Map<Integer, List<MenuItem>> discountedItemMap =
+        beverages.stream()
+            .collect(groupingBy(Entry::getKey, mapping(Entry::getValue, toList())))
+            .entrySet()
+            .stream()
+            .collect(
+                Collectors.toMap(
+                    Entry::getKey,
+                    e ->
+                        e.getValue().stream()
+                            .sorted(Comparator.comparing(MenuItem::getPrice))
+                            .collect(Collectors.toCollection(LinkedList::new))));
+
+    List<Integer> discountedOrderIds =
+        IntStream.range(0, beverages.size())
+            .filter(i -> (i + 1) % 5 == 0)
+            .mapToObj(i -> beverages.get(i).getKey())
+            .collect(Collectors.toCollection(LinkedList::new));
+
+    MenuItemList menuItemList = new MenuItemList();
+
+    // Selected the cheapest beverage for 5th beverage discount in every order to provide fairness.
+
+    while (!discountedOrderIds.isEmpty()) {
+      Integer discountedOrderId = discountedOrderIds.removeFirst();
+      List<MenuItem> menuItems = discountedItemMap.get(discountedOrderId);
+      MenuItem discountedMenuItem = menuItems.removeFirst();
+      menuItemList.add(new SimpleEntry<>(discountedOrderId, discountedMenuItem));
+    }
+    return menuItemList;
   }
 
   private MenuItemList splitOrderItemListToMenuItemList(OrderItemList listOfOrderItemEntries) {

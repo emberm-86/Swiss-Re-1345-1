@@ -34,8 +34,8 @@ public class DiscountBillingServiceTest {
     List<OrderItem> disOrds5thBev = discountService.getDisOrdItems5thBev(orders.size() - 1, orders);
 
     assertEquals(2, disOrds5thBev.size());
-    assertEquals(disOrds5thBev.get(0), new OrderItem(MenuItem.MEDIUM_COFFEE, 1));
-    assertEquals(disOrds5thBev.get(1), new OrderItem(MenuItem.ORANGE_JUICE, 1));
+    assertEquals(disOrds5thBev.get(0), new OrderItem(MenuItem.SMALL_COFFEE, 1));
+    assertEquals(disOrds5thBev.get(1), new OrderItem(MenuItem.MEDIUM_COFFEE, 1));
 
     BigDecimal origSumPrice = billingService.calcSum(orders.get(0));
     BigDecimal discSumPrice = billingService.calcSumWithDisc(orders.get(0), disOrds5thBev);
@@ -58,12 +58,11 @@ public class DiscountBillingServiceTest {
 
     assertEquals(1, discOrders1.size());
     assertEquals(1, discOrders2.size());
-    assertEquals(2, discOrders3.size());
+    assertEquals(1, discOrders3.size());
 
-    assertEquals(discOrders1.get(0), new OrderItem(MenuItem.MEDIUM_COFFEE, 1));
+    assertEquals(discOrders1.get(0), new OrderItem(MenuItem.SMALL_COFFEE, 1));
     assertEquals(discOrders2.get(0), new OrderItem(MenuItem.ORANGE_JUICE, 1));
-    assertEquals(discOrders3.get(0), new OrderItem(MenuItem.LARGE_COFFEE, 1));
-    assertEquals(discOrders3.get(1), new OrderItem(MenuItem.MEDIUM_COFFEE, 1));
+    assertEquals(discOrders3.get(0), new OrderItem(MenuItem.MEDIUM_COFFEE, 2));
 
     for (int i = 0; i < orders.size(); i++) {
       List<OrderItem> disOrdItems5thBev = discountService.getDisOrdItems5thBev(i, orders);
