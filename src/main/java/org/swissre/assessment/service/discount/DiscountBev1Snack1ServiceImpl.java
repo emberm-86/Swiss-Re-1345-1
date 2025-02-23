@@ -49,7 +49,7 @@ public class DiscountBev1Snack1ServiceImpl implements DiscountService {
         .map(MenuItemConverter::convertToOrderItem)
         .toList();
   }
-  
+
   private List<MenuItem> flattenAnOrder(List<OrderItem> order) {
     return order.stream()
         .map(

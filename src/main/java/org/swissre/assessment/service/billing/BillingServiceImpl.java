@@ -54,9 +54,7 @@ public class BillingServiceImpl implements BillingService {
                     LinkedHashMap::new,
                     Collectors.summingInt(OrderItem::getQuantity)));
 
-    return menuItems.entrySet().stream()
-        .map(MenuItemConverter::convertToOrderItem)
-        .toList();
+    return menuItems.entrySet().stream().map(MenuItemConverter::convertToOrderItem).toList();
   }
 
   private static BigDecimal getSumPrice(OrderItem orderItem) {

@@ -55,34 +55,9 @@ public class Discount5thBevServiceImpl implements DiscountService {
             .filter(menuItemEntry -> menuItemEntry.getValue().getType() == Type.BEVERAGE)
             .toList();
 
-    Map<Integer, List<MenuItem>> discountedItemMap =
-        beverages.stream()
-            .collect(groupingBy(Entry::getKey, mapping(Entry::getValue, toList())))
-            .entrySet()
-            .stream()
-            .collect(
-                Collectors.toMap(
-                    Entry::getKey,
-                    e ->
-                        e.getValue().stream()
-                            .sorted(Comparator.comparing(MenuItem::getPrice))
-                            .collect(Collectors.toCollection(LinkedList::new))));
-
-    List<Integer> discountedOrderIds =
-        IntStream.range(0, beverages.size())
-            .filter(i -> (i + 1) % 5 == 0)
-            .mapToObj(i -> beverages.get(i).getKey())
-            .collect(Collectors.toCollection(LinkedList::new));
-
-    // Selected the cheapest beverage for 5th beverage discount in every order to provide fairness.
-
-    return discountedOrderIds.stream()
-        .map(
-            discountedOrderId -> {
-              List<MenuItem> menuItems = discountedItemMap.get(discountedOrderId);
-              MenuItem discountedMenuItem = menuItems.removeFirst();
-              return new SimpleEntry<>(discountedOrderId, discountedMenuItem);
-            })
+    return IntStream.range(0, beverages.size())
+        .mapToObj(i -> (i + 1) % 5 == 0 ? beverages.get(i) : null)
+        .filter(Objects::nonNull)
         .collect(Collectors.toCollection(MenuItemList::new));
   }
 
