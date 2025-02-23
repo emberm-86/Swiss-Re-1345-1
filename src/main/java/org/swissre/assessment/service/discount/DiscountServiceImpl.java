@@ -101,17 +101,16 @@ public class DiscountServiceImpl implements DiscountService {
             .mapToObj(i -> beverages.get(i).getKey())
             .collect(Collectors.toCollection(LinkedList::new));
 
-    MenuItemList menuItemList = new MenuItemList();
-
     // Selected the cheapest beverage for 5th beverage discount in every order to provide fairness.
 
-    while (!discountedOrderIds.isEmpty()) {
-      Integer discountedOrderId = discountedOrderIds.removeFirst();
-      List<MenuItem> menuItems = discountedItemMap.get(discountedOrderId);
-      MenuItem discountedMenuItem = menuItems.removeFirst();
-      menuItemList.add(new SimpleEntry<>(discountedOrderId, discountedMenuItem));
-    }
-    return menuItemList;
+    return discountedOrderIds.stream()
+        .map(
+            discountedOrderId -> {
+              List<MenuItem> menuItems = discountedItemMap.get(discountedOrderId);
+              MenuItem discountedMenuItem = menuItems.removeFirst();
+              return new SimpleEntry<>(discountedOrderId, discountedMenuItem);
+            })
+        .collect(Collectors.toCollection(MenuItemList::new));
   }
 
   private MenuItemList splitOrderItemListToMenuItemList(OrderItemList listOfOrderItemEntries) {
