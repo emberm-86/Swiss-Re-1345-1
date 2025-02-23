@@ -13,8 +13,9 @@ import org.swissre.assessment.domain.OrderItem;
 import org.swissre.assessment.domain.datastructure.OrderMap;
 import org.swissre.assessment.service.billing.BillingService;
 import org.swissre.assessment.service.billing.BillingServiceImpl;
+import org.swissre.assessment.service.discount.DiscountBev1Snack1ServiceImpl;
 import org.swissre.assessment.service.discount.DiscountService;
-import org.swissre.assessment.service.discount.DiscountServiceImpl;
+import org.swissre.assessment.service.discount.Discount5thBevServiceImpl;
 
 public class OrderServiceImpl implements OrderService {
 
@@ -24,7 +25,8 @@ public class OrderServiceImpl implements OrderService {
 
   List<OrderItem> ordSelectionCurrent = new ArrayList<>();
   OrderStorageProvider ordStgProvider = new OrderStorageProviderImpl();
-  DiscountService discountService = new DiscountServiceImpl();
+  DiscountService discount5thBevService = new Discount5thBevServiceImpl();
+  DiscountService discountBev1Snack1Service = new DiscountBev1Snack1ServiceImpl();
   BillingService billingService = new BillingServiceImpl();
 
   @Override
@@ -75,12 +77,13 @@ public class OrderServiceImpl implements OrderService {
     // Do all the calculations here.
     BigDecimal billForOrder = billingService.calcSum(order);
 
-    List<OrderItem> disOrderItems5thBev = discountService.getDisOrdItems5thBev(orderId, allOrders);
-    List<OrderItem> disOrderItemsBev1Snack1 = discountService.getDiscBev1Snack1(orderId, allOrders);
+    List<OrderItem> disOrderItems5thBev =
+        discount5thBevService.getDiscountedOrderItems(orderId, allOrders);
+    List<OrderItem> disOrderItemsBev1Snack1 =
+        discountBev1Snack1Service.getDiscountedOrderItems(orderId, allOrders);
 
     List<OrderItem> disOrderItems =
-        Stream.concat(disOrderItems5thBev.stream(), disOrderItemsBev1Snack1.stream())
-            .toList();
+        Stream.concat(disOrderItems5thBev.stream(), disOrderItemsBev1Snack1.stream()).toList();
 
     BigDecimal billForOrderDisc = billingService.calcSumWithDisc(order, disOrderItems);
 

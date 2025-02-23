@@ -19,37 +19,10 @@ import org.swissre.assessment.domain.datastructure.OrderItemList;
 import org.swissre.assessment.domain.datastructure.OrderMap;
 import org.swissre.assessment.service.util.MenuItemConverter;
 
-public class DiscountServiceImpl implements DiscountService {
+public class Discount5thBevServiceImpl implements DiscountService {
 
   @Override
-  public List<OrderItem> getDiscBev1Snack1(Integer orderId, OrderMap allOrders) {
-    List<OrderItem> order = allOrders.getOrDefault(orderId, new ArrayList<>());
-    int maxGiftCount = maxGiftCount(order);
-    List<MenuItem> flattedOrderList = flattenAnOrder(order);
-
-    List<MenuItem> discountedExtraMenuItems =
-        flattedOrderList.stream()
-            .filter(menuItem -> menuItem.getType() == Type.EXTRA)
-            .sorted(Comparator.comparing(MenuItem::getPrice).reversed())
-            .limit(maxGiftCount)
-            .toList();
-
-    return convertMenuItemsToOrderItems(discountedExtraMenuItems);
-  }
-
-  private int maxGiftCount(List<OrderItem> order) {
-    return Math.min(sumByType(order, Type.BEVERAGE), sumByType(order, Type.SNACK));
-  }
-
-  private int sumByType(List<OrderItem> order, Type snack) {
-    return order.stream()
-        .filter(orderItem -> orderItem.getMenuItem().getType() == snack)
-        .map(OrderItem::getQuantity)
-        .reduce(0, Integer::sum);
-  }
-
-  @Override
-  public List<OrderItem> getDisOrdItems5thBev(Integer orderId, OrderMap allOrders) {
+  public List<OrderItem> getDiscountedOrderItems(Integer orderId, OrderMap allOrders) {
     OrderItemList listOfOrderItemEntries = convertOrdersToOrderItemList(allOrders);
     MenuItemList listOfMenuItemEntries = splitOrderItemListToMenuItemList(listOfOrderItemEntries);
     MenuItemList discountedMenuItems = filter5thBevDiscounts(listOfMenuItemEntries);
@@ -129,16 +102,5 @@ public class DiscountServiceImpl implements DiscountService {
     return allOrders.entrySet().stream()
         .flatMap(e -> e.getValue().stream().map(v -> new SimpleEntry<>(e.getKey(), v)))
         .collect(Collectors.toCollection(OrderItemList::new));
-  }
-
-  private List<MenuItem> flattenAnOrder(List<OrderItem> order) {
-    return order.stream()
-        .map(
-            orderItem ->
-                IntStream.range(0, orderItem.getQuantity())
-                    .mapToObj(i -> orderItem.getMenuItem())
-                    .toList())
-        .flatMap(Collection::stream)
-        .toList();
   }
 }
