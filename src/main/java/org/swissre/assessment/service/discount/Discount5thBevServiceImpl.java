@@ -1,5 +1,6 @@
 package org.swissre.assessment.service.discount;
 
+import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.mapping;
 import static java.util.stream.Collectors.summingInt;
@@ -50,14 +51,19 @@ public class Discount5thBevServiceImpl implements DiscountService {
   }
 
   private MenuItemList filter5thBevDiscounts(MenuItemList listOfMenuItemEntries) {
+    Comparator<Entry<Integer, MenuItem>> priceComparator = comparing(e -> e.getValue().getPrice());
+    Comparator<Entry<Integer, MenuItem>> entryComparator =
+        Entry.<Integer, MenuItem>comparingByKey().thenComparing(priceComparator.reversed());
+
     List<SimpleEntry<Integer, MenuItem>> beverages =
         listOfMenuItemEntries.stream()
             .filter(menuItemEntry -> menuItemEntry.getValue().getType() == Type.BEVERAGE)
+            .sorted(entryComparator)
             .toList();
 
     return IntStream.range(0, beverages.size())
-        .mapToObj(i -> (i + 1) % 5 == 0 ? beverages.get(i) : null)
-        .filter(Objects::nonNull)
+        .filter(i -> (i + 1) % 5 == 0)
+        .mapToObj(i -> new SimpleEntry<>(beverages.get(i).getKey(), beverages.get(i).getValue()))
         .collect(Collectors.toCollection(MenuItemList::new));
   }
 
