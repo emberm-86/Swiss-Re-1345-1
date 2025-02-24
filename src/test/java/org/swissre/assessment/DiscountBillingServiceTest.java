@@ -37,8 +37,8 @@ public class DiscountBillingServiceTest {
         disc5thBevService.getDiscountedOrderItems(orders.size() - 1, orders);
 
     assertEquals(2, disOrds5thBev.size());
-    assertEquals(disOrds5thBev.get(0), new OrderItem(MenuItem.MEDIUM_COFFEE, 1));
-    assertEquals(disOrds5thBev.get(1), new OrderItem(MenuItem.ORANGE_JUICE, 1));
+    assertEquals(disOrds5thBev.get(0), new OrderItem(MenuItem.ORANGE_JUICE, 1));
+    assertEquals(disOrds5thBev.get(1), new OrderItem(MenuItem.SMALL_COFFEE, 1));
 
     BigDecimal origSumPrice = billingService.calcSum(orders.get(0));
     BigDecimal discSumPrice = billingService.calcSumWithDisc(orders.get(0), disOrds5thBev);
