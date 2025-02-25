@@ -45,7 +45,7 @@ public class DiscountBillingServiceTest {
 
     BigDecimal expectedDiff =
         disOrds5thBev.stream()
-            .map(DiscountBillingServiceTest::getSumPrice)
+            .map(this::getSumPrice)
             .reduce(ZERO, BigDecimal::add);
 
     assertEquals(origSumPrice, new BigDecimal("46.80"));
@@ -75,7 +75,7 @@ public class DiscountBillingServiceTest {
 
       BigDecimal expectedDiff =
           disOrdItems5thBev.stream()
-              .map(DiscountBillingServiceTest::getSumPrice)
+              .map(this::getSumPrice)
               .reduce(ZERO, BigDecimal::add);
 
       assertEquals(expectedDiff, origSumPrice.subtract(discSumPrice));
@@ -96,7 +96,7 @@ public class DiscountBillingServiceTest {
 
     BigDecimal expectedDiff =
         discountedBev1Snack1.stream()
-            .map(DiscountBillingServiceTest::getSumPrice)
+            .map(this::getSumPrice)
             .reduce(ZERO, BigDecimal::add);
 
     assertEquals(expectedDiff, origSumPrice.subtract(discSumPrice));
@@ -210,10 +210,9 @@ public class DiscountBillingServiceTest {
     return toMap(SimpleEntry::getKey, SimpleEntry::getValue, (e1, e2) -> e1, OrderMap::new);
   }
 
-  private static BigDecimal getSumPrice(OrderItem orderItem) {
+  private BigDecimal getSumPrice(OrderItem orderItem) {
     BigDecimal price = orderItem.getMenuItem().getPrice();
     BigDecimal quantity = new BigDecimal(String.valueOf(orderItem.getQuantity()));
-
     return price.multiply(quantity);
   }
 }

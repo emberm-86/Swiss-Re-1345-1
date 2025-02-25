@@ -15,7 +15,7 @@ public class BillingServiceImpl implements BillingService {
 
   @Override
   public BigDecimal calcSum(List<OrderItem> order) {
-    return order.stream().map(BillingServiceImpl::getSumPrice).reduce(ZERO, BigDecimal::add);
+    return order.stream().map(this::getSumPrice).reduce(ZERO, BigDecimal::add);
   }
 
   @Override
@@ -33,7 +33,7 @@ public class BillingServiceImpl implements BillingService {
         .reduce(ZERO, BigDecimal::add);
   }
 
-  private static BigDecimal calculateDiscountedPrice(OrderItem item, BigDecimal sumPrice) {
+  private BigDecimal calculateDiscountedPrice(OrderItem item, BigDecimal sumPrice) {
     BigDecimal disPrice = item.getMenuItem().getPrice();
     BigDecimal disQuantity = new BigDecimal(String.valueOf(item.getQuantity()));
     return sumPrice.subtract(disPrice.multiply(disQuantity));
@@ -57,7 +57,7 @@ public class BillingServiceImpl implements BillingService {
     return menuItems.entrySet().stream().map(MenuItemConverter::convertToOrderItem).toList();
   }
 
-  private static BigDecimal getSumPrice(OrderItem orderItem) {
+  private BigDecimal getSumPrice(OrderItem orderItem) {
     BigDecimal price = orderItem.getMenuItem().getPrice();
     BigDecimal quantity = new BigDecimal(String.valueOf(orderItem.getQuantity()));
     return price.multiply(quantity);

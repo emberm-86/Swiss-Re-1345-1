@@ -29,8 +29,9 @@ public class MenuPrinter {
   }
 
   public static void prettyPrintMenuItems(List<MenuItem> menuItems) {
-    String headerFormat = "%-17s %-9s %s";
-    String rowFormat = "%-17s %-6s " + FLT_FMT + " %s";
+    String productShift = "%-17s";
+    String headerFormat = productShift + " %-9s %s";
+    String rowFormat = productShift + " %-6s " + FLT_FMT + " %s";
 
     System.out.printf((headerFormat) + "%n", "Product", "Code", "Price");
     System.out.println("---------------------------------");
