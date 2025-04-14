@@ -32,7 +32,9 @@ public class MenuController {
   }
 
   private boolean keyXPressed(String menuCode) {
-    if (!menuCode.equalsIgnoreCase("x")) {
+    if (!menuCode.equalsIgnoreCase("x")
+        || (menuSelection.getMenuSelected() == MenuState.CREATE_ORDER
+            && menuSelection.getMenuItemSelected() != null)) {
       return false;
     }
 
