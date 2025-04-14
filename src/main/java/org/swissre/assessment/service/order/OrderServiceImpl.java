@@ -29,7 +29,10 @@ public class OrderServiceImpl implements OrderService {
     System.out.println("You can check your bill here.");
 
     singleOrderPrinterService.print(
-        ordStgProvider.getLastOrderIndex(), ordSelectionCurrent, ordStgProvider.getAllOrders());
+        ordStgProvider.getLastOrderIndex(),
+        ordSelectionCurrent,
+        ordStgProvider.getAllOrders(),
+        true);
 
     ordSelectionCurrent.clear();
   }
@@ -51,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
           }
 
           System.out.println("Order: " + orderId);
-          singleOrderPrinterService.print(orderId, order, allOrders);
+          singleOrderPrinterService.print(orderId, order, allOrders, false);
         });
     System.out.println("========================\n");
   }

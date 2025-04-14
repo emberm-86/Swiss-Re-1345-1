@@ -10,6 +10,9 @@ import org.swissre.assessment.service.discount.DiscountBev1Snack1ServiceImpl;
 import org.swissre.assessment.service.discount.DiscountService;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -23,12 +26,20 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
   private static final int PRC_SHIFT = BASE_SHIFT - 33;
   private static final int QTY_SHIFT = 8;
 
+  private static final String ORDER_DATE =
+      LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+  private static final String ORDER_TIME =
+      LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+
+  private static final List<String> RECEIPT_TITLE =
+      Arrays.asList("Charlene's Coffee Corner", "Swiss Re Office", "Soodring 6, 8134 Adliswil, ZH");
+
   DiscountService discount5thBevService = new Discount5thBevServiceImpl();
   DiscountService discountBev1Snack1Service = new DiscountBev1Snack1ServiceImpl();
   BillingService billingService = new BillingServiceImpl();
 
   @Override
-  public void print(Integer orderId, List<OrderItem> order, OrderMap allOrders) {
+  public void print(Integer orderId, List<OrderItem> order, OrderMap allOrders, boolean receipt) {
     // Do all the calculations here.
     BigDecimal billForOrder = billingService.calcSum(order);
 
@@ -52,6 +63,10 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
 
     int rightMargin = BASE_SHIFT + maxQtyStrLen + maxSumPrcStrLen;
     int separatorLength = rightMargin + 5;
+
+    if (receipt) {
+      printReceiptHeader(separatorLength);
+    }
 
     printSeparator(separatorLength, '=');
     printHeader(maxQtyStrLen, maxSumPrcStrLen);
@@ -110,6 +125,41 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
 
     String format = "%-" + discountSumShift + "s " + FLT_FMT + " %s %n";
     System.out.printf(format, "Total with discounts:", billForOrderDisc, CURRENCY);
+
+    if (receipt) {
+      printReceiptFooter(separatorLength);
+    }
+  }
+
+  private void printReceiptHeader(int separatorLength) {
+    printSeparator(separatorLength, '=');
+
+    IntStream.range(0, RECEIPT_TITLE.size())
+        .forEach(
+            i -> {
+              String receiptTitlePart = RECEIPT_TITLE.get(i);
+              System.out.printf(
+                  "%" + (separatorLength / 2 + (receiptTitlePart.length() / 2) + 1) + "s %n",
+                  receiptTitlePart);
+            });
+  }
+
+  private void printReceiptFooter(int separatorLength) {
+    printSeparator(separatorLength, '=');
+    String uniqueReceiptNumber = getUniqueReceiptNumber();
+
+    System.out.printf(
+        "%-" + (separatorLength - ORDER_TIME.length() - 1) + "s %s %n", "Time:", ORDER_TIME);
+    System.out.printf(
+        "%-" + (separatorLength - ORDER_DATE.length() - 1) + "s %s %n", "Date:", ORDER_DATE);
+    System.out.printf(
+        "%-" + (separatorLength - uniqueReceiptNumber.length() - 1) + "s %s %n",
+        "Receipt #:",
+        uniqueReceiptNumber);
+  }
+
+  private String getUniqueReceiptNumber() {
+    return Integer.toHexString((int) System.currentTimeMillis()).toUpperCase();
   }
 
   private static void printHeader(int maxQtyStrLen, int maxSumPrcStrLen) {
