@@ -11,7 +11,7 @@ public class MenuPrinter {
 
   public static void printMainMenu() {
     System.out.println("=========================");
-    System.out.println("Coffee Corner");
+    System.out.printf("%19s %n", "Coffee Corner");
     System.out.println("=========================");
     System.out.println("1. Create a new order");
     System.out.println("2. List all of the orders");
