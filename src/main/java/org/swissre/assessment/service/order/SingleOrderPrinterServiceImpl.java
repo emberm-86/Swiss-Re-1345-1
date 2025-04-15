@@ -163,6 +163,7 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
     printReceiptFooterRow(separatorLength, "Time:", ORDER_TIME);
     printReceiptFooterRow(separatorLength, "Date:", ORDER_DATE);
     printReceiptFooterRow(separatorLength, "Receipt #:", createUniqueReceiptNumber());
+    printSeparator(separatorLength, '=', true);
   }
 
   void printReceiptFooterRow(int separatorLength, String fieldName, String fieldValue) {
