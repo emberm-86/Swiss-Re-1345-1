@@ -1,22 +1,14 @@
 package org.swissre.assessment.domain;
 
-import static org.swissre.assessment.domain.Type.BEVERAGE;
-import static org.swissre.assessment.domain.Type.EXTRA;
-import static org.swissre.assessment.domain.Type.SNACK;
-
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.experimental.FieldDefaults;
 
-@AllArgsConstructor
-@Getter
-@FieldDefaults(makeFinal = true)
+import static org.swissre.assessment.domain.Type.*;
+
 public enum MenuItem {
   SMALL_COFFEE("sc", "Small coffee", BEVERAGE, new BigDecimal("2.50")),
   MEDIUM_COFFEE("mc", "Medium coffee", BEVERAGE, new BigDecimal("3.00")),
@@ -28,10 +20,17 @@ public enum MenuItem {
   FOAMED_MILK("xfm", "Foamed milk", EXTRA, new BigDecimal("0.50")),
   ROASTED_COFFEE("rcf", "Roasted coffee", EXTRA, new BigDecimal("0.90"));
 
-  String code;
-  String name;
-  Type type;
-  BigDecimal price;
+  private final String code;
+private final String name;
+  private final Type type;
+  private final BigDecimal price;
+
+  MenuItem(String code, String name, Type type, BigDecimal price) {
+    this.code = code;
+    this.name = name;
+    this.type = type;
+    this.price = price;
+  }
 
   private static final Set<MenuItem> COFFEE_PRODUCTS =
       Stream.of(SMALL_COFFEE, MEDIUM_COFFEE, LARGE_COFFEE).collect(Collectors.toSet());
@@ -64,5 +63,21 @@ public enum MenuItem {
     return Arrays.stream(values())
         .filter(menuItem -> menuItem.getType() == EXTRA)
         .toList();
+  }
+
+  public String getCode() {
+    return code;
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public Type getType() {
+    return type;
+  }
+
+  public BigDecimal getPrice() {
+    return price;
   }
 }

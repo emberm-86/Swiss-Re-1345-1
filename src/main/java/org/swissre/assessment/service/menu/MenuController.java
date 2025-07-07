@@ -1,26 +1,28 @@
 package org.swissre.assessment.service.menu;
 
-import static org.swissre.assessment.domain.MenuItem.checkIfExtraByCode;
-import static org.swissre.assessment.service.util.MenuPrinter.printCreateOrderMenu;
-import static org.swissre.assessment.service.util.MenuPrinter.printMainMenu;
+import org.swissre.assessment.domain.MenuItem;
+import org.swissre.assessment.domain.MenuSelection;
+import org.swissre.assessment.domain.MenuState;
+import org.swissre.assessment.service.order.OrderService;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import org.swissre.assessment.domain.MenuItem;
-import org.swissre.assessment.domain.MenuSelection;
-import org.swissre.assessment.domain.MenuState;
-import org.swissre.assessment.service.order.OrderService;
+import static org.swissre.assessment.domain.MenuItem.checkIfExtraByCode;
+import static org.swissre.assessment.service.util.MenuPrinter.printCreateOrderMenu;
+import static org.swissre.assessment.service.util.MenuPrinter.printMainMenu;
 
-@AllArgsConstructor
 public class MenuController {
 
-  private OrderService orderService;
-  @Getter private MenuSelection menuSelection;
+  private final OrderService orderService;
+  private final MenuSelection menuSelection;
+
+  public MenuController(OrderService orderService, MenuSelection menuSelection) {
+    this.orderService = orderService;
+    this.menuSelection = menuSelection;
+  }
 
   public boolean checkExit(String menuCode) {
     return ((menuCode.equalsIgnoreCase("q")
