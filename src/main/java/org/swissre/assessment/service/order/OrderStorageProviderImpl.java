@@ -15,11 +15,11 @@ public class OrderStorageProviderImpl implements OrderStorageProvider {
 
   @Override
   public void addNewOrder(List<OrderItem> order) {
-    INTERNAL_MAP.put(INTERNAL_MAP.values().size(), order);
+    INTERNAL_MAP.put(INTERNAL_MAP.size(), order);
   }
 
   @Override
   public int getLastOrderIndex() {
-    return INTERNAL_MAP.values().size() - 1;
+    return INTERNAL_MAP.size() - 1;
   }
 }
