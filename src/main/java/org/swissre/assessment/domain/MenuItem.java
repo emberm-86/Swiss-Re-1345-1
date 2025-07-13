@@ -51,8 +51,9 @@ public enum MenuItem {
         .anyMatch(menuIt -> menuIt.getCode().equalsIgnoreCase(code) && menuIt.getType() == EXTRA);
   }
 
-  public static boolean isCoffee(String menuCode) {
-    return getMenuItemByCode(menuCode).isCoffee();
+  public static boolean isCoffee(String code) {
+    return Arrays.stream(values())
+        .anyMatch(menuItem -> menuItem.getCode().equalsIgnoreCase(code) && menuItem.isCoffee());
   }
 
   public boolean isCoffee() {
