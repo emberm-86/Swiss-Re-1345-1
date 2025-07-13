@@ -21,7 +21,7 @@ public enum MenuItem {
   ROASTED_COFFEE("rcf", "Roasted coffee", EXTRA, new BigDecimal("0.90"));
 
   private final String code;
-private final String name;
+  private final String name;
   private final Type type;
   private final BigDecimal price;
 
