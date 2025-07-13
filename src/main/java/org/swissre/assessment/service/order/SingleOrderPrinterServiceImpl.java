@@ -85,7 +85,8 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
 
       printSeparator(separatorLength, '=', receipt);
       String discountsLabelStr = "Discounts:";
-      String discountLabel = String.format("%-" + (rightMargin + 4) + "s ", discountsLabelStr);
+      String discountFormat = "%-" + (rightMargin + 4) + "s ";
+      String discountLabel = String.format(discountFormat, discountsLabelStr);
       System.out.println(createRow(receipt, discountLabel));
       printSeparator(separatorLength, '-', receipt);
     }
@@ -143,17 +144,13 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
             i -> {
               String receiptTitlePart = RECEIPT_TITLE.get(i);
               int minorShift = separatorLength % 2 == 0 ? 1 : 0;
-              String receiptTitleRow =
-                  String.format(
-                      "%s%"
-                          + (separatorLength / 2 + (receiptTitlePart.length() / 2) - minorShift)
-                          + "s"
-                          + "%"
-                          + (separatorLength / 2 - (receiptTitlePart.length() / 2))
-                          + "s",
-                      "|",
-                      receiptTitlePart,
-                      "|");
+              String format = "%s%"
+                      + (separatorLength / 2 + (receiptTitlePart.length() / 2) - minorShift)
+                      + "s"
+                      + "%"
+                      + (separatorLength / 2 - (receiptTitlePart.length() / 2))
+                      + "s";
+              String receiptTitleRow = String.format(format, "|", receiptTitlePart, "|");
               System.out.println(createRow(false, receiptTitleRow));
             });
   }
@@ -167,9 +164,8 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
   }
 
   void printReceiptFooterRow(int separatorLength, String fieldName, String fieldValue) {
-    String footerRow =
-        String.format(
-            "%-" + (separatorLength - fieldValue.length() - 5) + "s %s", fieldName, fieldValue);
+    String footerFormat = "%-" + (separatorLength - fieldValue.length() - 5) + "s %s";
+    String footerRow = String.format(footerFormat, fieldName, fieldValue);
     System.out.println(createRow(true, footerRow));
   }
 

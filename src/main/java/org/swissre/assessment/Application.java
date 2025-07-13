@@ -13,16 +13,14 @@ public class Application {
     MenuPrinter.printMainMenu();
 
     Scanner in = new Scanner(System.in);
+    boolean checkExit = false;
 
-    while (in.hasNext()) {
+    while (!checkExit && in.hasNext()) {
       String[] arguments = in.nextLine().split("\\s+");
-      if (arguments.length == 0) {
-        continue;
-      }
-      String menuCode = arguments[0];
+      String menuCode = arguments.length == 0 ? "" : arguments[0];
+      checkExit = menuController.checkExit(menuCode);
 
-      if (menuController.checkExit(menuCode)) break;
-      if (menuController.preCheckMenuCode(menuCode)) continue;
+      if (menuController.preCheckMenuCode(menuCode) || checkExit) continue;
 
       try {
         menuController.launchSelectedMenu(menuCode);

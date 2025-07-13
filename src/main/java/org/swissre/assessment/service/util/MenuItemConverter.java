@@ -8,6 +8,9 @@ import static org.swissre.assessment.domain.Constants.CURRENCY;
 
 public class MenuItemConverter {
 
+  private MenuItemConverter() {
+  }
+
   public static OrderItem convertToOrderItem(Entry<String, Integer> menuItemCounter) {
     MenuItem menuItem = MenuItem.getMenuItemByCode(menuItemCounter.getKey());
     return new OrderItem(menuItem, menuItemCounter.getValue());

@@ -7,9 +7,12 @@ import org.swissre.assessment.service.order.OrderService;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.swissre.assessment.domain.Constants.NUMBER_VALIDATION_MSG;
+import static org.swissre.assessment.domain.Constants.OR_SAY_NO_MSG;
 import static org.swissre.assessment.domain.MenuItem.checkIfExtraByCode;
 import static org.swissre.assessment.service.util.MenuPrinter.printCreateOrderMenu;
 import static org.swissre.assessment.service.util.MenuPrinter.printMainMenu;
@@ -25,8 +28,8 @@ public class MenuController {
   }
 
   public boolean checkExit(String menuCode) {
-    return ((menuCode.equalsIgnoreCase("q")
-        || (menuCode.equals("3")) && menuSelection.getMenuSelected() == MenuState.MAIN_MENU));
+    return menuCode.equalsIgnoreCase("q")
+        || menuCode.equals("3") && menuSelection.getMenuSelected() == MenuState.MAIN_MENU;
   }
 
   public boolean preCheckMenuCode(String menuCode) {
@@ -40,9 +43,10 @@ public class MenuController {
       return false;
     }
 
-    switch (menuSelection.getMenuSelected()) {
-      case CREATE_ORDER -> createOrder();
-      case LIST_ORDERS -> backToMainMenu();
+    if (Objects.requireNonNull(menuSelection.getMenuSelected()) == MenuState.CREATE_ORDER) {
+      createOrder();
+    } else if (menuSelection.getMenuSelected() == MenuState.LIST_ORDERS) {
+      backToMainMenu();
     }
     return true;
   }
@@ -67,17 +71,14 @@ public class MenuController {
   }
 
   public void launchMainMenu(String menuCode) {
-    switch (menuCode) {
-      case "1" -> {
-        menuSelection.setMenuSelected(MenuState.CREATE_ORDER);
-        printCreateOrderMenu();
+      if (menuCode.equals("1")) {
+          menuSelection.setMenuSelected(MenuState.CREATE_ORDER);
+          printCreateOrderMenu();
+      } else if (menuCode.equals("2")) {
+          menuSelection.setMenuSelected(MenuState.LIST_ORDERS);
+          orderService.printAllOrders();
+          System.out.println("Press X to return to the Main Menu!");
       }
-      case "2" -> {
-        menuSelection.setMenuSelected(MenuState.LIST_ORDERS);
-        orderService.printAllOrders();
-        System.out.println("Press X to return to the Main Menu!");
-      }
-    }
   }
 
   public void backToMainMenu() {
@@ -105,7 +106,7 @@ public class MenuController {
         System.out.println(
             "You can choose an extra with it's code for your coffee product: "
                 + checkSelectableExtras(selectedExtras)
-                + " or say no(n)!");
+                + OR_SAY_NO_MSG);
       } else {
         System.out.println("Please type the quantity:");
       }
@@ -123,7 +124,7 @@ public class MenuController {
       System.out.println(
           "You can choose an extra with it's code for your coffee product: "
               + checkSelectableExtras(selectedExtras)
-              + " or say no(n)!");
+              + OR_SAY_NO_MSG);
     } else {
       orderService.closeOrder();
       backToMainMenu();
@@ -136,7 +137,7 @@ public class MenuController {
 
     if (menuItemSelected.isCoffee() && noOptions.anyMatch(menuCode::equalsIgnoreCase)) {
       if (menuSelection.isExtraSelectionDone()) {
-        System.out.println("Please give a valid number: > 0 as an input!");
+        System.out.println(NUMBER_VALIDATION_MSG);
       } else {
         System.out.println("Please type the quantity:");
       }
@@ -165,7 +166,7 @@ public class MenuController {
       System.out.println(
           "Please choose the coffee with a valid extra code: "
               + checkSelectableExtras(selectedExtras)
-              + " or say no(n)!");
+              + OR_SAY_NO_MSG);
     }
   }
 
@@ -212,7 +213,7 @@ public class MenuController {
       System.out.println(
           "You can choose another coffee extra with valid code: "
               + selectableExtras
-              + " or say no(n)!");
+              + OR_SAY_NO_MSG);
     } else {
       System.out.println(
           "'"
@@ -221,7 +222,7 @@ public class MenuController {
               + " has already been chosen."
               + " Please choose another one: "
               + selectableExtras
-              + " or say no(n)!");
+              + OR_SAY_NO_MSG);
     }
   }
 

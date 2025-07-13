@@ -9,14 +9,18 @@ import static org.swissre.assessment.domain.Constants.FLT_FMT;
 
 public class MenuPrinter {
 
+  private MenuPrinter() {
+  }
+
   public static void printMainMenu() {
-    System.out.println("=========================");
+    String menuSeparator = "=========================";
+    System.out.println(menuSeparator);
     System.out.printf("%19s %n", "Coffee Corner");
-    System.out.println("=========================");
+    System.out.println(menuSeparator);
     System.out.println("1. Create a new order");
     System.out.println("2. List all of the orders");
     System.out.println("3. Quit (Q)");
-    System.out.println("=========================");
+    System.out.println(menuSeparator);
     System.out.println("Please choose from the menu: ");
   }
 
@@ -30,10 +34,10 @@ public class MenuPrinter {
 
   public static void prettyPrintMenuItems(List<MenuItem> menuItems) {
     String productShift = "%-17s";
-    String headerFormat = productShift + " %-9s %s";
+    String headerFormat = productShift + " %-9s %s%n";
     String rowFormat = productShift + " %-6s " + FLT_FMT + " %s";
 
-    System.out.printf((headerFormat) + "%n", "Product", "Code", "Price");
+    System.out.printf(headerFormat, "Product", "Code", "Price");
     System.out.println("---------------------------------");
 
     menuItems.stream()
