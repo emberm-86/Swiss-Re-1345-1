@@ -31,7 +31,8 @@ public class OrderServiceImpl implements OrderService {
     singleOrderPrinterService.print(
         ordStgProvider.getLastOrderIndex(),
         ordSelectionCurrent,
-        ordStgProvider.getAllOrders());
+        ordStgProvider.getAllOrders(),
+        true);
 
     ordSelectionCurrent.clear();
   }
@@ -53,7 +54,7 @@ public class OrderServiceImpl implements OrderService {
           }
 
           System.out.println("Order: " + orderId);
-          singleOrderPrinterService.print(orderId, order, allOrders);
+          singleOrderPrinterService.print(orderId, order, allOrders, false);
         });
     System.out.println("========================\n");
   }

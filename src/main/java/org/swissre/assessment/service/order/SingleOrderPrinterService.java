@@ -6,5 +6,5 @@ import org.swissre.assessment.domain.datastructure.OrderMap;
 import java.util.List;
 
 public interface SingleOrderPrinterService {
-  void print(Integer orderId, List<OrderItem> order, OrderMap allOrders);
+  void print(Integer orderId, List<OrderItem> order, OrderMap allOrders, boolean receipt);
 }
