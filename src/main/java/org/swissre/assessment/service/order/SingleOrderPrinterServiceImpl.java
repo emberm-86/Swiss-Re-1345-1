@@ -95,7 +95,6 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
     String beverage1Snack1Title = "beverage1snack1";
 
     for (int i = 0; i < disOrderItems.size(); i++) {
-
       MenuItem discountedMenuItem = disOrderItems.get(i).getMenuItem();
       int qty = disOrderItems.get(i).getQuantity();
       BigDecimal disc = discountedMenuItem.getPrice();
@@ -138,21 +137,21 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
 
   private void printReceiptHeader(int separatorLength) {
     printSeparator(separatorLength, '=', true);
+    IntStream.range(0, RECEIPT_TITLE.size()).forEach(i -> printReceiptTitle(separatorLength, i));
+  }
 
-    IntStream.range(0, RECEIPT_TITLE.size())
-        .forEach(
-            i -> {
-              String receiptTitlePart = RECEIPT_TITLE.get(i);
-              int minorShift = separatorLength % 2 == 0 ? 1 : 0;
-              String format = "%s%"
-                      + (separatorLength / 2 + (receiptTitlePart.length() / 2) - minorShift)
-                      + "s"
-                      + "%"
-                      + (separatorLength / 2 - (receiptTitlePart.length() / 2))
-                      + "s";
-              String receiptTitleRow = String.format(format, "|", receiptTitlePart, "|");
-              System.out.println(createRow(false, receiptTitleRow));
-            });
+  private void printReceiptTitle(int separatorLength, int i) {
+    String receiptTitlePart = RECEIPT_TITLE.get(i);
+    int minorShift = separatorLength % 2 == 0 ? 1 : 0;
+    String format =
+        "%s%"
+            + (separatorLength / 2 + (receiptTitlePart.length() / 2) - minorShift)
+            + "s"
+            + "%"
+            + (separatorLength / 2 - (receiptTitlePart.length() / 2))
+            + "s";
+    String receiptTitleRow = String.format(format, "|", receiptTitlePart, "|");
+    System.out.println(createRow(false, receiptTitleRow));
   }
 
   private void printReceiptFooter(int separatorLength) {
