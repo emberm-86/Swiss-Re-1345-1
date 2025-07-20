@@ -49,10 +49,6 @@ public class MenuPrinter {
         .forEach(LOGGER::info);
   }
 
-  public static void printLoggingInfoDisabled(Logger logger) {
-    logger.info(LOG_INFO_DISABLED);
-  }
-
   public static void printNumberValidationMsg(Logger logger) {
     logger.info(NUMBER_VALIDATION_MSG);
   }

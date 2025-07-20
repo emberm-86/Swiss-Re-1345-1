@@ -2,6 +2,7 @@ package org.swissre.assessment.service.menu;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.swissre.assessment.domain.LogConfigImproperlySetException;
 import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.MenuSelection;
 import org.swissre.assessment.domain.MenuState;
@@ -89,8 +90,7 @@ public class MenuController {
 
   public void launchCreateOrderMenu(String menuCode) {
     if (!LOGGER.isInfoEnabled()) {
-      printLoggingInfoDisabled(LOGGER);
-      return;
+      throw new LogConfigImproperlySetException("Logging info is not enabled!");
     }
 
     MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
@@ -120,8 +120,7 @@ public class MenuController {
 
   public void createOrder() {
     if (!LOGGER.isInfoEnabled()) {
-      printLoggingInfoDisabled(LOGGER);
-      return;
+      throw new LogConfigImproperlySetException("Logging info is not enabled!");
     }
 
     MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
@@ -154,8 +153,7 @@ public class MenuController {
 
   private void addMenuItemWithExtraCheck(String menuCode) {
     if (!LOGGER.isInfoEnabled()) {
-      printLoggingInfoDisabled(LOGGER);
-      return;
+      throw new LogConfigImproperlySetException("Logging info is not enabled!");
     }
 
     boolean extraSelectionDone = menuSelection.isExtraSelectionDone();

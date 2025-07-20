@@ -2,6 +2,7 @@ package org.swissre.assessment.service.order;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.swissre.assessment.domain.LogConfigImproperlySetException;
 import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.OrderItem;
 import org.swissre.assessment.domain.datastructure.OrderMap;
@@ -20,7 +21,6 @@ import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 import static org.swissre.assessment.domain.Constants.*;
-import static org.swissre.assessment.service.util.MenuPrinter.printLoggingInfoDisabled;
 
 public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService {
 
@@ -45,8 +45,7 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
   @Override
   public void print(Integer orderId, List<OrderItem> order, OrderMap allOrders, boolean receipt) {
     if (!LOGGER.isInfoEnabled()) {
-      printLoggingInfoDisabled(LOGGER);
-      return;
+      throw new LogConfigImproperlySetException("Logging info is not enabled!");
     }
 
     // Do all the calculations here.
@@ -151,8 +150,7 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
 
   private void printReceiptTitle(int separatorLength, int i) {
     if (!LOGGER.isInfoEnabled()) {
-      printLoggingInfoDisabled(LOGGER);
-      return;
+      throw new LogConfigImproperlySetException("Logging info is not enabled!");
     }
 
     String receiptTitlePart = RECEIPT_TITLE.get(i);
@@ -178,8 +176,7 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
 
   void printReceiptFooterRow(int separatorLength, String fieldName, String fieldValue) {
     if (!LOGGER.isInfoEnabled()) {
-      printLoggingInfoDisabled(LOGGER);
-      return;
+      throw new LogConfigImproperlySetException("Logging info is not enabled!");
     }
 
     String footerFormat = "%-" + (separatorLength - fieldValue.length() - 5) + "s %s";
@@ -193,8 +190,7 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
 
   private static void printHeader(int maxQtyStrLen, int maxSumPrcStrLen, boolean receipt) {
     if (!LOGGER.isInfoEnabled()) {
-      printLoggingInfoDisabled(LOGGER);
-      return;
+      throw new LogConfigImproperlySetException("Logging info is not enabled!");
     }
 
     String sumQtyWithSpace = "%" + (QTY_SHIFT + 3 + maxQtyStrLen) + "s";
@@ -207,8 +203,7 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
 
   private void printSeparator(int shift, char sep, boolean receipt) {
     if (!LOGGER.isInfoEnabled()) {
-      printLoggingInfoDisabled(LOGGER);
-      return;
+      throw new LogConfigImproperlySetException("Logging info is not enabled!");
     }
 
     StringBuilder sb = new StringBuilder();
