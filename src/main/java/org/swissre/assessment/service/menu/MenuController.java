@@ -152,9 +152,7 @@ public class MenuController {
   }
 
   private void addMenuItemWithExtraCheck(String menuCode) {
-    if (!LOGGER.isInfoEnabled()) {
-      throw new LogConfigImproperlySetException("Logging info is not enabled!");
-    }
+    if (!LOGGER.isInfoEnabled()) return;
 
     boolean extraSelectionDone = menuSelection.isExtraSelectionDone();
     MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
