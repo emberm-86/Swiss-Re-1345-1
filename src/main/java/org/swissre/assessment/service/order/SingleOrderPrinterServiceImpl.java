@@ -12,9 +12,6 @@ import org.swissre.assessment.service.discount.DiscountBev1Snack1ServiceImpl;
 import org.swissre.assessment.service.discount.DiscountService;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -29,20 +26,12 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
   private static final int PRC_SHIFT = BASE_SHIFT - 33;
   private static final int QTY_SHIFT = 8;
 
-  private static final String ORDER_DATE =
-      LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
-  private static final String ORDER_TIME =
-      LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"));
-
-  private static final List<String> RECEIPT_TITLE =
-      Arrays.asList("Charlene's Coffee Corner", "Swiss Re Office", "Soodring 6, 8134 Adliswil, ZH");
-
   DiscountService discount5thBevService = new Discount5thBevServiceImpl();
   DiscountService discountBev1Snack1Service = new DiscountBev1Snack1ServiceImpl();
   BillingService billingService = new BillingServiceImpl();
 
   @Override
-  public void print(Integer orderId, List<OrderItem> order, OrderMap allOrders, boolean receipt) {
+  public void print(Integer orderId, List<OrderItem> order, OrderMap allOrders) {
     // Done all the calculations here.
     BigDecimal billForOrder = billingService.calcSum(order);
 
@@ -65,37 +54,32 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
     }
 
     int rightMargin = BASE_SHIFT + maxQtyStrLen + maxSumPrcStrLen;
-    int separatorLength = rightMargin + (receipt ? 9 : 5);
+    int separatorLength = rightMargin + 5;
 
-    if (receipt) {
-      printReceiptHeader(separatorLength);
-    }
+    printSeparator(separatorLength, '=');
+    printHeader(maxQtyStrLen, maxSumPrcStrLen);
 
-    printSeparator(separatorLength, '=', receipt);
-    printHeader(maxQtyStrLen, maxSumPrcStrLen, receipt);
-
-    printSeparator(separatorLength, '-', receipt);
-    prettyPrintOrder(order, maxQtyStrLen, maxSumPrcStrLen, receipt);
+    printSeparator(separatorLength, '-');
+    prettyPrintOrder(order, maxQtyStrLen, maxSumPrcStrLen);
 
     int j = disOrderItems5thBev.size();
     int totalShift = rightMargin - String.format(FLT_FMT, billForOrder).length();
 
     if (!disOrderItems.isEmpty()) {
-      printSeparator(separatorLength, '-', receipt);
+      printSeparator(separatorLength, '-');
+
       String formatTotal = "%-" + totalShift + "s " + FLT_FMT + " %s";
       String totalRow = String.format(formatTotal, "Total:", billForOrder, CURRENCY);
+      LOGGER.info(totalRow);
 
-      String receiptTotalRow = createRow(receipt, totalRow);
-      LOGGER.info(receiptTotalRow);
+      printSeparator(separatorLength, '=');
 
-      printSeparator(separatorLength, '=', receipt);
       String discountsLabelStr = "Discounts:";
       String discountFormat = "%-" + (rightMargin + 4) + "s ";
       String discountLabel = String.format(discountFormat, discountsLabelStr);
+      LOGGER.info(discountLabel);
 
-      String receiptDiscountLabel = createRow(receipt, discountLabel);
-      LOGGER.info(receiptDiscountLabel);
-      printSeparator(separatorLength, '-', receipt);
+      printSeparator(separatorLength, '-');
     }
 
     String bev5thTitle = "beverage5th";
@@ -114,111 +98,51 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
       String formatDiscount = "%-" + discShift + "s%s" + FLT_FMT + " %s";
       String discountRow =
           String.format(formatDiscount, discType, qty + " X ", disc.negate(), CURRENCY);
-
-      String receiptDiscountRow = createRow(receipt, discountRow);
-      LOGGER.info(receiptDiscountRow);
+      LOGGER.info(discountRow);
     }
 
     if (!disOrderItems.isEmpty()) {
-      printSeparator(separatorLength, '-', receipt);
+      printSeparator(separatorLength, '-');
     }
 
-    printDistSum(rightMargin, disOrderItems5thBev, bev5thTitle, receipt);
-    printDistSum(rightMargin, disOrderItemsBev1Snack1, beverage1Snack1Title, receipt);
-    printSeparator(separatorLength, '=', receipt);
+    printDistSum(rightMargin, disOrderItems5thBev, bev5thTitle);
+    printDistSum(rightMargin, disOrderItemsBev1Snack1, beverage1Snack1Title);
+    printSeparator(separatorLength, '=');
 
     String formatTotal = "%-" + totalShift + "s " + FLT_FMT + " %s";
     String totalRow = String.format(formatTotal, "Total:", billForOrder, CURRENCY);
+    LOGGER.info(totalRow);
 
-    String receiptTotalRow = createRow(receipt, totalRow);
-    LOGGER.info(receiptTotalRow);
-
-    printDistSum(rightMargin, disOrderItems, "All discounts", true, receipt);
+    printDistSum(rightMargin, disOrderItems, "All discounts", true);
 
     int discountSumShift = rightMargin - String.format(FLT_FMT, billForOrderDisc).length();
     String formatTotalDisc = "%-" + discountSumShift + "s " + FLT_FMT + " %s";
     String totalWithDiscountsRow =
         String.format(formatTotalDisc, "Total with discounts:", billForOrderDisc, CURRENCY);
-
-    String receiptTotalWithDiscountsRow = createRow(receipt, totalWithDiscountsRow);
-    LOGGER.info(receiptTotalWithDiscountsRow);
-
-    if (receipt) {
-      printReceiptFooter(separatorLength);
-    }
+    LOGGER.info(totalWithDiscountsRow);
   }
 
-  private void printReceiptHeader(int separatorLength) {
-    printSeparator(separatorLength, '=', true);
-    IntStream.range(0, RECEIPT_TITLE.size()).forEach(i -> printReceiptTitle(separatorLength, i));
-  }
-
-  private void printReceiptTitle(int separatorLength, int i) {
-    String receiptTitlePart = RECEIPT_TITLE.get(i);
-    int minorShift = separatorLength % 2 == 0 ? 1 : 0;
-    String format =
-        "%s%"
-            + (separatorLength / 2 + (receiptTitlePart.length() / 2) - minorShift)
-            + "s"
-            + "%"
-            + (separatorLength / 2 - (receiptTitlePart.length() / 2))
-            + "s";
-    String receiptTitleRow = String.format(format, "|", receiptTitlePart, "|");
-    LOGGER.info(receiptTitleRow);
-  }
-
-  private void printReceiptFooter(int separatorLength) {
-    printSeparator(separatorLength, '=', true);
-    printReceiptFooterRow(separatorLength, "Time:", ORDER_TIME);
-    printReceiptFooterRow(separatorLength, "Date:", ORDER_DATE);
-    printReceiptFooterRow(separatorLength, "Receipt #:", createUniqueReceiptNumber());
-    printSeparator(separatorLength, '=', true);
-  }
-
-  void printReceiptFooterRow(int separatorLength, String fieldName, String fieldValue) {
-    String footerFormat = "%-" + (separatorLength - fieldValue.length() - 5) + "s %s";
-    String footerRow = String.format(footerFormat, fieldName, fieldValue);
-
-    String receiptFooterRow = createRow(true, footerRow);
-    LOGGER.info(receiptFooterRow);
-  }
-
-  private String createUniqueReceiptNumber() {
-    return Integer.toHexString((int) System.currentTimeMillis()).toUpperCase();
-  }
-
-  private static void printHeader(int maxQtyStrLen, int maxSumPrcStrLen, boolean receipt) {
+  private static void printHeader(int maxQtyStrLen, int maxSumPrcStrLen) {
     String sumQtyWithSpace = "%" + (QTY_SHIFT + 3 + maxQtyStrLen) + "s";
     String sumPrcWithSpace = "%" + (PRC_SHIFT + 7 + maxSumPrcStrLen) + "s";
 
     String headerFormat = "%-16s" + "%s" + sumQtyWithSpace + sumPrcWithSpace;
     String headerRow = String.format((headerFormat), "Product", "Code", "Qty X UP", "Sum price");
-
-    String receiptRow = createRow(receipt, headerRow);
-    LOGGER.info(receiptRow);
+    LOGGER.info(headerRow);
   }
 
-  private void printSeparator(int shift, char sep, boolean receipt) {
+  private void printSeparator(int shift, char sep) {
     StringBuilder sb = new StringBuilder();
-    if (receipt) {
-      sb.append("|");
-      IntStream.range(0, shift - 2).forEach(i -> sb.append(sep));
-      sb.append("|");
-    } else {
-      IntStream.range(0, shift).forEach(i -> sb.append(sep));
-    }
+    IntStream.range(0, shift).forEach(i -> sb.append(sep));
     String separatorString = sb.toString();
     LOGGER.info(separatorString);
   }
 
-  private void printDistSum(
-      int baseShift, List<OrderItem> disOrderItems, String title, boolean receipt) {
-    printDistSum(baseShift, disOrderItems, title, false, receipt);
+  private void printDistSum(int baseShift, List<OrderItem> disOrderItems, String title) {
+    printDistSum(baseShift, disOrderItems, title, false);
   }
 
-  private void printDistSum(
-      int baseShift, List<OrderItem> disOrdItems, String title, boolean all, boolean receipt) {
-
+  private void printDistSum(int baseShift, List<OrderItem> disOrdItems, String title, boolean all) {
     if (disOrdItems.isEmpty() && !all) {
       return;
     }
@@ -229,20 +153,16 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
 
     String format = "%-" + distShift + "s " + FLT_FMT + " %s";
     String distSumRow = String.format(format, title + " sum:", distSum.negate(), CURRENCY);
-
-    String receiptDistSumRow = createRow(receipt, distSumRow);
-    LOGGER.info(receiptDistSumRow);
+    LOGGER.info(distSumRow);
   }
 
-  private void prettyPrintOrder(
-      List<OrderItem> orderItems, int maxQtyStrLen, int maxSumPrcStrLen, boolean receipt) {
+  private void prettyPrintOrder(List<OrderItem> orderItems, int maxQtyStrLen, int maxSumPrcStrLen) {
     orderItems.stream()
-        .map(orderItem -> createPrintableOrder(orderItem, maxQtyStrLen, maxSumPrcStrLen, receipt))
+        .map(orderItem -> createPrintableOrder(orderItem, maxQtyStrLen, maxSumPrcStrLen))
         .forEach(LOGGER::info);
   }
 
-  private String createPrintableOrder(
-      OrderItem orderItem, int maxQtyStrLen, int maxSumPrcStrLen, boolean receipt) {
+  private String createPrintableOrder(OrderItem orderItem, int maxQtyStrLen, int maxSumPrcStrLen) {
     MenuItem menuItem = orderItem.getMenuItem();
     String qtyStr = String.valueOf(orderItem.getQuantity());
     BigDecimal sumPrice = menuItem.getPrice().multiply(new BigDecimal(qtyStr));
@@ -255,23 +175,16 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
 
     String format = "%-16s" + qtyWithSpace + "%s %s " + FLT_FMT + sumPrcWithSpace + FLT_FMT + " %s";
 
-    String orderItemRow =
-        String.format(
-            format,
-            menuItem.getName(),
-            menuItem.getCode(),
-            qtyStr,
-            "X",
-            menuItem.getPrice(),
-            "",
-            sumPrice,
-            CURRENCY);
-
-    return createRow(receipt, orderItemRow);
-  }
-
-  private static String createRow(boolean receipt, String row) {
-    return receipt ? "| " + row + " |" : row;
+    return String.format(
+        format,
+        menuItem.getName(),
+        menuItem.getCode(),
+        qtyStr,
+        "X",
+        menuItem.getPrice(),
+        "",
+        sumPrice,
+        CURRENCY);
   }
 
   private int maxQtyStrLen(List<OrderItem> orders) {
