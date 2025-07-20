@@ -14,6 +14,7 @@
     <java.version>17</java.version>
     <junit.jupiter.version>5.9.2</junit.jupiter.version>
     <log4j.version>2.25.1</log4j.version>
+    <slf4j.version>2.0.17</slf4j.version>
     <maven.compiler.plugin.version>3.10.1</maven.compiler.plugin.version>
     <maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
     <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
@@ -21,6 +22,20 @@
   </properties>
 
   <dependencies>
+    <!-- Logging -->
+    <!-- SLF4J API -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>${slf4j.version}</version>
+    </dependency>
+    <!-- Log4j2 binding for SLF4J -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j2-impl</artifactId>
+      <version>${log4j.version}</version>
+    </dependency>
+    <!-- Log4j2-->
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
@@ -31,6 +46,8 @@
       <artifactId>log4j-core</artifactId>
       <version>${log4j.version}</version>
     </dependency>
+
+    <!-- Unit test -->
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter</artifactId>

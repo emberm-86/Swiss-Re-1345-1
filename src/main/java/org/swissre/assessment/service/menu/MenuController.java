@@ -1,7 +1,7 @@
 package org.swissre.assessment.service.menu;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.MenuSelection;
 import org.swissre.assessment.domain.MenuState;
@@ -19,7 +19,7 @@ import static org.swissre.assessment.service.util.MenuPrinter.*;
 
 public class MenuController {
 
-  private static final Logger LOGGER = LogManager.getLogger(MenuController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(MenuController.class);
   private final OrderService orderService;
   private final MenuSelection menuSelection;
 

@@ -2,15 +2,16 @@ package org.swissre.assessment.service.util;
 
 import java.util.Arrays;
 import java.util.List;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.swissre.assessment.domain.MenuItem;
 
 import static org.swissre.assessment.domain.Constants.*;
 
 public class MenuPrinter {
 
-  private static final Logger LOGGER = LogManager.getLogger(MenuPrinter.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(MenuPrinter.class);
 
   private MenuPrinter() {}
 

@@ -2,8 +2,8 @@ package org.swissre.assessment;
 
 import java.util.Scanner;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.swissre.assessment.domain.MenuSelection;
 import org.swissre.assessment.service.menu.MenuController;
 import org.swissre.assessment.service.order.OrderServiceImpl;
@@ -11,7 +11,7 @@ import org.swissre.assessment.service.util.MenuPrinter;
 
 public class Application {
 
-  private static final Logger LOGGER = LogManager.getLogger(Application.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
   public static void main(String[] args) {
     MenuController menuController = new MenuController(new OrderServiceImpl(), new MenuSelection());
