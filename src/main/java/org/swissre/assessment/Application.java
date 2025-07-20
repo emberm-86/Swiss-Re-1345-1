@@ -4,7 +4,6 @@ import java.util.Scanner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.swissre.assessment.domain.LogConfigImproperlySetException;
 import org.swissre.assessment.domain.MenuSelection;
 import org.swissre.assessment.service.menu.MenuController;
 import org.swissre.assessment.service.order.OrderServiceImpl;
@@ -15,10 +14,6 @@ public class Application {
   private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);
 
   public static void main(String[] args) {
-    if (!LOGGER.isInfoEnabled()) {
-      throw new LogConfigImproperlySetException("Logging info is not enabled!");
-    }
-
     MenuController menuController = new MenuController(new OrderServiceImpl(), new MenuSelection());
     MenuPrinter.printMainMenu();
 

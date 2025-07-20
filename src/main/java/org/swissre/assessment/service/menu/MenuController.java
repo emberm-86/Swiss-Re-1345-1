@@ -2,7 +2,6 @@ package org.swissre.assessment.service.menu;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.swissre.assessment.domain.LogConfigImproperlySetException;
 import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.MenuSelection;
 import org.swissre.assessment.domain.MenuState;
@@ -89,10 +88,6 @@ public class MenuController {
   }
 
   public void launchCreateOrderMenu(String menuCode) {
-    if (!LOGGER.isInfoEnabled()) {
-      throw new LogConfigImproperlySetException("Logging info is not enabled!");
-    }
-
     MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
 
@@ -119,10 +114,6 @@ public class MenuController {
   }
 
   public void createOrder() {
-    if (!LOGGER.isInfoEnabled()) {
-      throw new LogConfigImproperlySetException("Logging info is not enabled!");
-    }
-
     MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
     boolean extraSelectionDone = menuSelection.isExtraSelectionDone();
@@ -152,8 +143,6 @@ public class MenuController {
   }
 
   private void addMenuItemWithExtraCheck(String menuCode) {
-    if (!LOGGER.isInfoEnabled()) return;
-
     boolean extraSelectionDone = menuSelection.isExtraSelectionDone();
     MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
@@ -169,9 +158,10 @@ public class MenuController {
     } else if (MenuItem.checkIfExtraByCode(menuCode)) {
       addExtraMenuItem(MenuItem.getMenuItemByCode(menuCode));
     } else {
+      String selectableExtras = checkSelectableExtras(selectedExtras);
       LOGGER.info(
           "Please choose the coffee with a valid extra code: {}{}",
-          checkSelectableExtras(selectedExtras),
+          selectableExtras,
           OR_SAY_NO_MSG);
     }
   }

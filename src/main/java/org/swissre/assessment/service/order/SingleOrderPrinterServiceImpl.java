@@ -43,8 +43,6 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
 
   @Override
   public void print(Integer orderId, List<OrderItem> order, OrderMap allOrders, boolean receipt) {
-    if (!LOGGER.isInfoEnabled()) return;
-
     // Do all the calculations here.
     BigDecimal billForOrder = billingService.calcSum(order);
 
@@ -86,13 +84,17 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
       printSeparator(separatorLength, '-', receipt);
       String formatTotal = "%-" + totalShift + "s " + FLT_FMT + " %s";
       String totalRow = String.format(formatTotal, "Total:", billForOrder, CURRENCY);
-      LOGGER.info(createRow(receipt, totalRow));
+
+      String receiptTotalRow = createRow(receipt, totalRow);
+      LOGGER.info(receiptTotalRow);
 
       printSeparator(separatorLength, '=', receipt);
       String discountsLabelStr = "Discounts:";
       String discountFormat = "%-" + (rightMargin + 4) + "s ";
       String discountLabel = String.format(discountFormat, discountsLabelStr);
-      LOGGER.info(createRow(receipt, discountLabel));
+
+      String receiptDiscountLabel = createRow(receipt, discountLabel);
+      LOGGER.info(receiptDiscountLabel);
       printSeparator(separatorLength, '-', receipt);
     }
 
@@ -112,7 +114,9 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
       String formatDiscount = "%-" + discShift + "s%s" + FLT_FMT + " %s";
       String discountRow =
           String.format(formatDiscount, discType, qty + " X ", disc.negate(), CURRENCY);
-      LOGGER.info(createRow(receipt, discountRow));
+
+      String receiptDiscountRow = createRow(receipt, discountRow);
+      LOGGER.info(receiptDiscountRow);
     }
 
     if (!disOrderItems.isEmpty()) {
@@ -125,7 +129,9 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
 
     String formatTotal = "%-" + totalShift + "s " + FLT_FMT + " %s";
     String totalRow = String.format(formatTotal, "Total:", billForOrder, CURRENCY);
-    LOGGER.info(createRow(receipt, totalRow));
+
+    String receiptTotalRow = createRow(receipt, totalRow);
+    LOGGER.info(receiptTotalRow);
 
     printDistSum(rightMargin, disOrderItems, "All discounts", true, receipt);
 
@@ -133,7 +139,9 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
     String formatTotalDisc = "%-" + discountSumShift + "s " + FLT_FMT + " %s";
     String totalWithDiscountsRow =
         String.format(formatTotalDisc, "Total with discounts:", billForOrderDisc, CURRENCY);
-    LOGGER.info(createRow(receipt, totalWithDiscountsRow));
+
+    String receiptTotalWithDiscountsRow = createRow(receipt, totalWithDiscountsRow);
+    LOGGER.info(receiptTotalWithDiscountsRow);
 
     if (receipt) {
       printReceiptFooter(separatorLength);
@@ -146,8 +154,6 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
   }
 
   private void printReceiptTitle(int separatorLength, int i) {
-    if (!LOGGER.isInfoEnabled()) return;
-
     String receiptTitlePart = RECEIPT_TITLE.get(i);
     int minorShift = separatorLength % 2 == 0 ? 1 : 0;
     String format =
@@ -158,7 +164,7 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
             + (separatorLength / 2 - (receiptTitlePart.length() / 2))
             + "s";
     String receiptTitleRow = String.format(format, "|", receiptTitlePart, "|");
-    LOGGER.info(createRow(false, receiptTitleRow));
+    LOGGER.info(receiptTitleRow);
   }
 
   private void printReceiptFooter(int separatorLength) {
@@ -170,11 +176,11 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
   }
 
   void printReceiptFooterRow(int separatorLength, String fieldName, String fieldValue) {
-    if (!LOGGER.isInfoEnabled()) return;
-
     String footerFormat = "%-" + (separatorLength - fieldValue.length() - 5) + "s %s";
     String footerRow = String.format(footerFormat, fieldName, fieldValue);
-    LOGGER.info(createRow(true, footerRow));
+
+    String receiptFooterRow = createRow(true, footerRow);
+    LOGGER.info(receiptFooterRow);
   }
 
   private String createUniqueReceiptNumber() {
@@ -182,19 +188,17 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
   }
 
   private static void printHeader(int maxQtyStrLen, int maxSumPrcStrLen, boolean receipt) {
-    if (!LOGGER.isInfoEnabled()) return;
-
     String sumQtyWithSpace = "%" + (QTY_SHIFT + 3 + maxQtyStrLen) + "s";
     String sumPrcWithSpace = "%" + (PRC_SHIFT + 7 + maxSumPrcStrLen) + "s";
 
     String headerFormat = "%-16s" + "%s" + sumQtyWithSpace + sumPrcWithSpace;
     String headerRow = String.format((headerFormat), "Product", "Code", "Qty X UP", "Sum price");
-    LOGGER.info(createRow(receipt, headerRow));
+
+    String receiptRow = createRow(receipt, headerRow);
+    LOGGER.info(receiptRow);
   }
 
   private void printSeparator(int shift, char sep, boolean receipt) {
-    if (!LOGGER.isInfoEnabled()) return;
-
     StringBuilder sb = new StringBuilder();
     if (receipt) {
       sb.append("|");
@@ -203,7 +207,8 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
     } else {
       IntStream.range(0, shift).forEach(i -> sb.append(sep));
     }
-    LOGGER.info(sb.toString());
+    String separatorString = sb.toString();
+    LOGGER.info(separatorString);
   }
 
   private void printDistSum(
@@ -213,8 +218,6 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
 
   private void printDistSum(
       int baseShift, List<OrderItem> disOrdItems, String title, boolean all, boolean receipt) {
-
-    if (!LOGGER.isInfoEnabled()) return;
 
     if (disOrdItems.isEmpty() && !all) {
       return;
@@ -226,7 +229,9 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
 
     String format = "%-" + distShift + "s " + FLT_FMT + " %s";
     String distSumRow = String.format(format, title + " sum:", distSum.negate(), CURRENCY);
-    LOGGER.info(createRow(receipt, distSumRow));
+
+    String receiptDistSumRow = createRow(receipt, distSumRow);
+    LOGGER.info(receiptDistSumRow);
   }
 
   private void prettyPrintOrder(
