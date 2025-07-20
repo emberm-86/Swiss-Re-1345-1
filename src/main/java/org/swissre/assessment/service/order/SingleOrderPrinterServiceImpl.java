@@ -43,7 +43,7 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
 
   @Override
   public void print(Integer orderId, List<OrderItem> order, OrderMap allOrders, boolean receipt) {
-    // Do all the calculations here.
+    // Done all the calculations here.
     BigDecimal billForOrder = billingService.calcSum(order);
 
     List<OrderItem> disOrderItems5thBev =
@@ -57,7 +57,7 @@ public class SingleOrderPrinterServiceImpl implements SingleOrderPrinterService 
 
     BigDecimal billForOrderDisc = billingService.calcSumWithDisc(order, disOrderItems);
 
-    // Provide formatted output.
+    // Output formatting.
     int maxQtyStrLen = maxQtyStrLen(order);
     int maxSumPrcStrLen = String.format(FLT_FMT, billForOrder).length();
     if (!disOrderItems.isEmpty() && maxSumPrcStrLen < 5) {
