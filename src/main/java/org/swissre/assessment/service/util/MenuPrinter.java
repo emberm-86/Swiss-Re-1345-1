@@ -1,47 +1,66 @@
 package org.swissre.assessment.service.util;
 
-import org.swissre.assessment.domain.MenuItem;
-
 import java.util.Arrays;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.swissre.assessment.domain.MenuItem;
 
-import static org.swissre.assessment.domain.Constants.FLT_FMT;
+import static org.swissre.assessment.domain.Constants.*;
 
 public class MenuPrinter {
 
-  private MenuPrinter() {
-  }
+  private static final Logger LOGGER = LogManager.getLogger(MenuPrinter.class);
+
+  private MenuPrinter() {}
 
   public static void printMainMenu() {
     String menuSeparator = "=========================";
-    System.out.println(menuSeparator);
-    System.out.printf("%19s %n", "Coffee Corner");
-    System.out.println(menuSeparator);
-    System.out.println("1. Create a new order");
-    System.out.println("2. List all of the orders");
-    System.out.println("3. Quit (Q)");
-    System.out.println(menuSeparator);
-    System.out.println("Please choose from the menu: ");
+    LOGGER.info(menuSeparator);
+    String title = String.format("%19s", "Coffee Corner");
+    LOGGER.info(title);
+    LOGGER.info(menuSeparator);
+    LOGGER.info("1. Create a new order");
+    LOGGER.info("2. List all of the orders");
+    LOGGER.info("3. Quit (Q)");
+    LOGGER.info(menuSeparator);
+    LOGGER.info("Please choose from the menu: ");
   }
 
   public static void printCreateOrderMenu() {
-    System.out.println("=================================");
+    LOGGER.info("=================================");
     prettyPrintMenuItems(Arrays.asList(MenuItem.values()));
-    System.out.println("=================================");
-    System.out.println(
-        "Please choose a product with it's code or submit(x), cancel(c) your order:");
+    LOGGER.info("=================================");
+    LOGGER.info("Please choose a product with it's code or submit(x), cancel(c) your order:");
   }
 
   public static void prettyPrintMenuItems(List<MenuItem> menuItems) {
     String productShift = "%-17s";
-    String headerFormat = productShift + " %-9s %s%n";
+    String headerFormat = productShift + " %-9s %s";
     String rowFormat = productShift + " %-6s " + FLT_FMT + " %s";
 
-    System.out.printf(headerFormat, "Product", "Code", "Price");
-    System.out.println("---------------------------------");
+    String header = String.format(headerFormat, "Product", "Code", "Price");
+    LOGGER.info(header);
+    LOGGER.info("---------------------------------");
 
     menuItems.stream()
         .map(menuItem -> MenuItemConverter.convertMenuItemToString(rowFormat, menuItem))
-        .forEach(System.out::println);
+        .forEach(LOGGER::info);
+  }
+
+  public static void printLoggingInfoDisabled(Logger logger) {
+    logger.info(LOG_INFO_DISABLED);
+  }
+
+  public static void printNumberValidationMsg(Logger logger) {
+    logger.info(NUMBER_VALIDATION_MSG);
+  }
+
+  public static void printQuantityMsg(Logger logger) {
+    logger.info(QUANTITY_MSG);
+  }
+
+  public static void printSelectExtraMsg(Logger logger, String leftExtras) {
+    logger.info(SELECT_EXTRA_MSG, leftExtras, OR_SAY_NO_MSG);
   }
 }

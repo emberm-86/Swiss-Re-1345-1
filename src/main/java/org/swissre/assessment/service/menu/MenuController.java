@@ -1,5 +1,7 @@
 package org.swissre.assessment.service.menu;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.MenuSelection;
 import org.swissre.assessment.domain.MenuState;
@@ -11,14 +13,13 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.swissre.assessment.domain.Constants.NUMBER_VALIDATION_MSG;
-import static org.swissre.assessment.domain.Constants.OR_SAY_NO_MSG;
+import static org.swissre.assessment.domain.Constants.*;
 import static org.swissre.assessment.domain.MenuItem.checkIfExtraByCode;
-import static org.swissre.assessment.service.util.MenuPrinter.printCreateOrderMenu;
-import static org.swissre.assessment.service.util.MenuPrinter.printMainMenu;
+import static org.swissre.assessment.service.util.MenuPrinter.*;
 
 public class MenuController {
 
+  private static final Logger LOGGER = LogManager.getLogger(MenuController.class);
   private final OrderService orderService;
   private final MenuSelection menuSelection;
 
@@ -57,7 +58,7 @@ public class MenuController {
     if ((!menuCode.equalsIgnoreCase("c") || menuSelected != MenuState.CREATE_ORDER)) {
       return false;
     }
-    System.out.println("You have cancelled your order, no worries! :)");
+    LOGGER.info("You have cancelled your order, no worries! :)");
     backToMainMenu();
     return true;
   }
@@ -71,14 +72,14 @@ public class MenuController {
   }
 
   public void launchMainMenu(String menuCode) {
-      if (menuCode.equals("1")) {
-          menuSelection.setMenuSelected(MenuState.CREATE_ORDER);
-          printCreateOrderMenu();
-      } else if (menuCode.equals("2")) {
-          menuSelection.setMenuSelected(MenuState.LIST_ORDERS);
-          orderService.printAllOrders();
-          System.out.println("Press X to return to the Main Menu!");
-      }
+    if (menuCode.equals("1")) {
+      menuSelection.setMenuSelected(MenuState.CREATE_ORDER);
+      printCreateOrderMenu();
+    } else if (menuCode.equals("2")) {
+      menuSelection.setMenuSelected(MenuState.LIST_ORDERS);
+      orderService.printAllOrders();
+      LOGGER.info("Press X to return to the Main Menu!");
+    }
   }
 
   public void backToMainMenu() {
@@ -87,6 +88,11 @@ public class MenuController {
   }
 
   public void launchCreateOrderMenu(String menuCode) {
+    if (!LOGGER.isInfoEnabled()) {
+      printLoggingInfoDisabled(LOGGER);
+      return;
+    }
+
     MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
 
@@ -103,12 +109,9 @@ public class MenuController {
       menuSelection.setMenuItemSelected(MenuItem.getMenuItemByCode(menuCode));
 
       if (MenuItem.isCoffee(menuCode)) {
-        System.out.println(
-            "You can choose an extra with it's code for your coffee product: "
-                + checkSelectableExtras(selectedExtras)
-                + OR_SAY_NO_MSG);
+        printSelectExtraMsg(LOGGER, checkSelectableExtras(selectedExtras));
       } else {
-        System.out.println("Please type the quantity:");
+        printQuantityMsg(LOGGER);
       }
     } else {
       addMenuItem(menuCode);
@@ -116,15 +119,17 @@ public class MenuController {
   }
 
   public void createOrder() {
+    if (!LOGGER.isInfoEnabled()) {
+      printLoggingInfoDisabled(LOGGER);
+      return;
+    }
+
     MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
     boolean extraSelectionDone = menuSelection.isExtraSelectionDone();
 
     if (menuItemSelected != null && menuItemSelected.isCoffee() && !extraSelectionDone) {
-      System.out.println(
-          "You can choose an extra with it's code for your coffee product: "
-              + checkSelectableExtras(selectedExtras)
-              + OR_SAY_NO_MSG);
+      printSelectExtraMsg(LOGGER, checkSelectableExtras(selectedExtras));
     } else {
       orderService.closeOrder();
       backToMainMenu();
@@ -137,9 +142,9 @@ public class MenuController {
 
     if (menuItemSelected.isCoffee() && noOptions.anyMatch(menuCode::equalsIgnoreCase)) {
       if (menuSelection.isExtraSelectionDone()) {
-        System.out.println(NUMBER_VALIDATION_MSG);
+        printNumberValidationMsg(LOGGER);
       } else {
-        System.out.println("Please type the quantity:");
+        printQuantityMsg(LOGGER);
       }
       menuSelection.setExtraSelectionDone(true);
     } else {
@@ -148,6 +153,11 @@ public class MenuController {
   }
 
   private void addMenuItemWithExtraCheck(String menuCode) {
+    if (!LOGGER.isInfoEnabled()) {
+      printLoggingInfoDisabled(LOGGER);
+      return;
+    }
+
     boolean extraSelectionDone = menuSelection.isExtraSelectionDone();
     MenuItem menuItemSelected = menuSelection.getMenuItemSelected();
     List<MenuItem> selectedExtras = menuSelection.getSelectedExtras();
@@ -156,23 +166,23 @@ public class MenuController {
       addNonExtraMenuItem(menuCode);
     } else if (extraSelectionDone) {
       if (MenuItem.checkIfExtraByCode(menuCode)) {
-        System.out.println("Please give a valid number: > 0 as an input!");
+        printNumberValidationMsg(LOGGER);
       } else {
         addNonExtraMenuItem(menuCode);
       }
     } else if (MenuItem.checkIfExtraByCode(menuCode)) {
       addExtraMenuItem(MenuItem.getMenuItemByCode(menuCode));
     } else {
-      System.out.println(
-          "Please choose the coffee with a valid extra code: "
-              + checkSelectableExtras(selectedExtras)
-              + OR_SAY_NO_MSG);
+      LOGGER.info(
+          "Please choose the coffee with a valid extra code: {}{}",
+          checkSelectableExtras(selectedExtras),
+          OR_SAY_NO_MSG);
     }
   }
 
   private void addNonExtraMenuItem(String quantity) {
     if (!isValidNum(quantity)) {
-      System.out.println("Please give a valid number: > 0 as an input!");
+      printNumberValidationMsg(LOGGER);
     } else {
       addNewOrderItemWithExtras(quantity);
     }
@@ -198,8 +208,7 @@ public class MenuController {
 
     menuSelection.setMenuItemSelected(null);
     menuSelection.setExtraSelectionDone(false);
-    System.out.println(
-        "Please choose a product with it's code or submit(x), cancel(c) your order:");
+    LOGGER.info("Please choose a product with it's code or submit(x), cancel(c) your order:");
   }
 
   private void applySelectableCheck(MenuItem extra) {
@@ -207,22 +216,19 @@ public class MenuController {
     String selectableExtras = checkSelectableExtras(selectedExtras);
 
     if (selectableExtras.isEmpty()) {
-      System.out.println("No selectable extras left, please type the quantity:");
+      LOGGER.info("No selectable extras left, please type the quantity:");
       menuSelection.setExtraSelectionDone(true);
     } else if (extra == null) {
-      System.out.println(
-          "You can choose another coffee extra with valid code: "
-              + selectableExtras
-              + OR_SAY_NO_MSG);
+      LOGGER.info(
+          "You can choose another coffee extra with valid code: {}{}",
+          selectableExtras,
+          OR_SAY_NO_MSG);
     } else {
-      System.out.println(
-          "'"
-              + extra.getCode()
-              + "'"
-              + " has already been chosen."
-              + " Please choose another one: "
-              + selectableExtras
-              + OR_SAY_NO_MSG);
+      LOGGER.info(
+          "'{}' has already been chosen. Please choose another one: {}{}",
+          extra.getCode(),
+          selectableExtras,
+          OR_SAY_NO_MSG);
     }
   }
 

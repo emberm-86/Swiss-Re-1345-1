@@ -1,12 +1,17 @@
 package org.swissre.assessment;
 
 import java.util.Scanner;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.swissre.assessment.domain.MenuSelection;
 import org.swissre.assessment.service.menu.MenuController;
 import org.swissre.assessment.service.order.OrderServiceImpl;
 import org.swissre.assessment.service.util.MenuPrinter;
 
 public class Application {
+
+  private static final Logger LOGGER = LogManager.getLogger(Application.class);
 
   public static void main(String[] args) {
     MenuController menuController = new MenuController(new OrderServiceImpl(), new MenuSelection());
@@ -25,10 +30,10 @@ public class Application {
       try {
         menuController.launchSelectedMenu(menuCode);
       } catch (IllegalArgumentException e) {
-        System.out.println(e.getMessage());
+        LOGGER.error(e.getMessage());
       }
     }
     in.close();
-    System.out.println("Good bye! :)");
+    LOGGER.info("Good bye! :)");
   }
 }

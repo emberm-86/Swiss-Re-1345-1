@@ -2,11 +2,16 @@ package org.swissre.assessment.service.order;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.swissre.assessment.domain.MenuItem;
 import org.swissre.assessment.domain.OrderItem;
 import org.swissre.assessment.domain.datastructure.OrderMap;
 
 public class OrderServiceImpl implements OrderService {
+
+  private static final Logger LOGGER = LogManager.getLogger(OrderServiceImpl.class);
 
   List<OrderItem> ordSelectionCurrent = new ArrayList<>();
   OrderStorageProvider ordStgProvider = new OrderStorageProviderImpl();
@@ -20,13 +25,13 @@ public class OrderServiceImpl implements OrderService {
   @Override
   public void closeOrder() {
     if (ordSelectionCurrent.isEmpty()) {
-      System.out.println("You have ordered nothing.");
+      LOGGER.info("You have ordered nothing.");
       return;
     }
 
     ordStgProvider.addNewOrder(new ArrayList<>(ordSelectionCurrent));
 
-    System.out.println("You can check your bill here.");
+    LOGGER.info("You can check your bill here.");
 
     singleOrderPrinterService.print(
         ordStgProvider.getLastOrderIndex(),
@@ -39,23 +44,23 @@ public class OrderServiceImpl implements OrderService {
 
   @Override
   public void printAllOrders() {
-    System.out.println("========================");
+    LOGGER.info("========================");
 
     OrderMap allOrders = ordStgProvider.getAllOrders();
 
     if (allOrders.isEmpty()) {
-      System.out.println("There is no order in the system.");
+      LOGGER.info("There is no order in the system.");
     }
 
     allOrders.forEach(
         (orderId, order) -> {
           if (orderId > 0) {
-            System.out.println();
+            LOGGER.info("");
           }
 
-          System.out.println("Order: " + orderId);
+          LOGGER.info("Order: {}", orderId);
           singleOrderPrinterService.print(orderId, order, allOrders, false);
         });
-    System.out.println("========================\n");
+    LOGGER.info("========================\n");
   }
 }
